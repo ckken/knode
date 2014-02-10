@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}修改内容{% endblock %}
+
+{% block content %}
+<h1>修改内容</h1>
+<p>修改内容.</p>
+<form action="/post/update" method="post">
+    <p><input type="text" placeholder="标题" name="title" value="{{post.title}}"></p>
+    <p><textarea placeholder="内容" class="editor" name="content">{{post.content}}</textarea></p>
+    <p><input type="submit" value="修改"></p>
+    <p><input type="hidden" name="id" value="{{post.id}}"> </p>
+</form>
+
+<script>
+    KindEditor.ready(function(K) {
+        window.editor = K.create('.editor');
+    });
+</script>
+{% endblock %}

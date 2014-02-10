@@ -3,7 +3,14 @@
  */
 //C配置文件 M通用模块插件 F 内置函数 D 数据库类
 global.C = global.M = global.F = {};
+//获取配置内容
 C = require(__dirname+'/config/config')(__dirname);
+//公共函数定义
+F = require(__dirname+'/function/init')(__dirname);
+//连接数据库
+M.mongoose = require('mongoose');
+M.mongoose.connect(C.mongo);
+D = require(C.model+'db');
 
 var koa = require('koa'),
     path = require('path'),
@@ -11,9 +18,16 @@ var koa = require('koa'),
     views = require('co-views'),
     route = require('koa-route'),
     static = require('koa-static'),
+    swig = require('swig'),
     app = koa();
 
+
+
 //定义模版类型以及路径
+swig.setDefaults({
+    autoescape:false
+});
+
 var render = views(C.view, {
     map: { html: 'swig' }
 })

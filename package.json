@@ -10,7 +10,8 @@
         "co-fs": "*",
         "co-body": "*",
         "co-views": "*",
-        "swig": "*"
+        "swig": "*",
+        "mongoose":"*"
     },
     "engines": {
         "node": ">= 11.3"

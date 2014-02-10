@@ -7,7 +7,12 @@
   <p>创建内容.</p>
   <form action="/post" method="post">
     <p><input type="text" placeholder="标题" name="title"></p>
-    <p><textarea placeholder="内容" name="body"></textarea></p>
+    <p><textarea placeholder="内容" class="editor" name="content"></textarea></p>
     <p><input type="submit" value="Create"></p>
   </form>
+<script>
+    KindEditor.ready(function(K) {
+        window.editor = K.create('.editor');
+    });
+</script>
 {% endblock %}

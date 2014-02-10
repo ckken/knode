@@ -4,5 +4,7 @@
 
 {% block content %}
   <h1>{{ post.title }}</h1>
-  <p>{{ post.body }}</p>
+        <p><a href="/post/edit/{{ post.id }}">修改</a></p>
+  <p>{{ post.content  }}</p>
+
 {% endblock %}

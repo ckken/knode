@@ -4,7 +4,10 @@
 
 {% block content %}
   <h1>{{ post.title }}</h1>
-        <p><a href="/post/edit/{{ post.id }}">修改</a></p>
+        <p>
+            <a href="/post/edit/{{ post.id }}">修改</a>
+            <a href="/post/del/{{ vo._id }}">删除</a>
+        </p>
   <p>{{ post.content  }}</p>
 
 {% endblock %}

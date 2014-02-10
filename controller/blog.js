@@ -4,41 +4,31 @@
 
 module.exports = function(app,route,parse,render){
 
-    var posts = [];
-
-    // middleware
-
-    // route middleware
-
     app.use(route.get('/', list));
     app.use(route.get('/post/new', add));
     app.use(route.get('/post/edit/:id', edit));
     app.use(route.get('/post/:id', show));
-
+    app.use(route.get('/post/del/:id',del));
     app.use(route.post('/post', create));
     app.use(route.post('/post/update', update));
-    // route definitions
 
-    /**
-     * Post listing.
-     */
 
     function *list() {
 
 
         var page =  this.query.p||1;
-        var perPage = this.query.perPage||2;
+        var perPage = this.query.perPage||10;
         var where = this.query.where||{};
         var bysort = this.query.sort||{
             '_id': -1
-        };
+        }
 
         var count = yield function(fn){
             D('blog').count(where, function(err, count) {
                 if (err) return fn(err);
                 fn(null, count);
             });
-        };
+        }
 
         var List = yield function(fn){
             D('blog').find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
@@ -46,29 +36,38 @@ module.exports = function(app,route,parse,render){
                 d.data = doc;
                 d.count = count;
                 d.page = F.page(page, count, perPage);
+                d.data.forEach(function(vo){
+
+                    vo.content = F.html.delHtmlTag(vo.content);
+                    vo.content = vo.content.substring(0, 250);
+                })
+
+
                 if (err) return fn(err);
                 fn(null, d);
             })
-        };
+        }
 
         this.body = yield render('blog/list',List);
 
 
     }
 
-    /**
-     * Show creation form.
-     */
-
     function *add() {
         this.body = yield render('blog/new');
     }
 
     function *edit(id) {
-        console.log(id);
-        console.log(id>=0&&posts.length>0);
-        if(id>=0&&posts.length>0){
-            var post = posts[id];
+
+        if(id!=''){
+
+                var post = yield function(fn){
+                    D('blog').findById(id,function(err,d){
+                        if(err)fn(err);
+                        fn(null,d);
+                    })
+                }
+            if (!post) this.throw(404, '找不到相应文章');
             this.body = yield render('blog/edit', { post: post});
         }else{
             this.redirect('/');
@@ -76,15 +75,22 @@ module.exports = function(app,route,parse,render){
 
     }
 
-    /**
-     * Show post :id.
-     */
 
     function *show(id) {
-        console.log(posts);
-        var post = posts[id];
-        if (!post) this.throw(404, 'invalid post id');
-        this.body = yield render('blog/show', { post: post });
+
+        if(id!=''){
+            var post = yield function(fn){
+                D('blog').findById(id,function(err,d){
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+            if (!post) this.throw(404, '找不到相应文章');
+            this.body = yield render('blog/show', { post: post });
+        }else{
+            this.redirect('/');
+        }
+
     }
 
     /**
@@ -93,11 +99,6 @@ module.exports = function(app,route,parse,render){
 
     function *create() {
         var post = yield parse(this);
-        //var id = posts.push(post) - 1;
-        //post.created_at = new Date;
-        //post.id = id;
-        console.log(post.content+'1');
-
         if (!post.title) {
 
             this.body ="标题是必须的";
@@ -106,28 +107,59 @@ module.exports = function(app,route,parse,render){
 
             this.body = "内容不能为空";
         }else{
-            yield insert(post);
-            this.redirect('/');
-        }
 
-        function *insert(data){
-            console.log(data);
-            D('blog').insert(data, function (err, row) {
-                return true;
-            })
+            var cb = yield function(fn){
+                D('blog').insert(post, function (err, d) {
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+
+            this.redirect('/');
         }
 
     }
 
     function *update() {
         var post = yield parse(this);
-        if(post.id>=0){
+        if(!post.id){
+            this.body ="非法操作";
+        }
+        else if (!post.title) {
 
-            post.created_at = new Date;
-            posts[post.id]=post;
+            this.body ="标题是必须的";
+        }
+        else if (!post.content) {
+
+            this.body = "内容不能为空";
+        }else{
+
+            var cb = yield function(fn){
+                D('blog').findByIdAndUpdate(post.id,post, function (err, d) {
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+            this.redirect('/');
         }
 
         this.redirect('/');
+    }
+
+    function *del(id){
+        console.log(id);
+        if(id!=''){
+            var cb = yield function(fn){
+                console.log(id);
+                D('blog').findByIdAndRemove(id,function(err,d){
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+            this.redirect('/');
+        }else{
+            this.body ="非法操作";
+        }
     }
 
 }

@@ -12,6 +12,7 @@
         <h2>{{ vo.title }}</h2>
           <p>{{vo.content}}</p>
         <p><a href="/post/edit/{{ vo._id }}">修改</a>
+            <a href="/post/del/{{ vo._id }}">删除</a>
             <a href="/post/{{ vo._id }}">更多</a></p>
       </li>
     {% endfor %}

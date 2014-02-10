@@ -15,7 +15,7 @@ function D(obj) {
         });
     }
 
-    o._list = function(opt, callback) {
+/*    o._list = function(opt, callback) {
         var where = ('undefined' !== typeof opt.where) ? opt.where : {};
         var page = ('undefined' !== typeof opt.page) ? opt.page : 1;
         var perPage = ('undefined' !== typeof opt.perPage) ? opt.perPage : 10;
@@ -30,7 +30,7 @@ function D(obj) {
                 callback(err, d);
             })
         });
-    }
+    }*/
 
     o.delete = o.remove;
 

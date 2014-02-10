@@ -24,44 +24,35 @@ module.exports = function(app,route,parse,render){
      */
 
     function *list() {
-        var _S = this;
-        var page =  1;
-        var perPage = 10;
-        var pageList = '';
-        var listData = {};
-        console.log(1);
-        listData = yield getlist();
-        console.log(3);
-        console.log(listData);
-        this.body = yield render('blog/list',listData);
 
 
-        function *getlist(){
+        var page =  this.query.p||1;
+        var perPage = this.query.perPage||2;
+        var where = this.query.where||{};
+        var bysort = this.query.sort||{
+            '_id': -1
+        };
 
-            D('blog')._list({}, function (err, todos) {
-
-                if (err) return next(err);
-
-                todos.data.forEach(function (vo) {
-                    vo.creattime = F.date.dgm(vo.creattime, 'yyyy-mm-dd');
-                    vo.updatetime = F.date.dgm(vo.updatetime, 'yyyy-mm-dd');
-                    if ('undefined' !== typeof vo.email)vo.avatar = F.encode.md5(vo.email);
-                    if ('undefined' !== typeof vo.content) {
-                        vo.content = F.html.delHtmlTag(vo.content);
-                        vo.content = vo.content.substring(0, 250);
-                    }
-                })
-                pageList = F.page(page, todos.count, perPage);
-                console.log(2);
-
-                return {
-                    posts: todos,
-                    page: pageList
-                }
-
-
+        var count = yield function(fn){
+            D('blog').count(where, function(err, count) {
+                if (err) return fn(err);
+                fn(null, count);
             });
-        }
+        };
+
+        var List = yield function(fn){
+            D('blog').find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
+                var d = {};
+                d.data = doc;
+                d.count = count;
+                d.page = F.page(page, count, perPage);
+                if (err) return fn(err);
+                fn(null, d);
+            })
+        };
+
+        this.body = yield render('blog/list',List);
+
 
     }
 

@@ -4,15 +4,15 @@
 
 {% block content %}
   <h1>已经提交的的内容</h1>
-  <p>已经提交 <strong>{{ posts.count }}</strong> !</p>
+  <p>已经提交 <strong>{{ count }}</strong> !</p>
   <p><a href="/post/new">创建内容</a></p>
   <ul id="posts">
-    {% for post in posts.data %}
+    {% for vo in data %}
       <li>
-        <h2>{{ post.title }}</h2>
-          <p>{{post.content}}</p>
-        <p><a href="/post/edit/{{ post.id }}">修改</a>
-            <a href="/post/{{ post.id }}">更多</a></p>
+        <h2>{{ vo.title }}</h2>
+          <p>{{vo.content}}</p>
+        <p><a href="/post/edit/{{ vo._id }}">修改</a>
+            <a href="/post/{{ vo._id }}">更多</a></p>
       </li>
     {% endfor %}
   </ul>

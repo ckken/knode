@@ -7,20 +7,23 @@ global.C = global.M = global.F = {};
 C = require(__dirname+'/config/config')(__dirname);
 //公共函数定义
 F = require(__dirname+'/function/init')(__dirname);
-//连接数据库
-M.mongoose = require('mongoose');
-M.mongoose.connect(C.mongo);
-D = require(C.model+'db');
-
+//主模块
 var koa = require('koa'),
-    path = require('path'),
-    parse = require('co-body'),
-    views = require('co-views'),
     route = require('koa-route'),
     static = require('koa-static'),
     swig = require('swig'),
-    app = koa();
-
+    app = koa(),
+    path = require('path'),
+    co = require('co'),
+    parse = require('co-body'),
+    views = require('co-views'),
+    mongoose = require('mongoose');
+//模块定义
+M.co = co;
+//连接数据库
+M.mongoose = mongoose;
+M.mongoose.connect(C.mongo);
+D = require(C.model+'db');
 
 
 //定义模版类型以及路径
@@ -44,6 +47,9 @@ mod.forEach(function (item) {
 app.use(function *(){
     this.body = '404';
 });
+
+
+
 
 app.listen(3000);
 

@@ -4,12 +4,13 @@
     "version": "0.0.1",
     "dependencies": {
         "koa": "*",
+        "koa-route": "*",
+        "koa-static": "*",
+        "co":"*",
         "co-fs": "*",
         "co-body": "*",
         "co-views": "*",
-        "swig": "*",
-        "koa-route": "*",
-        "koa-static": "*"
+        "swig": "*"
     },
     "engines": {
         "node": ">= 11.3"

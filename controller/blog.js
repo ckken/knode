@@ -4,8 +4,6 @@
 
 module.exports = function(app,route,parse){
 
-    render = require(C.lib+'/render');
-
     var posts = [];
 
     // middleware
@@ -24,7 +22,7 @@ module.exports = function(app,route,parse){
      */
 
     function *list() {
-        this.body = yield render('list', { posts: posts });
+        this.body = yield render('blog/list', { posts: posts });
     }
 
     /**
@@ -32,7 +30,7 @@ module.exports = function(app,route,parse){
      */
 
     function *add() {
-        this.body = yield render('new');
+        this.body = yield render('blog/new');
     }
 
     /**
@@ -43,7 +41,7 @@ module.exports = function(app,route,parse){
         console.log(posts);
         var post = posts[id];
         if (!post) this.throw(404, 'invalid post id');
-        this.body = yield render('show', { post: post });
+        this.body = yield render('blog/show', { post: post });
     }
 
     /**

@@ -2,7 +2,7 @@
  * Created by ken.xu on 14-2-10.
  */
 
-module.exports = function(app,route,parse){
+module.exports = function(app,route,parse,render){
 
     var posts = [];
 

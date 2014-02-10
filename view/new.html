@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block title %}新内容{% endblock %}
+
+{% block content %}
+  <h1>新内容</h1>
+  <p>创建内容.</p>
+  <form action="/post" method="post">
+    <p><input type="text" placeholder="标题" name="title"></p>
+    <p><textarea placeholder="内容" name="body"></textarea></p>
+    <p><input type="submit" value="Create"></p>
+  </form>
+{% endblock %}

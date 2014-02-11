@@ -32,6 +32,7 @@ swig.setDefaults({
 var render = views(C.view, {
     map: { html: 'swig' }
 })
+app.keys = ['fsdfasdfasdfasdf','sdfsadfasfasdf'];
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
@@ -46,6 +47,12 @@ app.use(function *(next){
             })
         }
     }
+
+    if(!G.user){
+        var user = this.cookies.get('member');
+        G.user = user && JSON.parse(user) || {};
+    }
+
     yield next;
 });
 

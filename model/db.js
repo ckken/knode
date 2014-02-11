@@ -1,5 +1,5 @@
 var Schema = M.mongoose.Schema;
-//M.mongoose.set('debug', true);
+M.mongoose.set('debug', true);
 
 models=new Array();
 function D(obj) {

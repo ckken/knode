@@ -1,115 +1,138 @@
-/*
- * Derived from einaros's Sons of Obsidian theme at
- * http://studiostyl.es/schemes/son-of-obsidian by
- * Alex Ford of CodeTunnel:
- * http://CodeTunnel.com/blog/post/71/google-code-prettify-obsidian-theme
- */
+/* Pretty printing styles. Used with prettify.js. */
+/* Vim sunburst theme by David Leibovic */
 
-.str
-{
-  color: #EC7600;
+pre .str, code .str {
+  color: #65B042;
 }
-.kwd
-{
-  color: #8F9C6C;
+
+/* string  - green */
+pre .kwd, code .kwd {
+  color: #E28964;
 }
-.com
-{
-  color: #66747B;
+
+/* keyword - dark pink */
+pre .com, code .com {
+  color: #AEAEAE;
+  font-style: italic;
 }
-.typ
-{
-  color: #678CB1;
+
+/* comment - gray */
+pre .typ, code .typ {
+  color: #89bdff;
 }
-.lit
-{
-  color: #FACD22;
+
+/* type - light blue */
+pre .lit, code .lit {
+  color: #3387CC;
 }
-.pun
-{
-  color: #F1F2F3;
+
+/* literal - blue */
+pre .pun, code .pun {
+  color: #fff;
 }
-.pln
-{
-  color: #F1F2F3;
+
+/* punctuation - white */
+pre .pln, code .pln {
+  color: #fff;
 }
-.tag
-{
-  color: #8AC763;
+
+/* plaintext - white */
+pre .tag, code .tag {
+  color: #89bdff;
 }
-.atn
-{
-  color: #E0E2E4;
+
+/* html/xml tag    - light blue */
+pre .atn, code .atn {
+  color: #bdb76b;
 }
-.atv
-{
-  color: #EC7600;
+
+/* html/xml attribute name  - khaki */
+pre .atv, code .atv {
+  color: #65B042;
 }
-.dec
-{
-  color: purple;
+
+/* html/xml attribute value - green */
+pre .dec, code .dec {
+  color: #3387CC;
 }
-pre.prettyprint
-{
-  border: 0px solid #888;
+
+/* decimal - blue */
+
+pre.prettyprint, code.prettyprint {
+  background-color: #222;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -o-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -khtml-border-radius: 4px;
+  border-radius: 4px;
 }
-ol.linenums
-{
+
+pre.prettyprint {
+  width: 95%;
+  margin: 1em auto;
+  padding: 1em;
+  white-space: pre-wrap;
+}
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
   margin-top: 0;
   margin-bottom: 0;
+  color: #AEAEAE;
 }
-li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
-{
-  color: #555;
-  list-style-type: decimal;
+
+/* IE indents via margin-left */
+li.L0, li.L1, li.L2, li.L3, li.L5, li.L6, li.L7, li.L8 {
+  list-style-type: none
 }
+
+/* Alternate shading for lines */
 li.L1, li.L3, li.L5, li.L7, li.L9 {
-  background: #111;
 }
-@media print
-{
-  .str
-  {
+
+@media print {
+  pre .str, code .str {
     color: #060;
   }
-  .kwd
-  {
+
+  pre .kwd, code .kwd {
     color: #006;
     font-weight: bold;
   }
-  .com
-  {
+
+  pre .com, code .com {
     color: #600;
     font-style: italic;
   }
-  .typ
-  {
+
+  pre .typ, code .typ {
     color: #404;
     font-weight: bold;
   }
-  .lit
-  {
+
+  pre .lit, code .lit {
     color: #044;
   }
-  .pun
-  {
+
+  pre .pun, code .pun {
     color: #440;
   }
-  .pln
-  {
+
+  pre .pln, code .pln {
     color: #000;
   }
-  .tag
-  {
+
+  pre .tag, code .tag {
     color: #006;
     font-weight: bold;
   }
-  .atn
-  {
+
+  pre .atn, code .atn {
     color: #404;
   }
-  .atv
-  {
+
+  pre .atv, code .atv {
     color: #060;
   }
 }

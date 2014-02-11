@@ -1,18 +1,26 @@
-{% extends 'layout.html' %}
+{% extends '../layout.html' %}
 
-{% block title %}新内容{% endblock %}
+{% block title %}创建内容{% endblock %}
 
 {% block content %}
-  <h1>新内容</h1>
-  <p>创建内容.</p>
+  <h1>创建内容</h1>
+
+<div class="form">
   <form action="/post" method="post">
-    <p><input type="text" placeholder="标题" name="title"></p>
-    <p><textarea placeholder="内容" class="editor" name="content"></textarea></p>
+    <p><input type="text" placeholder="标题" class="form-control" name="title"></p>
+    <p><textarea placeholder="内容" class="editor" style="width: 100%; height: 300px;" name="content"></textarea></p>
     <p><input type="submit" value="Create"></p>
   </form>
+    </div>
 <script>
     KindEditor.ready(function(K) {
-        window.editor = K.create('.editor');
+        K.create('.editor', {
+                    themeType : 'default',
+                    items : [
+                        'source','bold','italic','underline','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent','link','code','clearhtml','quickformat'
+                    ]
+                }
+        );
     });
 </script>
 {% endblock %}

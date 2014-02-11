@@ -1,21 +1,21 @@
-{% extends 'layout.html' %}
+{% extends '../layout.html' %}
 
 {% block title %}Posts{% endblock %}
 
 {% block content %}
-  <h1>已经提交的的内容</h1>
-  <p>已经提交 <strong>{{ count }}</strong> !</p>
-  <p><a href="/post/new">创建内容</a></p>
-  <ul id="posts">
+<div class="subnav">
+    <a href="/post/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>创建内容</a>
+</div>
+  <ul class="article">
     {% for vo in data %}
       <li>
-        <h2>{{ vo.title }}</h2>
+        <h2><a href="/post/{{ vo._id }}">{{ vo.title }}</a></h2>
           <p>{{vo.content}}</p>
         <p><a href="/post/edit/{{ vo._id }}">修改</a>
             <a href="/post/del/{{ vo._id }}">删除</a>
-            <a href="/post/{{ vo._id }}">更多</a></p>
+        </p>
       </li>
     {% endfor %}
   </ul>
-        <div class="page">{{page}}</div>
+        <div class="page page_navi">{{page}}</div>
 {% endblock %}

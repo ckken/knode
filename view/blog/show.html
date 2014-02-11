@@ -1,13 +1,15 @@
-{% extends 'layout.html' %}
+{% extends '../layout.html' %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+        <div class="article_content">
   <h1>{{ post.title }}</h1>
-        <p>
+        <div class="opt">
+            {{post.update_time}}
             <a href="/post/edit/{{ post.id }}">修改</a>
             <a href="/post/del/{{ vo._id }}">删除</a>
-        </p>
-  <p>{{ post.content  }}</p>
+        </div>
+  <div class="entity">{{ post.content  }}</div>
 
-{% endblock %}
+{% endblock %}</div>

@@ -37,7 +37,7 @@ var render = views(C.view, {
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
-
+ 
 //var mod = ['member', 'blog','auth'];
 var mod = ['blog'];
 mod.forEach(function (item) {
@@ -45,8 +45,9 @@ mod.forEach(function (item) {
 })
 //404页面
 app.use(function *(){
-    this.body = '404';
+    this.body = yield render('404');
 });
+
 
 
 

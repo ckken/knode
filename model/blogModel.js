@@ -17,5 +17,4 @@ var blog = new Schema({
           , favs  : {type:Number,default:0}
         }
 },{ collection: 'blog'});
-
 module.exports = M.mongoose.model('blog', blog);

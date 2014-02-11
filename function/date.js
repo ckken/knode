@@ -32,6 +32,7 @@ module.exports = {
     },
 
     dgm: function (date, format) {
+        format = format||'yyyy-mm-dd';
         var timestr = parseInt(date);
         date = new Date(parseInt(date) * 1000);
 
@@ -49,11 +50,13 @@ module.exports = {
 
         var now = new Date();
         now = now.getTime() / 1000;
-        var time = now - date;
+        var time = now - timestr;
+        var day = new Date(parseInt(now) * 1000).getDate() - new Date(parseInt(timestr) * 1000).getDate();
         var strtime = 0;
-        var day = parseInt((now - timestr) / 86400);
-        if (timestr == 0)format = '--';
-        else if (timestr >= now) {
+        if (timestr == 0){
+            format = '--';
+        }
+        else if (day ==0) {
             if (time > 3600) {
                 strtime = parseInt(time / 3600);
                 format = strtime + ' 小时前';
@@ -70,10 +73,10 @@ module.exports = {
             }
         }
 
-        else if (day >= 0 && day < 7) {
-            if (day == 0) {
+        else if (day > 0 && day < 7) {
+            if (day == 1) {
                 format = '昨天 ' + o['h+'] + ':' + o['i+'] + ':' + o['s+'] + '';
-            } else if (day == 1) {
+            } else if (day == 2) {
                 format = '前天 ' + o['h+'] + ':' + o['i+'] + ':' + o['s+'] + '';
             } else {
                 format = o['d+'] + ' 天前';

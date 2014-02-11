@@ -3,12 +3,19 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active">{{post.title}}</li>
+</ol>
+
+
         <div class="article_content">
   <h1>{{ post.title }}</h1>
         <div class="opt">
-            {{post.update_time}}
-            <a href="/post/edit/{{ post.id }}">修改</a>
-            <a href="/post/del/{{ vo._id }}">删除</a>
+            {{post.updatetime}}
+            <a href="/blog/edit/{{ post.id }}">修改</a>
+            <a href="/blog/del/{{ vo._id }}">删除</a>
         </div>
   <div class="entity">{{ post.content  }}</div>
 

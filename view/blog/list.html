@@ -1,18 +1,27 @@
 {% extends '../layout.html' %}
 
-{% block title %}Posts{% endblock %}
+{% block title %}博客{% endblock %}
 
 {% block content %}
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active">博客</li>
+</ol>
+
+
 <div class="subnav">
-    <a href="/post/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>创建内容</a>
+    <a href="/blog/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>发布文章</a>
+    <a href="/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
 </div>
   <ul class="article">
     {% for vo in data %}
       <li>
-        <h2><a href="/post/{{ vo._id }}">{{ vo.title }}</a></h2>
+        <h2><a href="/blog/{{ vo._id }}">{{ vo.title }}</a></h2>
           <p>{{vo.content}}</p>
-        <p><a href="/post/edit/{{ vo._id }}">修改</a>
-            <a href="/post/del/{{ vo._id }}">删除</a>
+        <p><a href="/blog/edit/{{ vo._id }}">修改</a>
+            <a href="/blog/del/{{ vo._id }}">删除</a>
+            <span class="date">{{vo.updatetime}}</span>
         </p>
       </li>
     {% endfor %}

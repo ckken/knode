@@ -32,7 +32,7 @@ function D(obj) {
         });
     }*/
 
-    o.delete = o.remove;
+    //o.delete = o.remove;
 
     return o;
 }

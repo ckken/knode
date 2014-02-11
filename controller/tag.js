@@ -1,15 +1,17 @@
 /**
+ * Created by ken.xu on 14-2-11.
+ */
+/**
  * Created by ken.xu on 14-2-10.
  */
 
 module.exports = function(action,app,route,parse,render){
 
-    app.use(route.get('/', list));
+    app.use(route.get('/'+action, list));
     app.use(route.get('/'+action+'/add', add));
     app.use(route.get('/'+action+'/edit/:id', edit));
-    app.use(route.get('/'+action+'/:id', show));
     app.use(route.get('/'+action+'/del/:id',del));
-    app.use(route.post('/'+action+'', create));
+    app.use(route.post('/'+action+'/insert', insert));
     app.use(route.post('/'+action+'/update', update));
 
     function *list() {
@@ -37,87 +39,54 @@ module.exports = function(action,app,route,parse,render){
                 d.page = F.page(page, count, perPage);
                 d.data.forEach(function(vo){
 
-                    vo.content = F.html.delHtmlTag(vo.content);
-                    vo.content = vo.content.substring(0, 250);
-                    vo.updatetime= F.date.dgm(vo.updatetime);
-
+                    vo.createtime= F.date.dgm(vo.createtime);
                 })
-
 
                 if (err) return fn(err);
                 fn(null, d);
             })
         }
 
-        this.body = yield render('blog/list',List);
+        this.body = yield render('tag/list',List);
 
 
     }
 
     function *add() {
-        var tag = yield function(fn){
-            D('tag').find({},function(err,d){
-                if(err)fn(err);
-                fn(null,d);
-            })
-        }
-        this.body = yield render('blog/add',{tag:tag});
+        this.body = yield render('tag/add');
     }
 
     function *edit(id) {
 
         if(id!=''){
 
-                var post = yield function(fn){
-                    D(action).findById(id,function(err,d){
-                        if(err)fn(err);
-                        fn(null,d);
-                    })
-                }
-            if (!post) this.throw(404, '找不到相应文章');
-            var tag = yield function(fn){
-                D('tag').find({},function(err,d){
-                    if(err)fn(err);
-                    fn(null,d);
-                })
-            }
-            this.body = yield render('blog/edit', { post:post,tag:tag});
-        }else{
-            this.redirect('/');
-        }
-
-    }
-
-
-    function *show(id) {
-
-        if(id!=''){
             var post = yield function(fn){
                 D(action).findById(id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            if (!post) this.throw(404, '找不到相应文章');
-            post.updatetime= F.date.dgm(post.updatetime);
-            this.body = yield render('blog/show', { post: post });
+            if (!post) this.throw(404, '找不到相应关键字');
+            this.body = yield render('tag/edit', { post: post});
         }else{
-            this.redirect('/');
+            this.redirect('/'+action);
         }
 
     }
+
+
 
     /**
      * Create a post.
      */
 
-    function *create() {
+    function *insert() {
         var post = yield parse(this);
-        if (!post.title) {
+        if (!post.name) {
 
             this.body ="标题是必须的";
         }
-        else if (!post.content) {
+        else if (!post.key) {
 
             this.body = "内容不能为空";
         }else{
@@ -129,7 +98,7 @@ module.exports = function(action,app,route,parse,render){
                 })
             }
 
-            this.redirect('/');
+            this.redirect('/'+action);
         }
 
     }
@@ -139,11 +108,11 @@ module.exports = function(action,app,route,parse,render){
         if(!post.id){
             this.body ="非法操作";
         }
-        else if (!post.title) {
+        else if (!post.name) {
 
             this.body ="标题是必须的";
         }
-        else if (!post.content) {
+        else if (!post.key) {
 
             this.body = "内容不能为空";
         }else{
@@ -154,14 +123,13 @@ module.exports = function(action,app,route,parse,render){
                     fn(null,d);
                 })
             }
-            this.redirect('/');
+            this.redirect('/'+action);
         }
 
-        this.redirect('/');
+        this.redirect('/'+action);
     }
 
     function *del(id){
-
         if(id!=''){
             var cb = yield function(fn){
                 D(action).findByIdAndRemove(id,function(err,d){
@@ -169,7 +137,7 @@ module.exports = function(action,app,route,parse,render){
                     fn(null,d);
                 })
             }
-            this.redirect('/');
+            this.redirect('/'+action);
         }else{
             this.body ="非法操作";
         }

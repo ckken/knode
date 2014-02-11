@@ -37,11 +37,11 @@ var render = views(C.view, {
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
- 
+
 //var mod = ['member', 'blog','auth'];
-var mod = ['blog'];
+var mod = ['blog','tag'];
 mod.forEach(function (item) {
-    require(C.controller + item + '.js')(app,route,parse,render);
+    require(C.controller + item + '.js')(item,app,route,parse,render);
 })
 //404页面
 app.use(function *(){

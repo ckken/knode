@@ -7,5 +7,4 @@ var comment = new Schema({
   , comment :String
   , date    :{type:String,default: F.date.time()}
 },{ collection: 'comment'});
-
 module.exports = M.mongoose.model('comment', comment);

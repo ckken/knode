@@ -98,6 +98,13 @@ module.exports = function(action,app,route,parse,render){
                 })
             }
 
+            G.tag = yield function(fn){
+                D('tag').find({},function(err,d){
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+
             this.redirect('/'+action);
         }
 
@@ -123,6 +130,15 @@ module.exports = function(action,app,route,parse,render){
                     fn(null,d);
                 })
             }
+
+
+            G.tag = yield function(fn){
+                D('tag').find({},function(err,d){
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+
             this.redirect('/'+action);
         }
 

@@ -15,9 +15,10 @@
     <p><input type="text" placeholder="标题" class="form-control" name="title" value="{{post.title}}"></p>
     <p><textarea placeholder="内容" class="editor" style="width: 100%; height: 300px;" name="content">{{post.content}}</textarea></p>
     <p>
-        {% for vo in tag %}
+
+        {% for vo in G.tag %}
         <label class="checkbox-inline">
-            <input type="checkbox" name="tag[]" value="{{vo.key}}"> {{vo.name}}
+            <input type="checkbox" class="checkbox" name="tags[]" value="{{vo.key}}"> {{vo.name}}
         </label>
         {% endfor %}
     </p>
@@ -27,6 +28,14 @@
 </div>
 <script>
 
+
+    $(function(){
+        var tags = "{{post.tags}}";
+        $('.checkbox').each(function(){
+            var vo = $(this).val();
+            if(tags.indexOf(vo)>=0)$(this).attr('checked',true);
+        })
+    })
 
     KindEditor.ready(function(K) {
         K.create('.editor', {

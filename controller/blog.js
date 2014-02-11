@@ -6,21 +6,24 @@ module.exports = function(action,app,route,parse,render){
 
     app.use(route.get('/', list));
     app.use(route.get('/'+action+'/add', add));
+    app.use(route.get('/'+action+'/category/:tag', list));
     app.use(route.get('/'+action+'/edit/:id', edit));
     app.use(route.get('/'+action+'/:id', show));
     app.use(route.get('/'+action+'/del/:id',del));
     app.use(route.post('/'+action+'', create));
     app.use(route.post('/'+action+'/update', update));
 
-    function *list() {
 
 
+    function *list(tag) {
         var page =  this.query.p||1;
         var perPage = this.query.perPage||10;
         var where = this.query.where||{};
         var bysort = this.query.sort||{
             '_id': -1
         }
+
+        if(tag)where.tags = tag;
 
         var count = yield function(fn){
             D(action).count(where, function(err, count) {
@@ -55,13 +58,8 @@ module.exports = function(action,app,route,parse,render){
     }
 
     function *add() {
-        var tag = yield function(fn){
-            D('tag').find({},function(err,d){
-                if(err)fn(err);
-                fn(null,d);
-            })
-        }
-        this.body = yield render('blog/add',{tag:tag});
+
+        this.body = yield render('blog/add');
     }
 
     function *edit(id) {
@@ -75,13 +73,7 @@ module.exports = function(action,app,route,parse,render){
                     })
                 }
             if (!post) this.throw(404, '找不到相应文章');
-            var tag = yield function(fn){
-                D('tag').find({},function(err,d){
-                    if(err)fn(err);
-                    fn(null,d);
-                })
-            }
-            this.body = yield render('blog/edit', { post:post,tag:tag});
+            this.body = yield render('blog/edit', { post:post});
         }else{
             this.redirect('/');
         }
@@ -100,6 +92,7 @@ module.exports = function(action,app,route,parse,render){
             }
             if (!post) this.throw(404, '找不到相应文章');
             post.updatetime= F.date.dgm(post.updatetime);
+            D(action).findByIdAndUpdate(id,{$inc: {view: 1}}, function (err, d) {});
             this.body = yield render('blog/show', { post: post });
         }else{
             this.redirect('/');
@@ -123,6 +116,7 @@ module.exports = function(action,app,route,parse,render){
         }else{
 
             var cb = yield function(fn){
+
                 D(action).insert(post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);

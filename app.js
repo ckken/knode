@@ -2,7 +2,7 @@
  * Created by ken.xu on 14-2-10.
  */
 //C配置文件 M通用模块插件 F 内置函数 D 数据库类
-global.C = global.M = global.F = {};
+global.C = global.M = global.F = global.G =  {};
 //获取配置内容
 C = require(__dirname+'/config/config')(__dirname);
 //公共函数定义
@@ -17,14 +17,12 @@ var koa = require('koa'),
     co = require('co'),
     parse = require('co-body'),
     views = require('co-views'),
+    compose = require('koa-compose'),
     mongoose = require('mongoose');
-//模块定义
-M.co = co;
 //连接数据库
 M.mongoose = mongoose;
 M.mongoose.connect(C.mongo);
 D = require(C.model+'db');
-
 
 //定义模版类型以及路径
 swig.setDefaults({
@@ -37,19 +35,32 @@ var render = views(C.view, {
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
+//全局函数
 
-//var mod = ['member', 'blog','auth'];
-var mod = ['blog','tag'];
+app.use(function *(next){
+    if(!G.tag){
+        G.tag = yield function(fn){
+            D('tag').find({},function(err,d){
+                if(err)fn(err);
+                fn(null,d);
+            })
+        }
+    }
+    yield next;
+});
+
+//进入路由==================================
+var mod = ['blog','tag','auth'];
 mod.forEach(function (item) {
     require(C.controller + item + '.js')(item,app,route,parse,render);
 })
+
+
+
 //404页面
-app.use(function *(){
+app.use(function *pageNotFound(next){
     this.body = yield render('404');
 });
-
-
-
 
 
 app.listen(3000);

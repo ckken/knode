@@ -10,6 +10,7 @@
         "co-fs": "*",
         "co-body": "*",
         "co-views": "*",
+        "koa-compose":"*",
         "swig": "*",
         "mongoose":"*"
     },

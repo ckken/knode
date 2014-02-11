@@ -1,0 +1,63 @@
+<html>
+<head>
+    <meta charset="utf-8">
+  <title>{% block title %}vco koajs blog{% endblock %} - Power By ckken</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+</head>
+<body>
+
+<div class="header">
+
+    <div class="wrap">
+        <div class="top">
+            <h1>vco koa blog</h1>
+            <p>nodejs koajs web framework</p>
+        </div>
+    </div>
+    <div class="nav">
+        <div class="wrap clearfix">
+
+            <span class="fr auth">
+                <a class="btn btn-primary btn-xs" href="/auth/login">登录</a>
+                <a class="btn btn-primary btn-xs" href="/auth/register">注册</a>
+                <a class="btn btn-primary btn-xs" href="/auth/forget">找回密码</a>
+            </span>
+
+            <span class="navlist">
+                <a href="/">首页</a>
+            {% for t in G.tag %}
+                <a href="/blog/category/{{t.key}}">{{t.name}}</a>
+                {% endfor %}
+            </span>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<div class="main wrap">
+    {% block content %}
+    <p>找不到相应的内容</p>
+    {% endblock %}
+</div>
+<div class="footer">
+    <div class="wrap">Theme Design By KenZR contact me ckken@qq.com
+        <a class="btn btn-primary btn-xs" href="https://github.com/ckken/koa-project" target="_blank">
+            <span class="glyphicon glyphicon-check"></span>
+            on GitHub
+        </a>
+    </div>
+</div>
+
+<script src="/js/jquery/jquery.js"></script>
+<script src="/js/editor/kindeditor.js"></script>
+<script src="/js/code.js"></script>
+<script>
+
+</script>
+
+</body>
+</html>

@@ -19,9 +19,11 @@
             {% for tag in post.tags %}
             <a class="label label-primary" href="/blog/category/{{tag}}">{{tag}}</a>
             {% endfor %} /
-            <a href="/blog/edit/{{ post.id }}">修改</a>
-            <a href="/blog/del/{{ vo._id }}">删除</a>
+            <a href="/blog/edit/{{ post._id.toString() }}">修改</a>
+            <a href="/blog/del/{{ post._id.toString() }}">删除</a>
         </div>
-  <div class="entity">{{ post.content  }}</div>
+  <div class="entity">
+{{ F.xss(post.content) }}
+  </div>
 
 {% endblock %}</div>

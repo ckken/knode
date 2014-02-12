@@ -46,8 +46,7 @@ module.exports = function(action,app,route,parse,render){
                 var cookiemember = {
                     username:member.username,
                     email:member.email,
-                    status:member.status,
-                    avatar: F.encode.md5(member.email)
+                    status:member.status
                 }
                 G.user = cookiemember;
                 cookiemember = JSON.stringify(cookiemember);

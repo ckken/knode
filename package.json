@@ -12,6 +12,7 @@
         "co-views": "*",
         "koa-compose":"*",
         "swig": "*",
+        "xss":"*",
         "mongoose":"*"
     },
     "engines": {

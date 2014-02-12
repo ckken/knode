@@ -17,11 +17,11 @@
   <ul class="article">
     {% for vo in data %}
       <li>
-        <h2><a href="/blog/{{ vo._id }}">{{ vo.title }}</a></h2>
-          <p>{{vo.content}}</p>
-        <p><a href="/blog/edit/{{ vo._id }}">修改</a>
-            <a href="/blog/del/{{ vo._id }}">删除</a>
-            <span class="date">{{vo.updatetime}}</span>
+        <h2><a href="/blog/{{ vo._id.toString() }}">{{ vo.title }}</a></h2>
+          <p>{{F.html.subhtml(vo.content)}}</p>
+        <p><a href="/blog/edit/{{ vo._id.toString() }}">修改</a>
+            <a href="/blog/del/{{ vo._id.toString() }}">删除</a>
+            <span class="date">{{F.date.dgm(vo.updatetime)}}</span>
         </p>
       </li>
     {% endfor %}

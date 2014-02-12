@@ -18,7 +18,7 @@
 
         {% for vo in G.tag %}
         <label class="checkbox-inline">
-            <input type="checkbox" class="checkbox" name="tags[]" value="{{vo.key}}"> {{vo.name}}
+            <input type="checkbox" class="checkbox" name="tags[]" value="{{vo.key}}" {% if F.in_array(vo.key,post.tags) %} checked{% endif %}> {{vo.name}}
         </label>
         {% endfor %}
     </p>
@@ -29,13 +29,13 @@
 <script>
 
 
-    $(function(){
+    /*$(function(){
         var tags = "{{post.tags}}";
         $('.checkbox').each(function(){
             var vo = $(this).val();
             if(tags.indexOf(vo)>=0)$(this).attr('checked',true);
         })
-    })
+    })*/
 
     KindEditor.ready(function(K) {
         K.create('.editor', {

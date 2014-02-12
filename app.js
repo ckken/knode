@@ -7,6 +7,12 @@ global.C = global.M = global.F = global.G =  {};
 C = require(__dirname+'/config/config')(__dirname);
 //公共函数定义
 F = require(__dirname+'/function/init')(__dirname);
+//防止xss 攻击
+F.xss = require('xss');
+F.xss.whiteList['pre'] = ['class', 'style','id'];
+F.xss.whiteList['p'] = ['class', 'style','id'];
+F.xss.whiteList['span'] = ['class', 'style','id'];
+F.xss.whiteList['div'] = ['class', 'style','id'];
 //主模块
 var koa = require('koa'),
     route = require('koa-route'),
@@ -25,14 +31,14 @@ M.mongoose.connect(C.mongo);
 D = require(C.model+'db');
 
 //定义模版类型以及路径
-swig.setDefaults({
+/*swig.setDefaults({
     autoescape:false
-});
+});*/
 
 var render = views(C.view, {
     map: { html: 'swig' }
 })
-app.keys = ['fsdfasdfasdfasdf','sdfsadfasfasdf'];
+//app.keys = ['fsdfasdfasdfasdf','sdfsadfasfasdf'];
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
@@ -48,10 +54,10 @@ app.use(function *(next){
         }
     }
 
-    if(!G.user){
+    //if(!G.user){//当一个用户时 可以跨浏览器调用
         var user = this.cookies.get('member');
         G.user = user && JSON.parse(user) || {};
-    }
+    //}
 
     yield next;
 });
@@ -63,7 +69,6 @@ mod.forEach(function (item) {
 })
 
 
-
 //404页面
 app.use(function *pageNotFound(next){
     this.body = yield render('404');
@@ -71,5 +76,4 @@ app.use(function *pageNotFound(next){
 
 
 app.listen(3000);
-
 console.log('listening on port 3000');

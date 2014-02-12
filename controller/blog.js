@@ -38,14 +38,6 @@ module.exports = function(action,app,route,parse,render){
                 d.data = doc;
                 d.count = count;
                 d.page = F.page(page, count, perPage);
-                d.data.forEach(function(vo){
-
-                    vo.content = F.html.delHtmlTag(vo.content);
-                    vo.content = vo.content.substring(0, 250);
-                    vo.updatetime= F.date.dgm(vo.updatetime);
-
-                })
-
 
                 if (err) return fn(err);
                 fn(null, d);
@@ -106,6 +98,7 @@ module.exports = function(action,app,route,parse,render){
 
     function *create() {
         var post = yield parse(this);
+
         if (!post.title) {
 
             this.body ="标题是必须的";

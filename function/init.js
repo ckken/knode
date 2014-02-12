@@ -7,5 +7,7 @@ module.exports = function(root){
         encode:require(root+'/function/encode'),
         page:require(root+'/function/page'),
         html:require(root+'/function/htmlformat'),
+        user:require(root+'/function/user'),
+        in_array:require(root+'/function/in_array'),
     }
 }

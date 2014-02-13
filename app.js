@@ -32,7 +32,6 @@ var render = G.render = views(C.view, {
     map: { html: 'swig' }
 })
 
-//app.keys = ['fsdfasdfasdfasdf','sdfsadfasfasdf'];
 //定义静态模版以及路径
 app.use(static(path.join(__dirname, 'static')));
 
@@ -45,7 +44,8 @@ F = require(__dirname+'/function/init')(__dirname);
 M.mongoose = mongoose;
 M.mongoose.connect(C.mongo);
 D = require(C.model+'db');
-
+//密钥
+app.keys = [C.secret];
 //全局函数
 app.use(function *(next){
     if(!G.tag){
@@ -58,7 +58,7 @@ app.use(function *(next){
     }
 
     //if(!G.user){//当一个用户时 可以跨浏览器调用
-        var user = this.cookies.get('member');
+        var user = this.cookies.get('member',{ signed: true });
         G.user = user && JSON.parse(user) || {};
     //}
 
@@ -90,5 +90,5 @@ app.use(function *pageNotFound(next){
 });
 
 
-app.listen(3000);
-console.log('listening on port 3000');
+app.listen(C.port);
+console.log('listening on port '+C.port);

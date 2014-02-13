@@ -66,8 +66,8 @@ module.exports = function(action,app,route,parse,render){
                 }
                 G.user = cookiemember;
                 cookiemember = JSON.stringify(cookiemember);
-                this.cookies.set('member', cookiemember);
-                this.body = yield F.msg('登陆成功',url);
+                this.cookies.set('member', cookiemember,{ signed: true });
+                this.body = yield F.msg('登陆成功','/');
             }
             else this.body = yield F.msg('账号或者密码错误，请重试',url);
         }
@@ -110,8 +110,8 @@ module.exports = function(action,app,route,parse,render){
                 }
                 G.user = cookiemember;
                 cookiemember = JSON.stringify(cookiemember);
-                this.cookies.set('member', cookiemember);
-                this.body = yield F.msg('注册成功',url);
+                this.cookies.set('member', cookiemember,{ signed: true });
+                this.body = yield F.msg('注册成功','/');
             }
 
             this.redirect('/');
@@ -123,7 +123,7 @@ module.exports = function(action,app,route,parse,render){
     }
 
     function *logout(){
-        this.cookies.set('member', '');
+        this.cookies.set('member', '',{ signed: true });
         G.user={};
         this.redirect('/');
     }

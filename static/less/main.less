@@ -63,7 +63,10 @@ a,.top b{ color: #007edf}
 /*article_content*/
 .article_content{
   .opt{
-    background: #eee; padding: 5px; margin-bottom: 10px; font-size: 12px;
+    background: #eee; padding: 8px; margin-bottom: 10px; font-size: 12px;
+    .avatar{
+      margin-right: 10px;
+    }
   }
   .entity{
     color: #333;
@@ -92,3 +95,29 @@ a,.top b{ color: #007edf}
 .avatar{
   border-radius:3px; margin: -2px 3px 0 0; vertical-align:middle;;
 }
+
+/*comment*/
+.comment{ margin-top: 10px;
+  ul{
+    li{
+      .content{
+        padding: 10px; border:1px solid #ddd; margin-top: -1px; position: relative;
+
+      img{ float: left; margin-right: 10px;}
+
+        .div_right{
+          .avatar{
+          span { display: inline-block; margin-right: 5px; font-size: 12px; color: #333}
+          }
+        }
+      };
+    }
+  }
+  .nocomment{ padding: 10px; background:  #ddd;}}
+.addCommentbox{ margin: 10px 0;
+  textarea{
+    height: 100px!important;
+  }
+  p{ padding: 10px 0}
+}
+

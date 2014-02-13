@@ -12,18 +12,45 @@
 
         <div class="article_content">
   <h1>{{ post.title }}</h1>
-        <div class="opt">
+        <div class="opt clearfix">
+            <img class="avatar fl" src="https://0.gravatar.com/avatar/{{F.user.avatar(post.author.email,48)}}">
+            <a>{{post.author.username}}</a>
+            <p>
             发布时间:{{post.updatetime}} /
             热度:{{post.view}} /
             关键字:
             {% for tag in post.tags %}
             <a class="label label-primary" href="/blog/category/{{tag}}">{{tag}}</a>
-            {% endfor %} /
+            {% endfor %}
+                {% if G.user.id==vo.author || G.user.status==1 %}
+                /
             <a href="/blog/edit/{{ post._id.toString() }}">修改</a>
             <a href="/blog/del/{{ post._id.toString() }}">删除</a>
+                {% endif %}
+            </p>
         </div>
   <div class="entity">
-{{ F.xss(post.content) }}
+{{ F.html.safe(post.content) }}
   </div>
 
+<div class="comment" id="comments">
+<ul id="comment">
+
+</ul>
+</div>
+
+<div class="addCommentbox">
+    <textarea class="form-control" class="addComment" id="addComment"></textarea>
+    <p>
+        <input type="button" class="btn btn-primary" id="submitbtn" value="发表评论">
+    </p>
+</div>
+
+<script>
+    var C = {
+        mod:'blog',
+        aid:'{{post._id.toString()}}'
+    }
+</script>
+       <script src="/js/module/comment.js"></script>
 {% endblock %}</div>

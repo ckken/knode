@@ -11,6 +11,21 @@ module.exports = function(action,app,route,parse,render){
     app.use(route.post('/'+action+'/toregister', toregister));
     app.use(route.post('/'+action+'/toforget', forget));
 
+    /*app.use(route.get('/'+action+'/setAdmin/:id', setAdmin));
+
+    function *setAdmin(id){
+        if(id){
+            var set = yield function(fn){
+                D('member').findByIdAndUpdate(id,{status:1}, function (err, d) {
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+                this.body = 'set by'+id;
+            }
+        }
+
+    }*/
+
     function *login(){
 
         if(G.user.username)this.redirect('/');
@@ -26,8 +41,8 @@ module.exports = function(action,app,route,parse,render){
     function *tologin(){
         var m = yield parse(this);
         var url = '/'+action+'/login'
-        if(m.username=='')this.body = yield msg('用户账号不能为空',url);
-        else if(m.password=='')this.body = yield msg('用户密码不能为空',url);
+        if(m.username=='')this.body = yield F.msg('用户账号不能为空',url);
+        else if(m.password=='')this.body = yield F.msg('用户密码不能为空',url);
         else{
 
             var where = {
@@ -44,6 +59,7 @@ module.exports = function(action,app,route,parse,render){
 
             if(member){
                 var cookiemember = {
+                    id:member._id,
                     username:member.username,
                     email:member.email,
                     status:member.status
@@ -51,18 +67,18 @@ module.exports = function(action,app,route,parse,render){
                 G.user = cookiemember;
                 cookiemember = JSON.stringify(cookiemember);
                 this.cookies.set('member', cookiemember);
-                this.body = yield msg('登陆成功',url);
+                this.body = yield F.msg('登陆成功',url);
             }
-            else this.body = yield msg('账号或者密码错误，请重试',url);
+            else this.body = yield F.msg('账号或者密码错误，请重试',url);
         }
     }
     function *toregister(){
         var m = yield parse(this);
         var url = '/'+action+'/register';
-        if(m.username=='')this.body = yield msg('用户名称不能为空',url);
-        else if(m.email=='')this.body = yield msg('用户邮箱不能为空',url);
-        else if(m.password=='')this.body =yield msg('用户密码不能为空',url);
-        else if(m.password!=m.checkpassword)this.body =yield msg('用户密码确认不正确',url);
+        if(m.username=='')this.body = yield F.msg('用户名称不能为空',url);
+        else if(m.email=='')this.body = yield F.msg('用户邮箱不能为空',url);
+        else if(m.password=='')this.body =yield F.msg('用户密码不能为空',url);
+        else if(m.password!=m.checkpassword)this.body =yield F.msg('用户密码确认不正确',url);
         else{
             var count = yield function(fn){
                 D('member').count({username: m.username}, function (err, count) {
@@ -70,14 +86,14 @@ module.exports = function(action,app,route,parse,render){
                     fn(null,count);
                 })
             }
-            if(count>0)this.body = yield msg('已存在该用户',url);
+            if(count>0)this.body = yield F.msg('已存在该用户',url);
             count = yield function(fn){
                 D('member').count({email: m.email}, function (err, count) {
                     if(err)fn(err);
                     fn(null,count);
                 })
             }
-            if(count>0)this.body = yield msg('已存在该邮箱',url);
+            if(count>0)this.body = yield F.msg('已存在该邮箱',url);
 
             var member = yield function(fn){
                 D('member').insert(m,function(err,d){
@@ -87,15 +103,15 @@ module.exports = function(action,app,route,parse,render){
             }
             if(member){
                 var cookiemember = {
+                    id:member._id,
                     username:member.username,
                     email:member.email,
                     status:member.status,
-                    avatar: F.encode.md5(member.email)
                 }
                 G.user = cookiemember;
                 cookiemember = JSON.stringify(cookiemember);
                 this.cookies.set('member', cookiemember);
-                this.body = yield msg('注册成功',url);
+                this.body = yield F.msg('注册成功',url);
             }
 
             this.redirect('/');
@@ -111,14 +127,4 @@ module.exports = function(action,app,route,parse,render){
         G.user={};
         this.redirect('/');
     }
-
-    function msg(msg,url,title,second){
-        msg = msg||'';
-        url= url||'/';
-        title=title||msg;
-        second=second||2;
-        return render('msg',{msg:msg,second:second,url:url,title:title});
-    }
-
-
 }

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var member  = require('./memberModel');
 var Schema = mongoose.Schema;
 var blog = new Schema({
     title:String
@@ -6,11 +7,11 @@ var blog = new Schema({
     ,pic:String
     ,ip:String
     ,tags:[]
-    ,status:{type:Boolean,default:false}
-    ,creattime:{type:String,default:F.date.time()}
-    ,updatetime:{type:String,default:F.date.time()}
+    ,status:{type:Number,default:0}
+    ,creattime:{type:Number,default:F.date.time()}
+    ,updatetime:{type:Number,default:F.date.time()}
     ,email:String
-    ,author:String
+    ,author:{ type: Schema.Types.ObjectId, ref: 'member' }
     ,view:{type:Number,default:0}
     , meta      : {
             votes : {type:Number,default:0}

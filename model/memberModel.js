@@ -6,9 +6,9 @@ var member = new Schema({
 	,email:String
 	,regip:String
 	,logip:String
-    ,status:{type:Boolean,default:false}
-    ,createtime:{type:String,default:F.date.time()}
-	,logintime:{type:String,default:F.date.time()}
+    ,status:{type:Number,default:0}
+    ,createtime:{type:Number,default:F.date.time()}
+	,logintime:{type:Number,default:F.date.time()}
 },{ collection: 'member'});
 
 module.exports = mongoose.model('member', member);

@@ -38,6 +38,7 @@ module.exports = function(action,app,route,parse,render){
                 d.data = doc;
                 d.count = count;
                 d.page = F.page(page, count, perPage);
+                d.tag = tag||'博客';
 
                 if (err) return fn(err);
                 fn(null, d);
@@ -50,11 +51,19 @@ module.exports = function(action,app,route,parse,render){
     }
 
     function *add() {
-
+        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
+        }
         this.body = yield render('blog/add');
     }
 
     function *edit(id) {
+        var ref = this.request.header.referer;
+        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
+        }
 
         if(id!=''){
 
@@ -64,7 +73,17 @@ module.exports = function(action,app,route,parse,render){
                         fn(null,d);
                     })
                 }
-            if (!post) this.throw(404, '找不到相应文章');
+
+            if (!post) {
+                this.body = yield F.msg('找不到相应文章',ref);
+            }
+
+            if(post.author != G.user.id){
+                this.body = yield F.msg('无权限操作',ref);
+                return;
+            }
+
+
             this.body = yield render('blog/edit', { post:post});
         }else{
             this.redirect('/');
@@ -74,17 +93,21 @@ module.exports = function(action,app,route,parse,render){
 
 
     function *show(id) {
-
+        var ref = this.request.header.referer;
         if(id!=''){
             var post = yield function(fn){
-                D(action).findById(id,function(err,d){
+                D(action).findById(id).populate('author').exec(function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            if (!post) this.throw(404, '找不到相应文章');
+
+            if (!post){
+                this.body = yield F.msg('找不到相应文章',ref);
+            }
+
             post.updatetime= F.date.dgm(post.updatetime);
-            D(action).findByIdAndUpdate(id,{$inc: {view: 1}}, function (err, d) {});
+            D(action).update({_id:id},{$inc: {view: 1}}, function (err, d) {});
             this.body = yield render('blog/show', { post: post });
         }else{
             this.redirect('/');
@@ -97,68 +120,112 @@ module.exports = function(action,app,route,parse,render){
      */
 
     function *create() {
-        var post = yield parse(this);
 
-        if (!post.title) {
-
-            this.body ="标题是必须的";
+        var ref = this.request.header.referer;
+        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
         }
-        else if (!post.content) {
+            var post = yield parse(this);
+            if (!post.title) {
 
-            this.body = "内容不能为空";
-        }else{
-
-            var cb = yield function(fn){
-
-                D(action).insert(post, function (err, d) {
-                    if(err)fn(err);
-                    fn(null,d);
-                })
+                //this.body ="标题是必须的";
+                this.body = yield F.msg('标题是必须的',ref);
             }
+            else if (!post.content) {
 
-            this.redirect('/');
-        }
+                //this.body = "内容不能为空";
+                this.body = yield F.msg('内容不能为空',ref);
+            }else{
+
+                var cb = yield function(fn){
+                    post.author = G.user.id;
+                    D(action).insert(post, function (err, d) {
+                        if(err)fn(err);
+                        fn(null,d);
+                    })
+                }
+                this.redirect('/');
+            }
 
     }
 
     function *update() {
+
+        var ref = this.request.header.referer;
+
+        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
+        }
+
         var post = yield parse(this);
         if(!post.id){
-            this.body ="非法操作";
+            //this.body ="非法操作";
+            this.body = yield F.msg('非法操作',ref);
         }
         else if (!post.title) {
 
-            this.body ="标题是必须的";
+            //this.body ="标题是必须的";
+            this.body = yield F.msg('标题是必须的',ref);
         }
         else if (!post.content) {
 
-            this.body = "内容不能为空";
+            //this.body = "内容不能为空";
+            this.body = yield F.msg('内容不能为空',ref);
         }else{
 
+            if(post.author != G.user.id){
+                this.body = yield F.msg('无权限操作',ref);
+                return;
+            }
+
             var cb = yield function(fn){
+                post.author = G.user.id;
                 D(action).findByIdAndUpdate(post.id,post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            this.redirect('/');
+
+            this.body = yield F.msg('更新成功','/blog/'+post.id);
+
         }
 
-        this.redirect('/');
+
     }
 
     function *del(id){
+        var ref = this.request.header.referer;
+        if(!G.user.id){
+            this.body = yield F.msg('请登录后进行操作','/auth/login');
+            return ;
+        }
 
         if(id!=''){
-            var cb = yield function(fn){
-                D(action).findByIdAndRemove(id,function(err,d){
+
+            var post = yield function(fn){
+                D(action).findById(id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            this.redirect('/');
+            if(post.author != G.user.id){
+                this.body = yield F.msg('无权限操作',ref);
+                return;
+            }
+                var cb = yield function(fn){
+                    D(action).remove({_id:id},function(err,d){
+                        if(err)fn(err);
+                        fn(null,d);
+                    })
+                }
+                //this.redirect('/');
+                this.body = yield F.msg('删除成功',ref);
+
+
         }else{
-            this.body ="非法操作";
+            this.body = yield F.msg('非法操作',ref);
         }
     }
 

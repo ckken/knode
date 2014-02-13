@@ -53,10 +53,27 @@ module.exports = function(action,app,route,parse,render){
     }
 
     function *add() {
+
+/*        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
+        }*/
+
+        var ref = this.request.header.referer;
+        if(G.user.status!=1){
+            this.body = yield F.msg('无权限操作',ref);
+            return ;
+        }
+
         this.body = yield render('tag/add');
     }
 
     function *edit(id) {
+
+/*        if(!G.user.id){
+            this.body = yield F.msg('请登录后再发布','/auth/login');
+            return ;
+        }*/
 
         if(id!=''){
 

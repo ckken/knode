@@ -83,7 +83,7 @@ module.exports = function(action,app,route,parse,render){
                 return;
             }
 
-
+            console.log(post.author != G.user.id)
             this.body = yield render('blog/edit', { post:post});
         }else{
             this.redirect('/');
@@ -175,7 +175,14 @@ module.exports = function(action,app,route,parse,render){
             this.body = yield F.msg('内容不能为空',ref);
         }else{
 
-            if(post.author != G.user.id){
+            var blog = yield function(fn){
+                D(action).findById(post.id,function(err,d){
+                    if(err)fn(err);
+                    fn(null,d);
+                })
+            }
+
+            if(blog.author != G.user.id){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }

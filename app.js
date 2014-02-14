@@ -17,7 +17,8 @@ var koa = require('koa'),
     compose = require('koa-compose'),
     mongoose = require('mongoose');
 
-
+var logger = require('koa-logger');
+app.use(logger());
 
 //===================自定义部分=====================
 global.C = global.M = global.F = global.G =  {};

@@ -6,6 +6,7 @@
         "koa": "*",
         "koa-route": "*",
         "koa-static": "*",
+        "koa-static-cache":"*",
         "co":"*",
         "co-fs": "*",
         "co-body": "*",

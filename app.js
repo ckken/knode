@@ -7,6 +7,7 @@
 var koa = require('koa'),
     route = require('koa-route'),
     static = require('koa-static'),
+    staticCache = require('koa-static-cache'),
     swig = require('swig'),
     app = koa(),
     path = require('path'),
@@ -33,8 +34,10 @@ var render = G.render = views(C.view, {
 })
 
 //定义静态模版以及路径
-app.use(static(path.join(__dirname, 'static')));
-
+//app.use(static(path.join(__dirname, 'static')));
+app.use(staticCache(path.join(__dirname, 'static'), {
+    maxAge: 365 * 24 * 60 * 60
+}))
 
 //公共函数定义
 F = require(__dirname+'/function/init')(__dirname);
@@ -48,6 +51,7 @@ D = require(C.model+'db');
 app.keys = [C.secret];
 //全局函数
 app.use(function *(next){
+
     if(!G.tag){
         G.tag = yield function(fn){
             D('tag').find({},function(err,d){
@@ -62,8 +66,6 @@ app.use(function *(next){
         G.user = user && JSON.parse(user) || {};
     //}
 
-
-
     //权限控制
     if(this.request.url.indexOf('tag')>=0){
         var ref = this.request.header.referer;
@@ -72,8 +74,6 @@ app.use(function *(next){
          return ;
          }
     }
-
-
 
     yield next;
 });

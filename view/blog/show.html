@@ -22,7 +22,7 @@
             {% for tag in post.tags %}
             <a class="label label-primary" href="/blog/category/{{tag}}">{{tag}}</a>
             {% endfor %}
-                {% if G.user.id==vo.author || G.user.status==1 %}
+                {% if G.user.id==post.author._id || G.user.status==1 %}
                 /
             <a href="/blog/edit/{{ post._id.toString() }}">修改</a>
             <a href="/blog/del/{{ post._id.toString() }}">删除</a>

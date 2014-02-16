@@ -1,6 +1,6 @@
 <img src="http://wvovo.com/koajs/knode.gif">
 =======================
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.4
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.4  
 执行方式: `node -harmony app`  
 演示地址: [http://koa.wvovo.com/](http://koa.wvovo.com/ "DEMO")
 ## 文件以及作用： ##

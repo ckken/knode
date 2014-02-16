@@ -1,4 +1,4 @@
-维酷koa博客框架 version 0.4.4
+koajs web框架解决方案 version 0.4.4
 =======================
 执行方式: `node -harmony app`  
 演示地址: [http://koa.wvovo.com/](http://koa.wvovo.com/ "DEMO")
@@ -16,7 +16,9 @@ run.md 运行命令
 404页面  
 建立模块主入口  
 bootstrap   
-缓存静态文件  
+缓存静态文件
+修复官网附件，静态文件不会出现304的问题解决方法：
+复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可
 安全性模块（XSS + cookies验证）
 ## 官网依赖模块包括: ##
 "koa": "*",koa核心模块

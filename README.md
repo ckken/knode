@@ -21,8 +21,8 @@ bootstrap
 缓存静态文件
 修复官网附件，静态文件不会出现304的问题解决方法：  
 复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可  
-安全性模块（XSS + cookies验证）
-增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[news]
+安全性模块（XSS + cookies验证）  
+增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[**news**]2014/2/17 18:26:33 
 ## 官网依赖模块包括: ##
 "koa": koa核心模块  
 "koa-route":路由模块    

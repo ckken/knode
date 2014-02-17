@@ -26,8 +26,10 @@
 
             <span class="fr auth">
                 {% if G.user.id!='' %}
+                <a href="/blog/user/{{G.user.id}}">
                 <img class="avatar" src="https://0.gravatar.com/avatar/{{F.user.avatar(G.user.email,32)}}">
-                <a class="btn btn-primary btn-xs">{{G.user.username}}</a>
+                </a>
+                <a class="btn btn-primary btn-xs" href="/blog/user/{{G.user.id}}">{{G.user.username}}</a>
                  <a class="btn btn-primary btn-xs" href="/auth/logout">退出</a>
                 {% else %}
                 <a class="btn btn-primary btn-xs" href="/auth/login">登录</a>

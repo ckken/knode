@@ -1,12 +1,12 @@
 /**
  * Created by ken.xu on 14-2-13.
  */
-module.exports = function(action,app,route,parse,render){
+module.exports = function(module,app,route,parse,render){
 
-    app.use(route.get('/'+action, list));
-    app.use(route.post('/'+action+'/insert', insert));
-    app.use(route.post('/'+action+'/update', update));
-    app.use(route.post('/'+action+'/del', del));
+    app.use(route.get('/'+module, list));
+    app.use(route.post('/'+module+'/insert', insert));
+    app.use(route.post('/'+module+'/update', update));
+    app.use(route.post('/'+module+'/del', del));
 
     function *list(){
 
@@ -21,7 +21,7 @@ module.exports = function(action,app,route,parse,render){
             }
 
             var List = yield function(fn){
-                D(action).find(where).populate('author').lean().exec(function(err, d) {
+                D(module).find(where).populate('author').lean().exec(function(err, d) {
                     d.forEach(function(v){
                         v.date = F.date.dgm(v.date),
                         v.author.avatar = F.encode.md5(v.author.email);
@@ -53,7 +53,7 @@ module.exports = function(action,app,route,parse,render){
         if(post.aid!=''&&post.mod!=''&&post.comment!=''){
             post.author = G.user.id;
             var cb = yield function(fn){
-                D(action).insert(post, function (err, d) {
+                D(module).insert(post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -81,14 +81,14 @@ module.exports = function(action,app,route,parse,render){
         if(id){
 
                 var comment = yield function(fn){
-                    D(action).findById(id,function(err,d){
+                    D(module).findById(id,function(err,d){
                         if(err)fn(err);
                         fn(null,d);
                     })
                 }
                 if(comment.author==G.user.id){
                     var cb = yield function(fn){
-                        D(action).remove({_id:id},function(err,d){
+                        D(module).remove({_id:id},function(err,d){
                             if(err)fn(err);
                             fn(null,d);
                         })

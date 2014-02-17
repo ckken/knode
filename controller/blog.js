@@ -2,16 +2,18 @@
  * Created by ken.xu on 14-2-10.
  */
 
-module.exports = function(action,app,route,parse,render){
+module.exports = function(module,app,route,parse,render){
+
 
     app.use(route.get('/', list));
-    app.use(route.get('/'+action+'/add', add));
-    app.use(route.get('/'+action+'/category/:tag', list));
-    app.use(route.get('/'+action+'/edit/:id', edit));
-    app.use(route.get('/'+action+'/:id', show));
-    app.use(route.get('/'+action+'/del/:id',del));
-    app.use(route.post('/'+action+'', create));
-    app.use(route.post('/'+action+'/update', update));
+    app.use(route.get('/'+module+'/add', add));
+    app.use(route.get('/'+module+'/category/:tag', list));
+    app.use(route.get('/'+module+'/user/:uid', list));
+    app.use(route.get('/'+module+'/edit/:id', edit));
+    app.use(route.get('/'+module+'/:id', show));
+    app.use(route.get('/'+module+'/del/:id',del));
+    app.use(route.post('/'+module+'', create));
+    app.use(route.post('/'+module+'/update', update));
 
 
 
@@ -23,22 +25,31 @@ module.exports = function(action,app,route,parse,render){
             '_id': -1
         }
 
-        if(tag)where.tags = tag;
+        var action = '';
+
+        if(this.request.url.indexOf('category')>-1&&tag){
+            where.tags = tag;
+            action = 'category';
+        }else if(this.request.url.indexOf('user')>-1&&tag){
+            where.author = tag;
+            action = 'user';
+        }
 
         var count = yield function(fn){
-            D(action).count(where, function(err, count) {
+            D(module).count(where, function(err, count) {
                 if (err) return fn(err);
                 fn(null, count);
             });
         }
 
         var List = yield function(fn){
-            D(action).find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
+            D(module).find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
                 var d = {};
                 d.data = doc;
                 d.count = count;
                 d.page = F.page(page, count, perPage);
-                d.tag = tag||'博客';
+                d.tag = tag||'Knode博客';
+                if(action=='user')d.tag = G.user.username+' 的博文';
 
                 if (err) return fn(err);
                 fn(null, d);
@@ -68,7 +79,7 @@ module.exports = function(action,app,route,parse,render){
         if(id!=''){
 
                 var post = yield function(fn){
-                    D(action).findById(id,function(err,d){
+                    D(module).findById(id,function(err,d){
                         if(err)fn(err);
                         fn(null,d);
                     })
@@ -78,12 +89,12 @@ module.exports = function(action,app,route,parse,render){
                 this.body = yield F.msg('找不到相应文章',ref);
             }
 
-            if(post.author != G.user.id){
+            if(post.author != G.user.id||post.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }
 
-            console.log(post.author != G.user.id)
+
             this.body = yield render('blog/edit', { post:post});
         }else{
             this.redirect('/');
@@ -96,7 +107,7 @@ module.exports = function(action,app,route,parse,render){
         var ref = this.request.header.referer;
         if(id!=''){
             var post = yield function(fn){
-                D(action).findById(id).populate('author').exec(function(err,d){
+                D(module).findById(id).populate('author').exec(function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -107,7 +118,7 @@ module.exports = function(action,app,route,parse,render){
             }
 
             post.updatetime= F.date.dgm(post.updatetime);
-            D(action).update({_id:id},{$inc: {view: 1}}, function (err, d) {});
+            D(module).update({_id:id},{$inc: {view: 1}}, function (err, d) {});
             this.body = yield render('blog/show', { post: post });
         }else{
             this.redirect('/');
@@ -140,7 +151,7 @@ module.exports = function(action,app,route,parse,render){
 
                 var cb = yield function(fn){
                     post.author = G.user.id;
-                    D(action).insert(post, function (err, d) {
+                    D(module).insert(post, function (err, d) {
                         if(err)fn(err);
                         fn(null,d);
                     })
@@ -176,20 +187,20 @@ module.exports = function(action,app,route,parse,render){
         }else{
 
             var blog = yield function(fn){
-                D(action).findById(post.id,function(err,d){
+                D(module).findById(post.id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
 
-            if(blog.author != G.user.id){
+            if(blog.author != G.user.id||post.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }
 
             var cb = yield function(fn){
                 post.author = G.user.id;
-                D(action).findByIdAndUpdate(post.id,post, function (err, d) {
+                D(module).findByIdAndUpdate(post.id,post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -212,17 +223,17 @@ module.exports = function(action,app,route,parse,render){
         if(id!=''){
 
             var post = yield function(fn){
-                D(action).findById(id,function(err,d){
+                D(module).findById(id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            if(post.author != G.user.id){
+            if(post.author != G.user.id||post.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }
                 var cb = yield function(fn){
-                    D(action).remove({_id:id},function(err,d){
+                    D(module).remove({_id:id},function(err,d){
                         if(err)fn(err);
                         fn(null,d);
                     })

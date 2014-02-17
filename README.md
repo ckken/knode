@@ -1,7 +1,8 @@
 <img src="http://wvovo.com/koajs/knode.gif">
 =======================
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.4  
-执行方式: `node -harmony app`  
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.5
+执行方式: `node -harmony app`
+将 config/config-default.js 改成 config.js
 演示地址: [http://koa.wvovo.com/](http://koa.wvovo.com/ "DEMO")
 ## 文件以及作用： ##
 static.js 解决windows开发中遇到的问题以及解决方案  
@@ -20,7 +21,8 @@ bootstrap
 缓存静态文件
 修复官网附件，静态文件不会出现304的问题解决方法：  
 复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可  
-安全性模块（XSS + cookies验证）  
+安全性模块（XSS + cookies验证）
+增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[news]
 ## 官网依赖模块包括: ##
 "koa": koa核心模块  
 "koa-route":路由模块    

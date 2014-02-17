@@ -1,18 +1,15 @@
 /**
  * Created by ken.xu on 14-2-11.
  */
-/**
- * Created by ken.xu on 14-2-10.
- */
 
-module.exports = function(action,app,route,parse,render){
+module.exports = function(module,app,route,parse,render){
 
-    app.use(route.get('/'+action, list));
-    app.use(route.get('/'+action+'/add', add));
-    app.use(route.get('/'+action+'/edit/:id', edit));
-    app.use(route.get('/'+action+'/del/:id',del));
-    app.use(route.post('/'+action+'/insert', insert));
-    app.use(route.post('/'+action+'/update', update));
+    app.use(route.get('/'+module, list));
+    app.use(route.get('/'+module+'/add', add));
+    app.use(route.get('/'+module+'/edit/:id', edit));
+    app.use(route.get('/'+module+'/del/:id',del));
+    app.use(route.post('/'+module+'/insert', insert));
+    app.use(route.post('/'+module+'/update', update));
 
     function *list() {
 
@@ -25,14 +22,14 @@ module.exports = function(action,app,route,parse,render){
         }
 
         var count = yield function(fn){
-            D(action).count(where, function(err, count) {
+            D(module).count(where, function(err, count) {
                 if (err) return fn(err);
                 fn(null, count);
             });
         }
 
         var List = yield function(fn){
-            D(action).find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
+            D(module).find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
                 var d = {};
                 d.data = doc;
                 d.count = count;
@@ -78,7 +75,7 @@ module.exports = function(action,app,route,parse,render){
         if(id!=''){
 
             var post = yield function(fn){
-                D(action).findById(id,function(err,d){
+                D(module).findById(id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -86,7 +83,7 @@ module.exports = function(action,app,route,parse,render){
             if (!post) this.throw(404, '找不到相应关键字');
             this.body = yield render('tag/edit', { post: post});
         }else{
-            this.redirect('/'+action);
+            this.redirect('/'+module);
         }
 
     }
@@ -109,7 +106,7 @@ module.exports = function(action,app,route,parse,render){
         }else{
 
             var cb = yield function(fn){
-                D(action).insert(post, function (err, d) {
+                D(module).insert(post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -122,7 +119,7 @@ module.exports = function(action,app,route,parse,render){
                 })
             }
 
-            this.redirect('/'+action);
+            this.redirect('/'+module);
         }
 
     }
@@ -142,7 +139,7 @@ module.exports = function(action,app,route,parse,render){
         }else{
 
             var cb = yield function(fn){
-                D(action).findByIdAndUpdate(post.id,post, function (err, d) {
+                D(module).findByIdAndUpdate(post.id,post, function (err, d) {
                     if(err)fn(err);
                     fn(null,d);
                 })
@@ -156,21 +153,21 @@ module.exports = function(action,app,route,parse,render){
                 })
             }
 
-            this.redirect('/'+action);
+            this.redirect('/'+module);
         }
 
-        this.redirect('/'+action);
+        this.redirect('/'+module);
     }
 
     function *del(id){
         if(id!=''){
             var cb = yield function(fn){
-                D(action).findByIdAndRemove(id,function(err,d){
+                D(module).findByIdAndRemove(id,function(err,d){
                     if(err)fn(err);
                     fn(null,d);
                 })
             }
-            this.redirect('/'+action);
+            this.redirect('/'+module);
         }else{
             this.body ="非法操作";
         }

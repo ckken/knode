@@ -13,8 +13,9 @@
         <div class="article_content">
   <h1>{{ post.title }}</h1>
         <div class="opt clearfix">
+            <a href="/blog/user/{{post.author._id.toString()}}">
             <img class="avatar fl" src="https://0.gravatar.com/avatar/{{F.user.avatar(post.author.email,48)}}">
-            <a>{{post.author.username}}</a>
+            {{post.author.username}}</a>
             <p>
             发布时间:{{post.updatetime}} /
             热度:{{post.view}} /

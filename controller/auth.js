@@ -1,17 +1,17 @@
 /**
  * Created by ken.xu on 14-2-11.
  */
-module.exports = function(action,app,route,parse,render){
-    app.use(route.get('/'+action+'/login', login));
-    app.use(route.get('/'+action+'/register', register));
-    app.use(route.get('/'+action+'/forget', forget));
-    app.use(route.get('/'+action+'/logout', logout));
+module.exports = function(module,app,route,parse,render){
+    app.use(route.get('/'+module+'/login', login));
+    app.use(route.get('/'+module+'/register', register));
+    app.use(route.get('/'+module+'/forget', forget));
+    app.use(route.get('/'+module+'/logout', logout));
     //
-    app.use(route.post('/'+action+'/tologin', tologin));
-    app.use(route.post('/'+action+'/toregister', toregister));
-    app.use(route.post('/'+action+'/toforget', forget));
+    app.use(route.post('/'+module+'/tologin', tologin));
+    app.use(route.post('/'+module+'/toregister', toregister));
+    app.use(route.post('/'+module+'/toforget', forget));
 
-    /*app.use(route.get('/'+action+'/setAdmin/:id', setAdmin));
+    /*app.use(route.get('/'+module+'/setAdmin/:id', setAdmin));
 
     function *setAdmin(id){
         if(id){
@@ -29,18 +29,18 @@ module.exports = function(action,app,route,parse,render){
     function *login(){
 
         if(G.user.username)this.redirect('/');
-        this.body = yield render(action+'/login');
+        this.body = yield render(module+'/login');
     }
     function *register(){
         if(G.user.username)this.redirect('/');
-        this.body = yield render(action+'/register');
+        this.body = yield render(module+'/register');
     }
     function *forget(){
-        this.body = yield render(action+'/forget');
+        this.body = yield render(module+'/forget');
     }
     function *tologin(){
         var m = yield parse(this);
-        var url = '/'+action+'/login'
+        var url = '/'+module+'/login'
         if(m.username=='')this.body = yield F.msg('用户账号不能为空',url);
         else if(m.password=='')this.body = yield F.msg('用户密码不能为空',url);
         else{
@@ -74,7 +74,7 @@ module.exports = function(action,app,route,parse,render){
     }
     function *toregister(){
         var m = yield parse(this);
-        var url = '/'+action+'/register';
+        var url = '/'+module+'/register';
         if(m.username=='')this.body = yield F.msg('用户名称不能为空',url);
         else if(m.email=='')this.body = yield F.msg('用户邮箱不能为空',url);
         else if(m.password=='')this.body =yield F.msg('用户密码不能为空',url);

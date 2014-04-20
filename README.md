@@ -1,6 +1,19 @@
-<img src="http://wvovo.com/koajs/knode.gif">
+<img src="http://koa.wvovo.com/knode.gif">
 =======================
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.5
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.5.1
+
+讨论区:https://github.com/ckken/koa-project/issues
+
+============== 0.5.1====================
+删除了static模块 使用static cache代替
+添加了LOG 配置方式在 knode 的首页 方便调试
+兼容最新的 nodejs 0.11.12
+优化了 cookies 的调用
+修复了权限问题
+修复了部分存在的BUG
+
+============== 执行方法====================
+
 执行方式: `node -harmony app`
 将 config/config-default.js 改成 config.js
 演示地址: [http://koa.wvovo.com/](http://koa.wvovo.com/ "DEMO")
@@ -8,7 +21,8 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.4.5
 static.js 解决windows开发中遇到的问题以及解决方案  
 yield.js 测试 异步流  
 run.md 运行命令  
-## 实现功能 ##
+
+============== 功能模块====================
 管理员设置栏目功能  
 文章发布功能  
 评论功能  
@@ -23,7 +37,8 @@ bootstrap
 复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可  
 安全性模块（XSS + cookies验证）  
 增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[**news**]2014/2/17 18:26:33 
-## 官网依赖模块包括: ##
+
+============== 官网依赖模块包括====================
 "koa": koa核心模块  
 "koa-route":路由模块    
 "koa-static":静态文件加载  

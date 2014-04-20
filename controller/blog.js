@@ -42,13 +42,15 @@ module.exports = function(module,app,route,parse,render){
             });
         }
 
+
         var List = yield function(fn){
             D(module).find(where).sort(bysort).skip((page - 1) * perPage).limit(perPage).lean().exec(function(err, doc) {
                 var d = {};
                 d.data = doc;
                 d.count = count;
                 d.page = F.page(page, count, perPage);
-                d.tag = tag||'Knode博客';
+
+                d.tag = (tag.length>0)?tag:'Knode博客';
                 if(action=='user')d.tag = G.user.username+' 的博文';
 
                 if (err) return fn(err);
@@ -89,7 +91,7 @@ module.exports = function(module,app,route,parse,render){
                 this.body = yield F.msg('找不到相应文章',ref);
             }
 
-            if(post.author != G.user.id||post.status!=1){
+            if(post.author != G.user.id||G.user.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }
@@ -193,7 +195,7 @@ module.exports = function(module,app,route,parse,render){
                 })
             }
 
-            if(blog.author != G.user.id||post.status!=1){
+            if(blog.author != G.user.id||G.user.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }

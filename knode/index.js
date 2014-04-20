@@ -66,7 +66,8 @@ app.use(function *(next){
     }
 
     //if(!G.user){//当一个用户时 可以跨浏览器调用
-    var user = this.cookies.get('member',{ signed: true });
+    var user = this.cookies.get('member');
+        console.log(user);
     G.user = user && JSON.parse(user) || {};
     //}
 

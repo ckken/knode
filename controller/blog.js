@@ -228,7 +228,7 @@ module.exports = function(module,app,route,parse,render){
                     fn(null,d);
                 })
             }
-            if(post.author != G.user.id||post.status!=1){
+            if(post.author != G.user.id||G.user.status!=1){
                 this.body = yield F.msg('无权限操作',ref);
                 return;
             }

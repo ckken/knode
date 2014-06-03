@@ -27,13 +27,13 @@
         <td>{{vo.name}}</td>
         <td>{{vo.key}}</td>
         <td>{{vo.createtime}}</td>
-        <td><a class="btn btn-primary btn-xs" href="/tag/edit/{{ vo._id }}">修改</a>
-            <a class="btn btn-danger btn-xs" href="/tag/del/{{ vo._id }}">删除</a></td>
+        <td><a class="btn btn-primary btn-xs" href="/tag/edit/{{ vo._id.toString() }}">修改</a>
+            <a class="btn btn-danger btn-xs" href="/tag/del/{{ vo._id.toString() }}">删除</a></td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
 
 
-<div class="page page_navi">{{page}}</div>
+<div class="page page_navi">{{page|safe}}</div>
 {% endblock %}

@@ -1,3 +1,4 @@
+
 var Schema = M.mongoose.Schema;
 
 if(C.debug.common&&C.debug.db){

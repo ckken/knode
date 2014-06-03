@@ -1,39 +1,64 @@
 /**
  * Created by ken.xu on 14-2-10.
  */
+/**
+ *
+ * @param root 根目录
+ * @param kpath 库目录
+ */
 module.exports = function (root, kpath) {
+
+    /**
+     * ===================自定义部分=====================
+     * C全局静态配置
+     * D全局数据模型
+     * G全局动态变量
+     * M全局外部模块调用
+     * R全局请求
+     */
+
+    global.C = {};
+    global.M = {};
+    global.F = {};
+    global.G = {};
+    global.R = {};
 
 
 //C配置文件 M通用模块插件 F 内置函数 D 数据库类
 
 //================主模块=========================
     var koa = require('koa'),
-        route = require('koa-route'),
-        //static = require('koa-static'),
+        //router = require('koa-route'),
+    //static = require('koa-static'),
         staticCache = require('koa-static-cache'),
         swig = require('swig'),
         app = koa(),
         path = require('path'),
+        //
         co = require('co'),
         parse = require('co-body'),
         views = require('co-views'),
         compose = require('koa-compose'),
-        mongoose = require('mongoose');
+        mongoose = require('mongoose'),
+        _ = require('underscore'),
+        thunkify = require('thunkify');
+
+    M.thunkify = thunkify;
+    //路由定义
+    //app.use(router(app));
 
 
-//===================自定义部分=====================
-    global.C = global.M = global.F = global.G = {};
 //===================获取配置内容
     C = require(root + '/config/config')(root);
 
 //===================缓存配置
     C.debug = {};
-    C.debug.common = false;
-    C.debug.logger = true;
-    C.debug.db = true;
+    C.debug.common = false;//全局debug
+    C.debug.logger = true;//请求debug
+    C.debug.db = true;//数据库debug
 
 //===================debug module
-    if (C.debug.common && C.debug.logger) {
+    if (C.debug.common || C.debug.logger) {
         var logger = require('koa-logger');
         app.use(logger());
     }
@@ -55,10 +80,10 @@ module.exports = function (root, kpath) {
         maxAge: 365 * 24 * 60 * 60
     }))
 
-//公共函数定义
-    F = require(root + '/function/init')(root);
-    F.extend = require(kpath + '/function/extend');
-
+//公共函数定义 合并 underscore
+    var styleFn = require(kpath + '/function/init')(kpath);
+    F = _;
+    F.extend(F,styleFn);
 
 //连接数据库
     M.mongoose = mongoose;
@@ -67,54 +92,63 @@ module.exports = function (root, kpath) {
 //密钥
     app.keys = [C.secret];
 //全局函数
-    app.use(function
-    *(next)
+    app.use(function*(next)
     {
 
-        if (!G.tag) {
-            G.tag = yield function (fn) {
-                D('tag').find({}, function (err, d) {
-                    if (err)fn(err);
-                    fn(null, d);
-                })
+
+        var mod = require(root + '/config/route');
+        R.method = this.request.method;
+        R.url = this.request.url.split('?')[0];
+
+        if(R.url!='/favicon.ico'){
+            R.url = R.url.split('/');
+            //默认值处理
+            R.m = R.url[1]||mod[0];//module
+            R.c = R.url[2]||mod[1];//controller
+            R.a = R.url[3]||mod[2];//action
+            R.q = {};
+            if(R.url.length>4)meregeRq(R.url);
+
+            var common =  require(C.controller+R.m+'/common.js')(this,render);
+
+            yield common.init();
+
+
+            if(_.isFunction(common[R.a])){
+                yield common[R.a]();
+            }else{
+                yield next;
             }
+
+
         }
+    });
 
-        //if(!G.user){//当一个用户时 可以跨浏览器调用
-        var user = this.cookies.get('member');
-        G.user = user && JSON.parse(user) || {};
-        //}
 
-        //权限控制
-        if (this.request.url.indexOf('tag') >= 0) {
-            var ref = this.request.header.referer;
-            if (G.user.status != 1) {
-                this.body = yield F.msg('无权限操作', ref);
-                return;
-            }
+    function meregeRq(url){
+
+        var d={};
+        for (var i = 2; i < Math.ceil(url.length / 2); i++) {
+            d[url[i * 2]] = url[i * 2 + 1]||'';
         }
+        R.q =  d||'';
+        //:todo 传统的 ?id=1&name=ken的操作
+        /*url = R.url.split('?');
+        if(url>0){
+            url
+        }
+        ......
+        _.extend()
 
-        yield next;
+        */
+
     }
-    )
-    ;
-
-//进入路由==================================
-    var mod = require(root + '/config/route');
-    mod.forEach(function (module) {
-        require(C.controller + module + '.js')(module, app, route, parse, render);
-    })
 
 
 //404页面
-    app.use(function
-    *
-    pageNotFound(next)
-    {
+    app.use(function *pageNotFound(next){
         this.body = yield render('404');
-    }
-    )
-    ;
+    });
 
     /**
      * 监听端口

@@ -1,23 +1,25 @@
 {
-    "name": "vco-koa-blog-Example",
-    "description": "Examples using Koa by @ckken vcotime.com",
-    "version": "0.0.1",
-    "dependencies": {
-        "koa": "*",
-        "koa-route": "*",
-        "koa-static": "*",
-        "koa-static-cache":"*",
-        "koa-logger":"*",
-        "co":"*",
-        "co-fs": "*",
-        "co-body": "*",
-        "co-views": "*",
-        "koa-compose":"*",
-        "swig": "*",
-        "xss":"*",
-        "mongoose":"*"
-    },
-    "engines": {
-        "node": ">= 11.3"
-    }
+  "name": "knode-koajs-blog-of-CN",
+  "description": "knode is one of chinese's blog make by ken use koajs",
+  "version": "0.6.1",
+  "dependencies": {
+    "koa": "*",
+    "koa-route": "*",
+    "koa-static": "*",
+    "koa-static-cache": "*",
+    "koa-logger": "*",
+    "co": "*",
+    "co-fs": "*",
+    "co-body": "*",
+    "co-views": "*",
+    "koa-compose": "*",
+    "swig": "*",
+    "xss": "*",
+    "mongoose": "*",
+    "thunkify": "^2.1.1",
+    "underscore": "^1.6.0"
+  },
+  "engines": {
+    "node": ">= 11.3"
+  }
 }

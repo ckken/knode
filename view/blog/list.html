@@ -21,7 +21,7 @@
   <ul class="article">
     {% for vo in data %}
       <li>
-        <h2><a href="/blog/{{ vo._id.toString() }}">{{ vo.title }}</a></h2>
+        <h2><a href="/blog/blog/show/id/{{ vo._id.toString() }}">{{ vo.title }}</a></h2>
           <p>{{F.html.subhtml(vo.content)}}</p>
 
         <p>

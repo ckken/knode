@@ -11,7 +11,7 @@
 
 
 <div class="subnav">
-    <a href="/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
+    <a href="/blog/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
 </div>
 
 
@@ -27,8 +27,8 @@
         <td>{{vo.name}}</td>
         <td>{{vo.key}}</td>
         <td>{{vo.createtime}}</td>
-        <td><a class="btn btn-primary btn-xs" href="/tag/edit/{{ vo._id.toString() }}">修改</a>
-            <a class="btn btn-danger btn-xs" href="/tag/del/{{ vo._id.toString() }}">删除</a></td>
+        <td><a class="btn btn-primary btn-xs" href="/blog/tag/edit/{{ vo._id.toString() }}">修改</a>
+            <a class="btn btn-danger btn-xs" href="/blog/tag/del/{{ vo._id.toString() }}">删除</a></td>
     </tr>
     {% endfor %}
     </tbody>

@@ -40,16 +40,16 @@ module.exports = function (root, kpath) {
         views = require('co-views'),
         compose = require('koa-compose'),
         mongoose = require('mongoose'),
-        _ = require('underscore'),
-        thunkify = require('thunkify');
+        _ = require('underscore');
 
-    M.thunkify = thunkify;
-    //路由定义
-    //app.use(router(app));
+
 
 
 //===================获取配置内容
-    C = require(root + '/config/config')(root);
+    var systemConfig = require(kpath + '/config')(root);
+    var clientConfig = require(root + '/config/config')(root);
+    _.extend(systemConfig,clientConfig);
+    C = systemConfig;
 
 //===================缓存配置
     C.debug = {};
@@ -69,7 +69,7 @@ module.exports = function (root, kpath) {
      autoescape:false
      });*/
 
-    var render = G.render = views(C.view, {
+    var render = views(C.view, {
         map: { html: 'swig' }
     })
 
@@ -96,7 +96,7 @@ module.exports = function (root, kpath) {
     {
 
 
-        var mod = require(root + '/config/route');
+        var mod = C.default_mod;
         R.method = this.request.method;
         R.url = this.request.url.split('?')[0];
 
@@ -106,42 +106,54 @@ module.exports = function (root, kpath) {
             R.m = R.url[1]||mod[0];//module
             R.c = R.url[2]||mod[1];//controller
             R.a = R.url[3]||mod[2];//action
-            R.q = {};
-            if(R.url.length>4)meregeRq(R.url);
 
-            var common =  require(C.controller+R.m+'/common.js')(this,render);
-
-            yield common.init();
-
-
-            if(_.isFunction(common[R.a])){
-                yield common[R.a]();
-            }else{
-                yield next;
+            if(R.url.length>4){
+               var d=  meregeRq(R.url);
+                this.query = this.query&&_.extend(this.query,d)||d;
             }
 
+
+
+            if(!C.debug.logger){
+
+                try{
+                    var cm = require(kpath+'middleLoad.js')(this,render,parse);
+                    // :TODO 探究如何判断是否是新函数
+                    yield cm.init();
+                    if(_.isFunction(cm[R.a])){
+                        yield cm[R.a]();
+                    }else{
+                        yield next;
+                    }
+
+                }catch (e){
+                    console.log(e);
+                    yield next;
+                }
+            }else{
+                var cm = require(kpath+'middleLoad.js')(this,render,parse);
+                // :TODO 探究如何判断是否是新函数
+                yield cm.init();
+                if(_.isFunction(cm[R.a])){
+                    yield cm[R.a]();
+                }else{
+                    yield next;
+                }
+            }
 
         }
     });
 
 
-    function meregeRq(url){
+    //指定路由请求
+    //:TODO 与配置路由相结合
+    function meregeRq(url,query){
 
         var d={};
         for (var i = 2; i < Math.ceil(url.length / 2); i++) {
             d[url[i * 2]] = url[i * 2 + 1]||'';
         }
-        R.q =  d||'';
-        //:todo 传统的 ?id=1&name=ken的操作
-        /*url = R.url.split('?');
-        if(url>0){
-            url
-        }
-        ......
-        _.extend()
-
-        */
-
+        return d =  d||'';
     }
 
 

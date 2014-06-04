@@ -9,6 +9,6 @@ module.exports = function(root){
         html:require(root+'/function/html'),
         user:require(root+'/function/user'),
         in_array:require(root+'/function/in_array'),
-        msg:require(root+'/function/msg'),
+        //msg:require(root+'/function/msg'),
     }
 }

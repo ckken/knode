@@ -4,6 +4,11 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.5.1
 
 讨论区:https://github.com/ckken/koa-project/issues
 
+============== 0.6.1====================
+正在更新ing......
+减少了1/3的代码
+以类的方式做继承 实现方法重用性
+删除了CALLBACK代码 用yield 的方式完美解决callback的问题
 ============== 0.5.1====================
 删除了static模块 使用static cache代替
 添加了LOG 配置方式在 knode 的首页 方便调试
@@ -18,25 +23,25 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.5.1
 将 config/config-default.js 改成 config.js
 演示地址: [http://koa.wvovo.com/](http://koa.wvovo.com/ "DEMO")
 ## 文件以及作用： ##
-static.js 解决windows开发中遇到的问题以及解决方案  
-yield.js 测试 异步流  
-run.md 运行命令  
+static.js 解决windows开发中遇到的问题以及解决方案
+yield.js 测试 异步流
+run.md 运行命令
 
 ============== 功能模块====================
-管理员设置栏目功能  
-文章发布功能  
-评论功能  
+管理员设置栏目功能
+文章发布功能
+评论功能
 信息提示页面
-多用户注册登录  
-权限控制模型 
-404页面  
-建立模块主入口  
-bootstrap   
+多用户注册登录
+权限控制模型
+404页面
+建立模块主入口
+bootstrap
 缓存静态文件
-修复官网附件，静态文件不会出现304的问题解决方法：  
-复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可  
-安全性模块（XSS + cookies验证）  
-增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[**news**]2014/2/17 18:26:33 
+修复官网附件，静态文件不会出现304的问题解决方法：
+复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可
+安全性模块（XSS + cookies验证）
+增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[**news**]2014/2/17 18:26:33
 
 ============== 官网依赖模块包括====================
 "koa": koa核心模块  

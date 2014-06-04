@@ -1,6 +1,6 @@
 {% extends '../layout.html' %}
 
-{% block title %}博客{% endblock %}
+{% block title %}{{tag}}{% endblock %}
 
 {% block content %}
 
@@ -12,10 +12,10 @@
 
 <div class="subnav">
     {% if G.user.id!='' %}
-    <a href="/blog/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>发布文章</a>
+    <a href="/blog/blog/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>发布文章</a>
     {% endif %}
     {% if G.user.status==1 %}
-    <a href="/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
+    <a href="/blog/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
     {% endif %}
 </div>
   <ul class="article">
@@ -26,8 +26,8 @@
 
         <p>
             {% if G.user.id==vo.author || G.user.status==1 %}
-            <a href="/blog/edit/{{ vo._id.toString() }}">修改</a>
-            <a href="/blog/del/{{ vo._id.toString() }}">删除</a>
+            <a href="/blog/blog/edit/id/{{ vo._id.toString() }}">修改</a>
+            <a href="/blog/blog/del/id/{{ vo._id.toString() }}">删除</a>
             <span class="date">{{F.date.dgm(vo.updatetime)}}</span>
             {% endif %}
         </p>

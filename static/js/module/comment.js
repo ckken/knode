@@ -14,11 +14,16 @@ var comment = function(){
 
     this.list = function(){
 
-        $.get('/comment',comarr,function(d){
-
-            if(d){
+        $.get('/blog/comment/index',comarr,function(d){
+            d = d||[];
+            if(d.length>0){
                 obj.html('');
+                var author = {
+                    avatar:'',username:'',email:''
+                }
                 $.each(d,function(k,v){
+                    v.author = $.extend(author,v.author)||author;
+
                     var li = $('<li>').appendTo(obj),
                         div =$('<div>').attr('class','content').appendTo(li),
                         img_a = $('<img>').attr('src', 'https://0.gravatar.com/avatar/'+v.author.avatar+'?s=48').appendTo(div),
@@ -50,7 +55,7 @@ var comment = function(){
     this.insert = function(){
         comarr.comment = addObj.val();
         if(comarr.comment!=''){
-            $.post('/comment/insert',comarr,function(d){
+            $.post('/blog/comment/insert',comarr,function(d){
                 alert(d.msg);
                 if(d.status){
                     _S.list();
@@ -67,13 +72,13 @@ var comment = function(){
 
 
     this.update = function(id){
-        $.post('/comment/update',{id:id},function(d){
+        $.post('/blog/comment/update',{id:id},function(d){
             _S.list();
         })
     }
 
     this.del = function(id){
-        $.post('/comment/del',{id:id},function(d){
+        $.post('/blog/comment/del',{id:id},function(d){
             alert(d.msg);
             if(d.status)_S.list();
         })
@@ -92,7 +97,7 @@ $(function(){
     $('.editbtn').click(function(){
 
     })
-    console.log($('.delbtn'));
+   // console.log($('.delbtn'));
 
     $('.delbtn').bind('click',function(){
         var id = $(this).attr('rel');

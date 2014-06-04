@@ -26,22 +26,22 @@
 
             <span class="fr auth">
                 {% if G.user.id!='' %}
-                <a href="/blog/user/{{G.user.id}}">
+                <a href="/blog/blog/user/uid/{{G.user.id}}">
                 <img class="avatar" src="https://0.gravatar.com/avatar/{{F.user.avatar(G.user.email,32)}}">
                 </a>
-                <a class="btn btn-primary btn-xs" href="/blog/user/{{G.user.id}}">{{G.user.username}}</a>
-                 <a class="btn btn-primary btn-xs" href="/auth/logout">退出</a>
+                <a class="btn btn-primary btn-xs" href="/blog/blog/user/uid/{{G.user.id}}">{{G.user.username}}</a>
+                 <a class="btn btn-primary btn-xs" href="/auth/auth/logout">退出</a>
                 {% else %}
-                <a class="btn btn-primary btn-xs" href="/auth/login">登录</a>
-                <a class="btn btn-primary btn-xs" href="/auth/register">注册</a>
-                <a class="btn btn-primary btn-xs" href="/auth/forget">找回密码</a>
+                <a class="btn btn-primary btn-xs" href="/auth/auth/login">登录</a>
+                <a class="btn btn-primary btn-xs" href="/auth/auth/register">注册</a>
+                <a class="btn btn-primary btn-xs" href="/auth/auth/forget">找回密码</a>
                 {% endif %}
             </span>
 
             <span class="navlist">
                 <a href="/">首页</a>
             {% for t in G.tag %}
-                <a href="/blog/category/{{t.key}}">{{t.name}}</a>
+                <a href="/blog/blog/category/tag/{{t.key}}">{{t.name}}</a>
                 {% endfor %}
             </span>
         </div>

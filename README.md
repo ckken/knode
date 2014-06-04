@@ -8,7 +8,7 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.5.1
 正在更新ing......
 减少了1/3的代码
 以类的方式做继承 实现方法重用性
-删除了CALLBACK代码 用yield 的方式完美解决callback的问题
+删除了CALLBACK代码 用yield 的方式完美解决callback的问题     
 ============== 0.5.1====================
 删除了static模块 使用static cache代替
 添加了LOG 配置方式在 knode 的首页 方便调试

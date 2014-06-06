@@ -2,15 +2,18 @@
 =======================
 knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1
 
-讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")	
+项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")	
 
 ============== 0.6.1====================		
-减少了1/3的代码，优化了callback机制 重新认识yield的强大用法				
-以类的方式做继承 实现方法重用性		
-删除了CALLBACK代码 用yield 的方式完美解决callback的问题   
-核心包增加了 index.js 主模块入口 middleLoad.js 中间件入口 config.js 主配置文件	
-function 移植到 knode里面 可以调用 F函数来增加自定义函数	
-本次优化增加了 Module / Controller / Action 3层 :TODO 参考namespace跨模块调用	
+- 减少了1/3的代码，优化了callback机制 重新认识yield的强大用法				
+- 以类的方式做继承 实现方法重用性		
+- 删除了CALLBACK代码 用yield 的方式完美解决callback的问题   	
+- 核心包增加了 index.js 	
+- 主模块入口 middleLoad.js 	
+- 中间件入口 config.js 主配置文件		
+- function 移植到 knode里面 可以调用 F函数来增加自定义函数		
+- 本次优化增加了 Module / Controller / Action 3层 	
+
 	
 ============== 0.5.1====================	
 删除了static模块 使用static cache代替	

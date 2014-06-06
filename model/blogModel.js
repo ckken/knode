@@ -18,4 +18,10 @@ var blog = new Schema({
           , favs  : {type:Number,default:0}
         }
 },{ collection: 'blog'});
+
+
+blog.path('title').validate(function (v) {
+  return v.length > 50;
+});
+
 module.exports = M.mongoose.model('blog', blog);

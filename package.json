@@ -16,7 +16,6 @@
     "swig": "*",
     "xss": "*",
     "mongoose": "*",
-    "thunkify": "^2.1.1",
     "underscore": "^1.6.0"
   },
   "engines": {

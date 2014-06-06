@@ -32,6 +32,7 @@ module.exports = function(root, kpath) {
         swig = require('swig'),
         app = koa(),
         path = require('path'),
+        fs = require('fs'),
         //
         co = require('co'),
         parse = require('co-body'),

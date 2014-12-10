@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ckken/koa-project.png?label=ready&title=Ready)](https://waffle.io/ckken/koa-project)
 <img src="http://koa.wvovo.com/knode.gif">
 =======================
 

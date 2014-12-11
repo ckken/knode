@@ -2,6 +2,8 @@
 <img src="http://koa.wvovo.com/knode.gif">
 =======================
 
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ckken/koa-project?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1
 

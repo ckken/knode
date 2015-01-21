@@ -3,6 +3,11 @@
 [问题讨论,Bug跟踪](http://js.wvovo.com/tags/knode)
 
 
+在经过几个月来的分析 发现nodejs 不适合做 web 全栈模型 理由如下：
++ 1.结构过度复杂导致线程执行不可控，出现各种卡顿现象	
++ 2.静态资源加载不力 相对于 NGINX	
++ 3.封装过度导致程序执行效率底下 优势不能凸显（目前 restify 感觉比较适中）
+
 knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1
 
 项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")	

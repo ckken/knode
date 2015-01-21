@@ -1,6 +1,6 @@
 <img src="http://koa.wvovo.com/knode.gif">
 =======================
-[![Stories in Ready](https://badge.waffle.io/ckken/koa-project.png?label=ready&title=Ready)](https://waffle.io/ckken/koa-project) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ckken/koa-project?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[问题讨论,Bug跟踪](http://js.wvovo.com/tags/knode)
 
 
 knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1

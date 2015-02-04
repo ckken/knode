@@ -1,7 +1,5 @@
 <img src="http://koa.wvovo.com/knode.gif">
 =======================
-[问题讨论,Bug跟踪](http://js.wvovo.com/tags/knode)
-
 
 在经过几个月来的分析 发现nodejs 不适合做 web 全栈模型 理由如下：
 + 1.结构过度复杂导致线程执行不可控，出现各种卡顿现象	

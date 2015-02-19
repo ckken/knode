@@ -33,7 +33,7 @@ module.exports = function(root) {
     if(!ftjs.config.debug){
         var logger = require('koa-logger');
         app.use(logger());
-    }
+    }  
 
 
     app.use(function *() {

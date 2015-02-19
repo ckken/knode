@@ -1,0 +1,39 @@
+{% extends '../layout.html' %}
+
+{% block title %}标签{% endblock %}
+
+{% block content %}
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active">标签</li>
+</ol>
+
+
+<div class="subnav">
+    <a href="/blog/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
+</div>
+
+
+<table class="table table-hover table-condensed table-bordered">
+<thead>
+<tr>
+    <th>名称</th><th>关键字</th><th>时间</th><th>操作</th>
+</tr>
+</thead>
+    <tbody>
+    {% for vo in data %}
+    <tr>
+        <td>{{vo.name}}</td>
+        <td>{{vo.key}}</td>
+        <td>{{vo.createtime}}</td>
+        <td><a class="btn btn-primary btn-xs" href="/blog/tag/edit/{{ vo._id.toString() }}">修改</a>
+            <a class="btn btn-danger btn-xs" href="/blog/tag/del/{{ vo._id.toString() }}">删除</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="page page_navi">{{page|safe}}</div>
+{% endblock %}

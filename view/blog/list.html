@@ -1,0 +1,38 @@
+{% extends '../layout.html' %}
+
+{% block title %}{{tag}}{% endblock %}
+
+{% block content %}
+
+<ol class="breadcrumb">
+    <li><a href="/">首页</a></li>
+    <li class="active">{{ tag }}</li>
+</ol>
+
+
+<div class="subnav">
+    {% if G.user.id!='' %}
+    <a href="/blog/blog/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>发布文章</a>
+    {% endif %}
+    {% if G.user.status==1 %}
+    <a href="/blog/tag/add" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>添加标签</a>
+    {% endif %}
+</div>
+  <ul class="article">
+    {% for vo in data %}
+      <li>
+        <h2><a href="/blog/blog/show/id/{{ vo._id.toString() }}">{{ vo.title }}</a></h2>
+          <p>{{F.html.subhtml(vo.content)}}</p>
+
+        <p>
+            {% if G.user.id==vo.author || G.user.status==1 %}
+            <a href="/blog/blog/edit/id/{{ vo._id.toString() }}">修改</a>
+            <a href="/blog/blog/del/id/{{ vo._id.toString() }}">删除</a>
+            <span class="date">{{F.date.dgm(vo.updatetime)}}</span>
+            {% endif %}
+        </p>
+      </li>
+    {% endfor %}
+  </ul>
+        <div class="page page_navi">{{page|safe}}</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+/**
+*code by @KenZR 2012-8-16
+*/
+@charset "utf-8";
+body, th, td, input, select, textarea, button {  font:12px microsoft yahei; line-height:20px; color:#555; }
+body, h1, h2, h3, h4, h5, h6, p, ul, dl, dt, dd, form, fieldset,li,a { margin: 0; padding: 0; }
+h1, h2, h3, h4, h5, h6 { font-size: 12px; color:#000; }
+ul li { list-style: none; }
+a { color: #000; text-decoration: none; }
+a:hover { }
+img { border:0; }
+.fl { float:left; }
+.fr { float:right; }
+.tl { text-align:left; }
+.tc { text-align:center; }
+.tr { text-align:right; }
+.dis { display:block; }
+.inline { display:inline; }
+.none { display:none; }
+/*clearfix*/
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+.clearfix { display: inline-block; zoom: 1; }
+/* Hide from IE Mac \*/
+.clearfix { display: block; }
+/* End hide from IE Mac*/
+.clear { clear:both }
+
+html,body{
+  -webkit-text-size-adjust:none;
+}
+
+
+/* 固定不动 */
+.fixed{
+  position:fixed;
+
+}
+.fixed.scrolltotop, .fixed.livechat{
+  bottom:75px; right:20px; left:auto; background:#ddd; width:50px; height:50px; text-align:center; line-height:50px; font-size:40px; color:#fff; display:block; _display:none; text-shadow:#bbb 1px 1px;
+}
+.fixed.scrolltotop{ display:none;}
+a:hover.fixed.scrolltotop, a:hover.fixed.livechat{
+  background:#ccc; text-decoration:none;
+}
+.fixed.livechat{
+  bottom:20px;
+}
+.fixed.scrolltotop.blue, .fixed.livechat.blue{
+  background:#85c2f2; text-shadow:#2d96e9 1px 1px;
+}
+a:hover.fixed.scrolltotop.blue, a:hover.fixed.livechat.blue{
+  background:#2d96e9; text-decoration:none;
+}
+
+*html{ background-image:url(about:blank); background-attachment:fixed; /* 解决固定层在IE6下闪的问题 */}
+
+
+/* png透明 */
+.pngfix{filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=true, sizingMethod=scale, src='images/x.png');}
+
+/* 渐变 */
+.gradient{filter: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#dedede);
+  background: -moz-linear-gradient(top, #ffffff, #dedede);}
+
+.radius
+{
+  -webkit-border-radius: 4px;   /*只支持webkit内核的浏览器*/
+  border-radius: 4px;  /*只支持IE内核的浏览器（IE>=7)*/
+  -moz-border-radius : 4px; /*只支持Mozilla内核的浏览器*/
+  border:#ddd solid 1px;
+  padding:4px;
+}
+
+.highlighted {
+  background: none repeat scroll 0 0 #00ADEE;
+  color: #FFFFFF;
+  padding: 0 5px;
+}
+
+/*超出省略号显示*/
+.ellipsis{
+  white-space:nowrap;/*设置不折行*/
+  text-overflow:ellipsis;/*这就是省略号喽*/
+  -o-text-overflow:ellipsis;/*兼容opera*/
+  width:80px;
+  overflow:hidden;
+}
+/*文字闪动*/
+.blink{
+  text-decoration:blink;
+}
+
+
+/* 解决ie下连接加粗的鼠标样式问题*/
+a strong{ cursor:pointer;}

@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+
+<p>
+    {{ msg }}
+</p>
+        <p>系统在{{second}}秒内跳转 如没跳转 <a href="{{url}}">请点击</a>  </p>
+<script>
+    var second = {{second}};
+    var url = '{{url}}';
+    setTimeout(function(){
+        window.location.href=url;
+    },second*1000)
+</script>
+
+{% endblock %}

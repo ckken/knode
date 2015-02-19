@@ -2,7 +2,7 @@
   "name": "ftjs",
   "version": "0.7.1",
   "description": "run in iojs use es6 to develop",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "iojs",
-    "koa",  
+    "koa",
     "waterline"
   ],
   "author": "ken",
@@ -20,5 +20,12 @@
   "bugs": {
     "url": "https://github.com/ckken/ftjs/issues"
   },
-  "homepage": "https://github.com/ckken/ftjs"
+  "homepage": "https://github.com/ckken/ftjs",
+  "dependencies": {
+    "koa": "^0.18.0",
+    "koa-bodyparser": "^1.3.1",
+    "koa-logger": "^1.2.2",
+    "koa-static": "^1.4.9",
+    "koa-swig": "^1.2.0"
+  }
 }

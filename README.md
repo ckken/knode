@@ -1,6 +1,8 @@
 <img src="http://koa.wvovo.com/knode.gif">
 =======================
 
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ckken/koa-project?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 运行在 IOJS 1.1.0
 
 DEMO ：http://koa.wvovo.com/

@@ -1,5 +1,5 @@
 /**
- * 激活 knode 
- * 导入 root路径 knode的路径
+ * 激活 ftjs
+ * 导入 root路径
  */
-require(__dirname+'/knode/index')(__dirname,__dirname+'/knode/');
+require(__dirname+'/ftjs')(__dirname);

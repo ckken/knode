@@ -1,3 +1,20 @@
+module.exports = {
+    type:{
+        username:String
+        ,password:String
+        ,email:String
+        ,regip:String
+        ,logip:String
+        ,status:{type:Number,default:0}
+        ,createtime:{type:Number,default:F.date.time()}
+        ,logintime:{type:Number,default:F.date.time()}
+    },
+    validate:function(model,schema){
+
+    }
+}
+
+/*
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var member = new Schema({
@@ -12,4 +29,5 @@ var member = new Schema({
 },{ collection: 'member'});
 
 module.exports = mongoose.model('member', member);
+*/
 

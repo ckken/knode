@@ -28,7 +28,8 @@ module.exports = function(root, kpath) {
 
     //================主模块=========================
     var koa = require('koa'),
-        staticCache = require('koa-static-cache'),
+        //staticCache = require('koa-static-cache'),
+        static = require('koa-static'),
         swig = require('swig'),
         app = koa(),
         path = require('path'),
@@ -38,7 +39,7 @@ module.exports = function(root, kpath) {
         parse = require('co-body'),
         views = require('co-views'),
         mongoose = require('mongoose'),
-        _ = require('underscore');
+        _ = require('lodash');
 
 
 
@@ -75,10 +76,10 @@ module.exports = function(root, kpath) {
 
 
     //定义静态模版以及路径
-    //app.use(static(path.join(root, 'static')));
-    app.use(staticCache(path.join(root, 'static'), {
+    /*app.use(staticCache(path.join(root, 'static'), {
         maxAge: 365 * 24 * 60 * 60
-    }))
+    }))*/
+   app.use(static(path.join(root, 'static'), {maxage: 365 * 24 * 60 * 60}));//静态文件加载
 
     //公共函数定义 合并 underscore
     var styleFn = require(kpath + '/function/init')(kpath);
@@ -86,9 +87,40 @@ module.exports = function(root, kpath) {
     F.extend(F, styleFn);
 
     //连接数据库
-    M.mongoose = mongoose;
-    M.mongoose.connect(C.mongo);
-    D = require(C.model + 'db');
+    //M.mongoose = mongoose;
+    //M.mongoose.connect(C.mongo);
+    mongoose.connect(C.mongo);
+    //D = require(C.model + 'db');
+    var Schema = mongoose.Schema,
+        models = {}
+    //app.context.models=models
+    D = function(name){
+        return models[name]
+    }
+
+    if(C.debug.common&&C.debug.db){
+        mongoose.set('debug', true);
+    }
+
+    fs.readdirSync(C.model).forEach(function (name) {
+        var modelExt = 'Model.js'
+        if(name.indexOf(modelExt)>-1) {
+            var model = require(C.model + name)
+            name = name.replace(modelExt, '').toLowerCase()
+
+            //mongoose
+            var newSchema = new Schema(_.isFunction(model.type)&&model.type(Schema)||model.type, {collection: model.name||name});
+            models[name] = mongoose.model(name, newSchema);
+            //导入 model 与 Schema
+            if (model.validate && _.isFunction(model.validate)) {
+                model.validate(models[name],newSchema)
+            }
+        }
+
+    })
+
+
+
     //密钥
     app.keys = [C.secret];
     //favicon 特殊处理
@@ -104,11 +136,11 @@ module.exports = function(root, kpath) {
             return;
         }
         //读取配置文件是否存在 favicon
-        var path = C.favicon || '/favicon.ico';
+       /* var path = C.favicon || '/favicon.ico';
         var icon = yield fs.readFile(path);
         this.set('Cache-Control', 'public, max-age=' + (maxAge / 1000 | 0));
         this.type = 'image/x-icon';
-        this.body = icon;
+        this.body = icon;*/
     });
 
     //全局函数

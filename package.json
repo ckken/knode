@@ -6,6 +6,8 @@
     "koa": "*",
     "koa-static-cache": "*",
     "koa-logger": "*",
+    "koa-compose": "*",
+    "koa-static": "*",
     "co": "*",
     "co-fs": "*",
     "co-body": "*",
@@ -13,9 +15,9 @@
     "swig": "*",
     "xss": "*",
     "mongoose": "*",
-    "underscore": "^1.6.0"
+    "lodash": "*"
   },
   "engines": {
-    "node": ">= 11.3"
+    "iojs": ">= 1.0"
   }
 }

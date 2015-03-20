@@ -7,9 +7,15 @@
 
 DEMO ：http://koa.wvovo.com/
 
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.8
 
 项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")
+
+============== 0.6.8====================
+- 替换underscore 为 lodash
+- 更新静态库 koa-static
+- 增加 koa-compose 进行流程处理
+- 优化了mongoose 的调用方式 
 
 ============== 0.6.1====================
 - 减少了1/3的代码，优化了callback机制 重新认识yield的强大用法
@@ -54,20 +60,6 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.1
 - 复制 koa-static-cache-index.js 文件在 koa-static-cache模块替换 index.js 文件即可
 - 安全性模块（XSS + cookies验证）
 - 增加 knode 文件夹作为文件夹核心部分，将进行分离核心代码到knode文件夹[**news**]2014/2/17 18:26:33
-
-============== 官网依赖模块包括====================
-- "koa": koa核心模块
-- "koa-route":路由模块
-- "koa-static":静态文件加载
-- "koa-static-cache":静态文件缓存加载
-- "co":异步流
-- "co-fs": 文件流
-- "co-body": post JSON模块
-- "co-views": 视图模块
-- "koa-compose":函数合并执行
-- "swig": 模版引擎
-- "xss":    方式xss 攻击
-- "mongoose":mongo链接库
 
 
 

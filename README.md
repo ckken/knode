@@ -15,7 +15,7 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.8
 - 替换underscore 为 lodash
 - 更新静态库 koa-static
 - 增加 koa-compose 进行流程处理
-- 优化了mongoose 的调用方式 
+- 优化了mongoose 的调用方式
 
 ============== 0.6.1====================
 - 减少了1/3的代码，优化了callback机制 重新认识yield的强大用法

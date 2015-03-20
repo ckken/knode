@@ -28,8 +28,8 @@ module.exports = function(root, kpath) {
 
     //================主模块=========================
     var koa = require('koa'),
-        //staticCache = require('koa-static-cache'),
-        static = require('koa-static'),
+        staticCache = require('koa-static-cache'),
+        //static = require('koa-static'),
         swig = require('swig'),
         app = koa(),
         path = require('path'),
@@ -39,6 +39,7 @@ module.exports = function(root, kpath) {
         parse = require('co-body'),
         views = require('co-views'),
         mongoose = require('mongoose'),
+        combo = require('koa-combo'),
         _ = require('lodash');
 
 
@@ -79,7 +80,12 @@ module.exports = function(root, kpath) {
     /*app.use(staticCache(path.join(root, 'static'), {
         maxAge: 365 * 24 * 60 * 60
     }))*/
-   app.use(static(path.join(root, 'static'), {maxage: 365 * 24 * 60 * 60}));//静态文件加载
+    var static_root = path.join(root, 'static');
+   app.use(staticCache(static_root, {
+       maxAge: 860000000,
+       gzip:true
+       }));//静态文件加载
+    app.use(combo([static_root]));
 
     //公共函数定义 合并 underscore
     var styleFn = require(kpath + '/function/init')(kpath);

@@ -12,8 +12,8 @@ knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.8
 项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")
 
 ============== 0.6.8====================
+- 调整了model层的总体架构
 - 替换underscore 为 lodash
-- 更新静态库 koa-static
 - 增加 koa-compose 进行流程处理
 - 优化了mongoose 的调用方式
 

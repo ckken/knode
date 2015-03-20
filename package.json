@@ -3,19 +3,20 @@
   "description": "knode is one of chinese's blog make by ken use koajs",
   "version": "0.6.1",
   "dependencies": {
-    "koa": "*",
-    "koa-static-cache": "*",
-    "koa-logger": "*",
-    "koa-compose": "*",
-    "koa-static": "*",
     "co": "*",
-    "co-fs": "*",
     "co-body": "*",
+    "co-fs": "*",
     "co-views": "*",
-    "swig": "*",
-    "xss": "*",
+    "koa": "*",
+    "koa-combo": "^1.0.1",
+    "koa-compose": "*",
+    "koa-logger": "*",
+    "koa-static": "*",
+    "koa-static-cache": "*",
+    "lodash": "*",
     "mongoose": "*",
-    "lodash": "*"
+    "swig": "*",
+    "xss": "*"
   },
   "engines": {
     "iojs": ">= 1.0"

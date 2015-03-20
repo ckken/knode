@@ -81,24 +81,9 @@ module.exports = function(_CS, render, parse) {
             }
             var id = post.id;
             if (id) {
-
-                var comment = yield
-                function(fn) {
-                    D('comment').findById(id, function(err, d) {
-                        if (err) fn(err);
-                        fn(null, d);
-                    })
-                }
+                var comment = yield D('comment').findById(id).exec()
                 if (comment.author == G.user.id) {
-                    var cb = yield
-                    function(fn) {
-                        D('comment').remove({
-                            _id: id
-                        }, function(err, d) {
-                            if (err) fn(err);
-                            fn(null, d);
-                        })
-                    }
+                    var cb = yield D('comment').remove({_id: id}).exec()
                     _CS.body = {
                         msg: '删除成功',
                         status: 1

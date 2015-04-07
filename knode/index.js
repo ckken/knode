@@ -18,10 +18,10 @@ module.exports = function(root, kpath) {
      */
 
     global.C = {};
-    global.M = {};
+    //global.M = {};
     global.F = {};
     global.G = {};
-    global.R = {};
+    //global.R = {};
 
 
     //C配置文件 M通用模块插件 F 内置函数 D 数据库类
@@ -36,13 +36,13 @@ module.exports = function(root, kpath) {
         fs = require('fs'),
         //
         co = require('co'),
-        parse = require('co-body'),
-        views = require('co-views'),
-        mongoose = require('mongoose'),
-        combo = require('koa-combo'),
-        _ = require('lodash');
+        //parse = require('co-body'),
+        bodyParser = require('koa-bodyparser'),
+       // views = require('co-views'),
+        combo = require('koa-combo')
 
 
+    global._ = require('lodash');
 
 
     //===================获取配置内容
@@ -65,16 +65,20 @@ module.exports = function(root, kpath) {
 
 
     //===================定义模版类型以及路径
-    /*swig.setDefaults({
-     autoescape:false
-     });*/
+    require('koa-swig')(app, {
+        root: C.view,
+        autoescape: true,
+        //cache: 'memory', // disable, set to false
+        ext: 'html',
+        //locals: locals,
+        //filters: filters,
+        //tags: tags,
+        //extensions: extensions
+    });
 
-    var render = views(C.view, {
-        map: {
-            html: 'swig'
-        }
-    })
-
+    //post 处理 this.request.body;
+    app.use(bodyParser());
+    //路由
 
     //定义静态模版以及路径
     /*app.use(staticCache(path.join(root, 'static'), {
@@ -84,47 +88,18 @@ module.exports = function(root, kpath) {
    app.use(staticCache(static_root, {
        maxAge: 860000000,
        gzip:true
-       }));//静态文件加载
+       }));
+
+    //静态文件加载
     app.use(combo([static_root]));
 
-    //公共函数定义 合并 underscore
+    //公共函数定义 合并 lodash
     var styleFn = require(kpath + '/function/init')(kpath);
-    F = _;
-    F.extend(F, styleFn);
+    //F = _;
+    _.extend(F, styleFn);
 
-    //连接数据库
-    //M.mongoose = mongoose;
-    //M.mongoose.connect(C.mongo);
-    mongoose.connect(C.mongo);
-    //D = require(C.model + 'db');
-    var Schema = mongoose.Schema,
-        models = {}
-    //app.context.models=models
-    D = function(name){
-        return models[name]
-    }
-
-    if(C.debug.common&&C.debug.db){
-        mongoose.set('debug', true);
-    }
-
-    fs.readdirSync(C.model).forEach(function (name) {
-        var modelExt = 'Model.js'
-        if(name.indexOf(modelExt)>-1) {
-            var model = require(C.model + name)
-            name = name.replace(modelExt, '').toLowerCase()
-
-            //mongoose
-            var newSchema = new Schema(_.isFunction(model.type)&&model.type(Schema)||model.type, {collection: model.name||name});
-            models[name] = mongoose.model(name, newSchema);
-            //导入 model 与 Schema
-            if (model.validate && _.isFunction(model.validate)) {
-                model.validate(models[name],newSchema)
-            }
-        }
-
-    })
-
+    //model 初始化
+    require(kpath+'model')(app,fs)
 
 
     //密钥
@@ -141,79 +116,15 @@ module.exports = function(root, kpath) {
             this.set('Allow', 'GET, HEAD, OPTIONS');
             return;
         }
-        //读取配置文件是否存在 favicon
-       /* var path = C.favicon || '/favicon.ico';
-        var icon = yield fs.readFile(path);
-        this.set('Cache-Control', 'public, max-age=' + (maxAge / 1000 | 0));
-        this.type = 'image/x-icon';
-        this.body = icon;*/
     });
 
-    //全局函数
-    app.use(function * (next) {
+    require(kpath+'controller')(app,fs)
 
-
-        var mod = C.default_mod;
-        R.method = this.request.method;
-        R.url = this.request.url.split('?')[0];
-
-        R.url = R.url.split('/');
-        //默认值处理
-        R.m = R.url[1] || mod[0]; //module
-        R.c = R.url[2] || mod[1]; //controller
-        R.a = R.url[3] || mod[2]; //action
-
-        //合并所有请求到 this.query里面
-        if (R.url.length > 4) {
-            var d = meregeRq(R.url);
-            this.query = this.query && _.extend(this.query, d) || d;
-        }
-
-        //非debug模式采取跳过方法进行处理
-        if (!C.debug.logger) {
-
-            try {
-                var cm = require(kpath + 'middleLoad.js')(this, render, parse);
-                // :TODO 探究如何判断是否是新函数
-                yield cm.init();
-                if (_.isFunction(cm[R.a])) {
-                    yield cm[R.a]();
-                } else {
-                    yield next;
-                }
-
-            } catch (e) {
-                console.log(e);
-                yield next;
-            }
-        } else {
-            var cm = require(kpath + 'middleLoad.js')(this, render, parse);
-            // :TODO 探究如何判断是否是新函数
-            yield cm.init();
-            if (_.isFunction(cm[R.a])) {
-                yield cm[R.a]();
-            } else {
-                yield next;
-            }
-        }
-    });
-
-
-    //指定路由请求
-    //:TODO 与配置路由相结合
-    function meregeRq(url, query) {
-
-        var d = {};
-        for (var i = 2; i < Math.ceil(url.length / 2); i++) {
-            d[url[i * 2]] = url[i * 2 + 1] || '';
-        }
-        return d = d || '';
-    }
 
 
     //404页面
     app.use(function * pageNotFound(next) {
-        this.body = yield render('404');
+        this.body = yield this.render('404');
     });
 
     /**

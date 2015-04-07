@@ -1,27 +1,25 @@
 /**
  * Created by ken.xu on 14-2-11.
  */
-module.exports = function(_CS,render,parse){
-
-    return {
-        _extend : 'blog/common',
+module.exports = {
+        _extend:{blog:require('./common')},
         login:function *(){
 
             if(G.user.username)this.redirect('/');
-            _CS.body = yield render('auth/login');
+            this.body = yield this.render('auth/login');
         },
         register:function *(){
-            if(G.user.username)_CS.redirect('/');
-            _CS.body = yield render('auth/register');
+            if(G.user.username)this.redirect('/');
+            this.body = yield this.render('auth/register');
         },
         forget:function *(){
-            _CS.body = yield render('auth/forget');
+            this.body = yield this.render('auth/forget');
         },
         tologin:function *(){
-            var m = yield parse(_CS);
-            var url = '/'+'auth/login'
-            if(m.username=='')_CS.body = yield this.msg('用户账号不能为空',url);
-            else if(m.password=='')_CS.body = yield this.msg('用户密码不能为空',url);
+            var m = this.request.body
+            var url = '/auth/login'
+            if(m.username=='')this.body = yield this.blog.msg('用户账号不能为空',url);
+            else if(m.password=='')this.body = yield this.blog.msg('用户密码不能为空',url);
             else{
 
                 var where = {
@@ -40,26 +38,26 @@ module.exports = function(_CS,render,parse){
                     }
                     G.user = cookiemember;
                     cookiemember = JSON.stringify(cookiemember);
-                    _CS.cookies.set('member', cookiemember);
-                    _CS.body = yield this.msg('登陆成功','/');
+                    this.cookies.set('member', cookiemember);
+                    this.body = yield this.blog.msg('登陆成功','/');
                 }
-                else _CS.body = yield this.msg('账号或者密码错误，请重试',url);
+                else this.body = yield this.blog.msg('账号或者密码错误，请重试',url);
             }
         },
         toregister:function *(){
-            var m = yield parse(_CS);
+            var m = this.request.body;
             var url = '/'+'auth/register';
-            if(m.username=='')_CS.body = yield this.msg('用户名称不能为空',url);
-            else if(m.email=='')_CS.body = yield this.msg('用户邮箱不能为空',url);
-            else if(m.password=='')_CS.body =yield this.msg('用户密码不能为空',url);
-            else if(m.password!=m.checkpassword)_CS.body =yield this.msg('用户密码确认不正确',url);
+            if(m.username=='')this.body = yield this.blog.msg('用户名称不能为空',url);
+            else if(m.email=='')this.body = yield this.blog.msg('用户邮箱不能为空',url);
+            else if(m.password=='')this.body =yield this.blog.msg('用户密码不能为空',url);
+            else if(m.password!=m.checkpassword)this.body =yield this.blog.msg('用户密码确认不正确',url);
             else{
                 //
                 var count = yield D('member').count({username: m.username}).exec();
-                if(count>0)_CS.body = yield this.msg('已存在该用户',url);
+                if(count>0)this.body = yield this.blog.msg('已存在该用户',url);
                 //
                 count = yield D('member').count({email: m.email}).exec();
-                if(count>0)_CS.body = yield this.msg('已存在该邮箱',url);
+                if(count>0)this.body = yield this.blog.msg('已存在该邮箱',url);
                 //
                 var member = yield D('member').create(m);
 
@@ -72,24 +70,23 @@ module.exports = function(_CS,render,parse){
                     }
                     G.user = cookiemember;
                     cookiemember = JSON.stringify(cookiemember);
-                    _CS.cookies.set('member', cookiemember);
-                    _CS.body = yield this.msg('注册成功','/');
+                    this.cookies.set('member', cookiemember);
+                    this.body = yield this.blog.msg('注册成功','/');
                 }
 
-                _CS.redirect('/');
+                this.redirect('/');
             }
 
         },
         toforget:function *(){
-            var m = yield parse(_CS);
+            var m = this.request.body;
         },
 
          logout:function *(){
-            _CS.cookies.set('member', '');
+            this.cookies.set('member', '');
             G.user={};
-            _CS.redirect('/');
+            this.redirect('/');
         }
     }
 
 
-}

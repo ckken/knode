@@ -9,15 +9,14 @@ module.exports=function(root){
         //系统目录
         model:root+'/model/',
         view:root+'/view/',
+        access:root+'/access/',
         controller:root+'/controller/',
         lib:root+'/lib/',
         //cookie session
         maxAge: 259200000,
         secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',
         //端口设置
-        port:3388,
-        //执行默认模块
-        default_mod:['blog','blog','index'],
+        port:3388
     }
 
 }

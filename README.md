@@ -7,9 +7,15 @@
 
 DEMO ：http://koa.wvovo.com/
 
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.6.8
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.8.1
 
 项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")
+
+============== 0.8.1====================
+- 调整了model层的总体架构
+- 调整controller 路由架构
+- 删除 module 层
+- ......
 
 ============== 0.6.8====================
 - 调整了model层的总体架构

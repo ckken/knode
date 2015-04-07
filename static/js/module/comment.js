@@ -14,7 +14,7 @@ var comment = function(){
 
     this.list = function(){
 
-        $.get('/blog/comment/index',comarr,function(d){
+        $.get('/comment/index',comarr,function(d){
             d = d||[];
             if(d.length>0){
                 obj.html('');
@@ -55,7 +55,7 @@ var comment = function(){
     this.insert = function(){
         comarr.comment = addObj.val();
         if(comarr.comment!=''){
-            $.post('/blog/comment/insert',comarr,function(d){
+            $.post('/comment/insert',comarr,function(d){
                 alert(d.msg);
                 if(d.status){
                     _S.list();
@@ -72,13 +72,13 @@ var comment = function(){
 
 
     this.update = function(id){
-        $.post('/blog/comment/update',{id:id},function(d){
+        $.post('/comment/update',{id:id},function(d){
             _S.list();
         })
     }
 
     this.del = function(id){
-        $.post('/blog/comment/del',{id:id},function(d){
+        $.post('/comment/del',{id:id},function(d){
             alert(d.msg);
             if(d.status)_S.list();
         })

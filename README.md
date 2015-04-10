@@ -7,7 +7,7 @@
 
 DEMO ：http://koa.wvovo.com/
 
-knode 基于nodejs koajs的下一代web框架解决方案 version 0.8.1
+knode 基于nodejs koajs的下一代web框架解决方案 version 0.8.1 beta
 
 项目功能展望讨论区: [https://github.com/ckken/koa-project/issues](https://github.com/ckken/koa-project/issues "项目讨论区")
 

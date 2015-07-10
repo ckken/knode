@@ -44,7 +44,7 @@ module.exports = function(root, kpath) {
 
     global._ = require('lodash');
 
-
+   
     //===================获取配置内容
     var systemConfig = require(kpath + '/config')(root);
     var clientConfig = require(root + '/config/config')(root);

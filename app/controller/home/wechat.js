@@ -37,9 +37,9 @@ export default class extends G.controller.http {
     async send() {
         this.data = await this.srv.sendTemplate({
             query: {
-                openid: 'oSD_Nw52qcTFg7fRXYt_cB3AALxY',
-                templateId: 'idT15W4pJLnxJc2AWE6furRA-lN0i5hs_BmJDotsS60',
-                url: 'http://wvovo.com',
+                openid: 'xxxxxxxx',
+                templateId: 'xxxxxx-lN0i5hs_BmJDotsS60',
+                url: 'http://baidu.com',
                 topColor: '#ce064c',
                 data: {
                     first: {

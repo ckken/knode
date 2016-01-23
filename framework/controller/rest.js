@@ -64,7 +64,9 @@ export default class extends G.controller.base {
     }
 
     async put() {
-        this._map = this._map ||((this.req.params.id) && {id: this.req.params.id})
+
+        //this._map = this._map ||((this.req.params.id) && {id: this.req.params.id})
+        this._map = _.extend(this._map,{id: this.req.params.id})
         let post = this.req.body || {}
         let rs = {
             code: 0,

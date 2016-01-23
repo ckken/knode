@@ -3,6 +3,7 @@ module.exports = (io) => {
 
     let room = {}
     let model = D.model('activity_signin_member')
+    let model_activity = D.model('activity_signin')
     var getRoomList = async (aid)=> {
         return await model.find({where: {aid: aid}, select: ['nickname', 'headimgurl', 'online']}).sort({
                 online: 'desc',
@@ -10,11 +11,38 @@ module.exports = (io) => {
             }).toPromise() || []
     }
 
+    //设置路由入口
     let signin = io.of('/signin');
+    //
     signin.on('connection', function (socket) {
 
-        //通知大屏人数
 
+        socket.on('activities_signin_rq_user', async (d)=> {
+            let user = await model.findOne({aid: d.id, openid: d.user.openid}).toPromise()
+            //console.log(user)
+            if (user)signin.in(socket.room).emit('activities_signin_rq_user', user);
+        })
+
+        socket.on('activities_signin_login', async (d)=> {
+            let data = {phone: d.phone, realname: d.realname}
+            let user = await model.update({aid: d.id, openid: d.openid}, data).toPromise()
+            if (user)signin.in(socket.room).emit('activities_signin_login', data);
+        })
+
+
+        socket.on('activities_signin_danmu', async (d)=> {
+            //console.log(d)
+            signin.in(socket.room).emit('activities_signin_danmu', d);
+        })
+
+        socket.on('activities_signin_msg', async (d)=> {
+            if (d.id) {
+                let activity = await model_activity.findOne({id: d.id}).toPromise()
+                socket.emit('activities_signin_msg', activity);
+            }
+        })
+
+        //通知大屏人数
         socket.on('activities_signin_screen_room', async (d)=> {
             if (d.id) {
                 socket.room = d.id

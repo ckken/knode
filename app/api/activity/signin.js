@@ -6,6 +6,8 @@ export default class extends G.controller.rest {
         this.modelName = 'activity_signin'
     }
 
+    asyn
+
     async get(){
         var rs = await super.get({cb:true})
         //console.log(rs)

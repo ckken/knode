@@ -1,29 +1,38 @@
-
 export default class {
 
-    constructor(...args) {
-        this.init(...args);
-    }
-
-    init(req, res, next) {
+    constructor(req, res, next,...args) {
         this.req = req
         this.res = res
         this.next = next
         this.rq = req.rq
         this.startTime = Date.now()
+        this.modelName = ''
+        this.init(...args);
+
     }
 
-    model(){
-        return D.model(this.rq.controller)
+    init(...args) {
     }
 
-    async __before(){}
+    model() {
+        let modelName = this.modelName || this.rq.controller
+        return D.model(modelName)
+    }
 
-    async __after(){}
+    async __before() {
+    }
 
-    async invoke(action,...args){
+    async __after() {
+    }
+
+    async invoke(action, ...args) {
         await this.__before()
         if (!this.res.headersSent) await this[action](...args)
         if (!this.res.headersSent) await this.__after()
+    }
+
+
+    json(data) {
+        this.res.json(data)
     }
 }

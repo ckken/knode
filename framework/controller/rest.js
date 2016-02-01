@@ -3,23 +3,23 @@
  */
 export default class extends G.controller.base {
 
-    init(req, res, next) {
-        console.log('restCrud')
-        super.init(req, res, next)
+    init(){
+        this._map = {}//自定义条件
+    }
+
+    async get(op={}) {
         this.pageSet = {
             pageSize: 10,
             page: 1,
             sort: 'desc',
-            order: 'id'
+            order: 'id',
+            cb:false,
+            findOne:false,
         }
-    }
-
-
-    async get() {
         //
-        var order = this.req.query.order || this.pageSet.order
-        var sort = this.req.query.sort || this.pageSet.sort
-        var orderby = {}
+        let order = this.req.query.order || this.pageSet.order
+        let sort = this.req.query.sort || this.pageSet.sort
+        let orderby = {}
 
         this.pageSet.page = this.req.query.page || this.pageSet.page
         this.pageSet.pageSize = this.req.query.pageSize || this.pageSet.pageSize
@@ -30,51 +30,58 @@ export default class extends G.controller.base {
             limit: this.pageSet.pageSize
         }
 
-        //
-        let map = this.req.map || {}
-        let data = {}
         let rs = {}
         rs.code = 0
         //
-        if (this.req.params.id) {
-            map.id = this.req.params.id
-            data = await this.model().findOne(map).toPromise()
+        if (op.findOne) {
+            this._map.id = this._map.id || this.req.params.id
+            rs.data = await this.model().findOne(this._map).toPromise()
         } else {
-            rs.page = this.pageSet.page
-            rs.pageSize = this.pageSet.pageSize
-            rs.total = await this.model().count(map).toPromise()
-            data = await this.model().find(map).paginate(paginates).sort(orderby).toPromise()
+            rs.data = {
+                page: this.pageSet.page,
+                pageSize: this.pageSet.pageSize,
+                total: await this.model().count(this._map).toPromise(),
+                pageData: (!op.populate)&&
+                await this.model().find(this._map).paginate(paginates).sort(orderby).toPromise()||
+                await this.model().find(this._map).paginate(paginates).sort(orderby)
+                    .populate(op.populate.model,{select:op.populate.select})
+                    .toPromise()
+            }
         }
-        rs.data = data
+        if(!op.cb){
+            this.json(rs)
+        }else{
+            return rs
+        }
+    }
+
+    async post() {
+        let post = this.req.body || {}
+        let rs = {
+            code: 0,
+            data: await this.model().create(post).toPromise()
+        }
+
         this.json(rs)
     }
 
-    async post(req, res, next) {
-        var data = req.body || {}
-        var rs = await this.model().create(data).toPromise()
+    async put() {
+
+        //this._map = this._map ||((this.req.params.id) && {id: this.req.params.id})
+        this._map = _.extend(this._map,{id: this.req.params.id})
+        let post = this.req.body || {}
+        let rs = {
+            code: 0,
+            data: await this.model().update(this._map, post).toPromise()
+        }
         this.json(rs)
     }
 
-    async put(req, res, next) {
-        var map = (this.req.params.id) && {id: this.req.params.id} || {}
-        var data = req.body || {}
-        map = _.extend(data, map)
+    async delete() {
+        this._map = this._map ||((this.req.params.id) && {id: this.req.params.id})
         var rs = {
             code: 0,
-            data: await this.model().update(map, data).toPromise()
-        }
-        this.json(rs)
-
-    }
-
-    async delete(req, res, next) {
-
-        var map = (this.req.params.id) && {id: this.req.params.id} || {}
-        var data = req.body || {}
-        map = _.extend(data, map)
-        var rs = {
-            code: 0,
-            data: await this.model().destroy(map).toPromise()
+            data: await this.model().destroy(this._map).toPromise()
         }
         this.json(rs)
     }

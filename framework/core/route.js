@@ -1,4 +1,6 @@
 import fs from '../utils/fs'
+import cors from 'cors'
+
 module.exports = (app)=> {
     //restful 方法
     var Func = async (req, res, next)=> {
@@ -23,14 +25,20 @@ module.exports = (app)=> {
                     break;
             }
         }
-        var rest_name = (req.rest_name) ? '/' + req.rest_name : ''
-        var load_file_path = G.path.controller + rest_name + '/' + req.rq.module + '/' + req.rq.controller
+        //var rest_name = (req.rest_name) ? '/' + req.rest_name : ''
+        //var load_file_path = G.path.controller + rest_name + '/' + req.rq.module + '/' + req.rq.controller
+
+        if (req.isApi) {
+            var load_file_path = G.path.api + '/' + req.rq.module + '/' + req.rq.controller
+        } else {
+            var load_file_path = G.path.controller + '/' + req.rq.module + '/' + req.rq.controller
+        }
+        //console.log(load_file_path)
         var check = await fs.exists(load_file_path + '.js')
         if (check) {
             try {
                 let cls = require(load_file_path)
                 cls = new cls(req, res, next)
-                //await cls[req.rq.action]()
                 await cls.invoke(req.rq.action)
 
             } catch (e) {
@@ -42,30 +50,34 @@ module.exports = (app)=> {
         }
     }
 
-    var restFunc = (name)=> {
+    var restFunc = ()=> {
         return (req, res, next)=> {
-            req.rest_name = name
+            req.isApi = true
             return Func(req, res, next)
         }
     }
 
     app.get('/', Func)
-    //rest
-    _.forEach(G.rest, (v, k)=> {
-        app.get('/' + v + '/:module/:controller', restFunc(v))
-        app.get('/' + v + '/:module/:controller/:id', restFunc(v))
-        app.post('/' + v + '/:module/:controller', restFunc(v))
-        app.put('/' + v + '/:module/:controller/:id', restFunc(v))
-        app.delete('/' + v + '/:module/:controller/:id', restFunc(v))
-        app.put('/' + v + '/:module/:controller', restFunc(v))
-        app.delete('/' + v + '/:module/:controller', restFunc(v))
-    })
+
+    app.options('/*', cors())
+    app.get('/' + G.rest + '/:module/:controller', cors(), restFunc())
+    app.get('/' + G.rest + '/:module/:controller/:id', cors(), restFunc())
+    app.post('/' + G.rest + '/:module/:controller', cors(), restFunc())
+    app.put('/' + G.rest + '/:module/:controller/:id', cors(), restFunc())
+    app.delete('/' + G.rest + '/:module/:controller/:id', cors(), restFunc())
+    app.put('/' + G.rest + '/:module/:controller', cors(), restFunc())
+    app.delete('/' + G.rest + '/:module/:controller', cors(), restFunc())
+    //
+    app.all('/' + G.rest + '/:module/:controller/:id/:action', cors(), restFunc())
+    app.all('/' + G.rest + '/:module/:controller/:id/:action/:actionId', cors(), restFunc())
+
 
     //custom
-    app.get('/:module/:controller/:action', Func)
-    app.get('/:module/:controller/:action/:id', Func)
-    app.post('/:module/:controller/:action', Func)
-    app.post('/:module/:controller/:action/:id', Func)
+    app.options('/:module/:controller/:action', cors())
+    app.get('/:module/:controller/:action', cors(), Func)
+    app.get('/:module/:controller/:action/:id', cors(), Func)
+    app.post('/:module/:controller/:action', cors(), Func)
+    app.post('/:module/:controller/:action/:id', cors(), Func)
 
 
 }

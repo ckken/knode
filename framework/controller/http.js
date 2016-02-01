@@ -5,14 +5,10 @@
 export default class extends G.controller.base {
 
 
-    init(req, res, next) {
-        super.init(req, res, next)
+    init() {
         this.tVal = {}
     }
 
-    async __before(){
-
-    }
 
     display(...args) {
         let rq = this.req.rq

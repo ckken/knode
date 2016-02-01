@@ -21,6 +21,8 @@ export default ()=> {
     if (G.env !== 'production')G.debug = true
     // 压缩请求资源
     app.use(compression({level: 9}))
+    //favicon使用方式
+    if (fs.existsSync(G.path.root + '/favicon.ico'))app.use(favicon(G.path.root + '/favicon.ico'));
     // 直接解析 G.cdn 文件夹下的静态资源
     if (G.cdn.indexOf('http') === -1)app.use(G.cdn, express.static(G.path.root + '/static', {maxAge: 86400000}));
     //定义模板 开发环境不缓存模板,模板根路径定位到 view 目录
@@ -31,20 +33,25 @@ export default ()=> {
     app.set('view engine', 'html');
     app.set('views', G.path.view + '/');
     app.set('view cache', false);
-    //favicon使用方式
-    if (fs.existsSync(G.path.root + '/favicon.ico'))app.use(favicon(G.path.root + '/favicon.ico'));
     //app.use(display());//display 封装
-    if (G.debug)app.use(logger('dev'));//开发环境性进行debug
+    //if (G.debug)app.use(logger('dev'));//开发环境性进行debug
+    app.use(logger('dev'));//开发环境性进行debug
     app.use(bodyParser.json());//接受json 传输格式 restful 必备
-    app.use(bodyParser.urlencoded({extended: false}));//传统url 传输方式
+    app.use(bodyParser.urlencoded({extended: true}));//传统url 传输方式
     app.use(cookieParser(G.cookie.secret));//cookie 使用注册
     //x-powered-by 操作
     //app.set('x-powered-by', 'xxx')
     app.disable('x-powered-by')
 
 
+    //自定义路由
+    if (fs.existsSync(G.path.config+'/route')){
+        require(G.path.config+'/route')(app);
+    }
     // 总路由
     require(G.path.core + '/core/route')(app);
+
+
     // catch 404 and forward to error handler
     app.use((req, res, next)=> {
         var err = new Error('Not Found');
@@ -60,15 +67,18 @@ export default ()=> {
             err_msg = {
                 message: err.message,
                 error: err,
-                status: err.status
+                status: err.status,
+                code:-1
             }
         } else {
             err_msg = {
                 message: err.message,
-                status: err.status
+                status: err.status,
+                code:-1
             }
         }
-        //console.log(err)
+        //console.log(req.is('html'))
+        //console.log(err_msg)
         res.json(err_msg)
         /*if(req.is('html')){
          req.display('/common/error',err_msg)

@@ -5,7 +5,8 @@ import fs from 'fs'
 import waterline from 'waterline'
 import mongoAdapter from 'sails-mongo'
 //import diskAdapter from 'sails-disk'
-//import mysqlAdapter from 'sails-mysql'
+import mysqlAdapter from 'sails-mysql'
+import sqlServerAdapter from 'sails-sqlserver'
 
 export default function (cb) {
 
@@ -16,14 +17,15 @@ export default function (cb) {
     let config = {
         adapters: {
             'default': mongoAdapter,
-            mongo: mongoAdapter
+            mongo: mongoAdapter,
             //disk: diskAdapter,
-            //mysql: mysqlAdapter
+            mysql: mysqlAdapter,
+            sqlserver:sqlServerAdapter,
         },
         connections: {},
         defaults: {
             migrate: 'safe'
-            //migrate: 'alter'
+           // migrate: 'alter'
         }
     }
     //初始化数据库配置
@@ -43,11 +45,14 @@ export default function (cb) {
                 setting.autoCreatedAt = setting.autoCreatedAt || true;//自动记录增加时间
                 setting.autoUpdatedAt = setting.autoUpdatedAt || true;//自动记录修改时间
                 dbs[k] = waterline.Collection.extend(setting)
+
                 orm.loadCollection(dbs[k])
             }
 
         })
     })
+
+
 
     orm.initialize(config, (err, models) => {
         if (err) throw err;

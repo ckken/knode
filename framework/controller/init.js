@@ -13,7 +13,7 @@ export default function () {
 
     //跨控制层加载
     G.controller.load = function (path) {
-        path = G.path.controller + '/' + path+'.js'
+        path = G.path.controller + '/' + path + '.js'
         if (fs.existsSync(path)) {
             return require(path)
         }

@@ -1,4 +1,5 @@
-export default class extends G.controller.rest {
+import base from '../common/base.js'
+export default class extends base {
 
 
     init(){
@@ -23,8 +24,8 @@ export default class extends G.controller.rest {
         if(this._map.aid){
             this.modelName = 'activity_signin_member'
             rs = await super.get({cb:true})
-            console.log(this._map)
-            console.log(rs)
+            //console.log(this._map)
+            //console.log(rs)
         }
         this.json(rs)
     }

@@ -16,6 +16,7 @@ module.exports = (io) => {
     //
     signin.on('connection', function (socket) {
 
+
         socket.on('activities_signin_rq_user', async (d)=> {
             let user = await model.findOne({aid: d.id, openid: d.user.openid}).toPromise()
             //console.log(user)
@@ -30,9 +31,6 @@ module.exports = (io) => {
 
 
         socket.on('activities_signin_danmu', async (d)=> {
-
-            console.log(d)
-
             //console.log(d)
             signin.in(socket.room).emit('activities_signin_danmu', d);
         })

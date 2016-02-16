@@ -38,6 +38,7 @@ module.exports = (io) => {
         socket.on('activities_signin_msg', async (d)=> {
             if (d.id) {
                 let activity = await model_activity.findOne({id: d.id}).toPromise()
+                console.log(activity)
                 socket.emit('activities_signin_msg', activity);
             }
         })

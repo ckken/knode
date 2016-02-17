@@ -1,4 +1,4 @@
-#KNode version 2.1
+#KNode version 2.2
 
 ##安装依赖
 
@@ -23,7 +23,7 @@
 ##下一步规划
 
 + websocket 支撑cluster  
-+ mirco 微服务 分离引入  
++ mirco 微服务 分离引入  已经实现 v2.2
 + 引入jwt 鉴权  
-+ 实现 restful模式 传统展示模式 websocket模式 等独立功能部署  
-+ 同一个framework文件 多文件调用 实现多独立模块调用同一框架问题  
++ 实现 restful模式 传统展示模式 websocket模式 等独立功能部署  已经实现 v2.2
++ 同一个framework文件 多文件调用 实现多独立模块调用同一框架问题  已经实现 v2.2

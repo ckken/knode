@@ -1,6 +1,6 @@
-import cors from 'cors'
+//import cors from 'cors'
 
-module.exports = function(app){
+export default (app)=>{
 
 
 /*    app.ws('/activities/signin/:id',cors(),function(ws, req, next){

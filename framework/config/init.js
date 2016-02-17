@@ -1,15 +1,31 @@
-import conf from './config'
+import conf from './config'//系统默认配置变量
 import fs from 'fs'
 
-export default function (root, app_path, core_path) {
+export default function (opt) {
     //定义全局配置方法 可以直接用 G. 调用
-    global.G = conf(root, app_path, core_path)
+    global.G = conf(opt)
 
     //创建项目目录
-    if (!fs.existsSync(app_path))fs.mkdirSync(app_path)
+    if (!fs.existsSync(opt.app_path))fs.mkdirSync(opt.app_path)
+    /**
+     * @G.system_mod Array 判断 生成对应的服务模式 api socket page , 默认值为[api,socket,page]
+     */
+    let module_folder = ['tmp','model','config']
+    if(G.system_mod.indexOf('api')>-1)module_folder.push(['api'])
+    if(G.system_mod.indexOf('socket')>-1)module_folder.push(['socket'])
+    if(G.system_mod.indexOf('page')>-1)module_folder.push(['controller','view'])
+
     _.forEach(G.path, (v, k) => {
-        if (!fs.existsSync(v) && v.indexOf(['app', 'core', 'root']) == -1)fs.mkdirSync(v)
+        //if (!fs.existsSync(v) && v.indexOf(['app', 'core', 'root']) === -1)fs.mkdirSync(v)
+        if (!fs.existsSync(v) && v.indexOf(module_folder) > -1)fs.mkdirSync(v)
     })
+    //上传目录
+    if(opt.upload_path){
+        if('boolean' === typeof opt.upload_path){
+            opt.upload_path = opt.app_path + "/data"
+        }
+        fs.mkdirSync(opt.upload_path)
+    }
 
     let default_app_path = [
         G.path.controller + '/' + G.web.module,

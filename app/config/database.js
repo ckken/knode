@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     db: {
         connections: {
 /*            local: {
@@ -28,7 +28,5 @@ module.exports = {
             }*/
 
         }
-    },
-    socket:true,
-    port: 8888
+    }
 }

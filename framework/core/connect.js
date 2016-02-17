@@ -10,7 +10,7 @@ module.exports = (app, db) => {
             console.log('启动服务端口:' + server.address().port);
         });
 
-        if (G.socket) {
+        if (G.system_mod.indexOf('socket')>-1) {
             console.log('启动Socket');
             io.listen(server)
 

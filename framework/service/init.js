@@ -8,4 +8,13 @@ export default function(){
             return require(path)
         }
     }
+
+    G.service.common_load = function(path){
+        path = G.path.common+'/service/'+path+'.js'
+        if(fs.existsSync(path)){
+            return require(path)
+        }
+    }
+
+
 }

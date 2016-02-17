@@ -1,4 +1,7 @@
 import request from 'request'
+//Promise.promisifyAll(request)
+
+
 
 //let today1 = _.moment().format('YYYY-MM-DD')+'+00%3A00%3A00'
 //let today2 = _.moment().format('YYYY-MM-DD')+'+23%3A59%3A59'
@@ -138,6 +141,8 @@ let refreshTokenID = setInterval(async ()=>{
 },600000);
 
 module.exports =  async (io) => {
+
+
     let sysToken = await D.model('sys_token').find().toPromise()
     sysToken = sysToken[0]||{}
     if(sysToken.token){

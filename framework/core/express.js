@@ -26,12 +26,14 @@ export default ()=> {
     // 直接解析 G.cdn 文件夹下的静态资源
     if (G.cdn.indexOf('http') === -1)app.use(G.cdn, express.static(G.path.root + '/static', {maxAge: 86400000}));
     //定义模板 开发环境不缓存模板,模板根路径定位到 view 目录
-    G.path.view = (!G.debug) && G.path.view.replace('/view', '/build/view') || G.path.view
-    swig.setDefaults({cache: false, autoescape: false, loader: swig.loaders.fs(G.path.view)})
+    //G.path.view = (!G.debug) && G.path.view.replace('/view', '/build/view') || G.path.view
+    //swig.setDefaults({cache: false, autoescape: false, loader: swig.loaders.fs(G.path.view)})
+    swig.setDefaults({cache: false, autoescape: false, loader: swig.loaders.fs(G.path.module)})
     swig.setDefaultTZOffset(8)
     app.engine('html', swig.renderFile);
     app.set('view engine', 'html');
-    app.set('views', G.path.view + '/');
+    //app.set('views', G.path.view + '/');
+    app.set('views', G.path.module + '/');
     app.set('view cache', false);
     //app.use(display());//display 封装
     //if (G.debug)app.use(logger('dev'));//开发环境性进行debug
@@ -62,6 +64,7 @@ export default ()=> {
     // no stacktraces leaked to user
     app.use((err, req, res, next)=> {
         var err_msg = {}
+        console.log(err)
         res.status(err.status || 500);
         if (G.debug) {
             err_msg = {

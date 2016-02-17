@@ -25,13 +25,11 @@ module.exports = (app)=> {
                     break;
             }
         }
-        //var rest_name = (req.rest_name) ? '/' + req.rest_name : ''
-        //var load_file_path = G.path.controller + rest_name + '/' + req.rq.module + '/' + req.rq.controller
 
         if (req.isApi) {
             var load_file_path = G.path.api + '/' + req.rq.module + '/' + req.rq.controller
         } else {
-            var load_file_path = G.path.controller + '/' + req.rq.module + '/' + req.rq.controller
+            var load_file_path = G.path.module + '/' + req.rq.module + '/' + req.rq.controller
         }
         //console.log(load_file_path)
         var check = await fs.exists(load_file_path + '.js')
@@ -42,7 +40,7 @@ module.exports = (app)=> {
                 await cls.invoke(req.rq.action)
 
             } catch (e) {
-                console.log(e)
+                //console.log(e)
                 next(e)
             }
 
@@ -63,7 +61,7 @@ module.exports = (app)=> {
 
     //G.system_mod = G.system_mod ||[]
     //console.log(G.system_mod)
-    if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('page') >-1) {
+    if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('module') >-1) {
 
         app.options('/*', cors())
         app.get('/' + G.rest + '/:module/:controller', cors(), restFunc())
@@ -83,7 +81,7 @@ module.exports = (app)=> {
         app.post('/:module/:controller/:action', cors(), Func)
         app.post('/:module/:controller/:action/:id', cors(), Func)
 
-    }else if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('page') === -1){
+    }else if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('module') === -1){
         //restful 模型
         app.options('/*', cors())
         app.get('/:module/:controller', cors(), restFunc())

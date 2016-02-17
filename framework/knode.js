@@ -16,8 +16,8 @@ export default  (opt)=> {
         opt.app_path = filename
     }
 
-    opt.app_path = opt.root_path+'/' + opt.app_path
-    opt.core_path = opt.root_path+'/'+ (opt.core_path||'framework')
+    opt.app_path = opt.root_path+'/' + opt.app_path//应用模块路径
+    opt.core_path = __dirname//框架路径
 
     //全局变量初始化
     require(opt.core_path + '/config/init')(opt)

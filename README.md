@@ -13,7 +13,7 @@
 + app/socket websocket功能模块  
 + app/api restful 模块
 
-## 微服务调用方式 可看app.js node app 可以开启多端口模式		
+`微服务调用方式 可看app.js node app 可以开启多端口模式	`	
 
 ##数据库配置		
 数据库ORM利用waterline 进行操作 配置如下:

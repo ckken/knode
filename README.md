@@ -54,13 +54,13 @@ module.exports = {
 ``````
 
 具体配置可以参考 waterline的用法，ORM调用方式为:
-async await 方法 `await D.model('collectionName').find().toPromise()`
+async await 方法 `await D.model('collectionName').find().toPromise()`	
 或回调方法 `D.model('collectionName').find().exec(function(error,data){})`
 
-## 功能明细
+## 实现功能以及规划(版本号为已经实现功能)
 
 + websocket 支撑cluster  
-+ mirco 微服务 分离引入  已经实现 <sup> version 2.2 </sup>
++ mirco 微服务 分离引入 <sup>version 2.2 </sup>
 + 引入jwt 鉴权  
 + 实现 restful模式 传统展示模式 websocket模式 等独立功能部署  <sup> version 2.2 </sup>
 + 同一个framework文件 多文件调用 实现多独立模块调用同一框架问题  <sup> version 2.2 </sup>

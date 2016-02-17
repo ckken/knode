@@ -1,26 +1,41 @@
 #KNode version 2.2 Beta
-
-##安装依赖
-
-+ express 
-+ babel 
-+ waterline	
-+ momentJs  
-+ lodash 
+###基于 express babel 开发的 nodejs (传统刷新,restful,socket)模型的 立足微服务 开发框架！
 
 安装依赖  `npm install`  
 运行程序  `node app.js`  
 
-##项目逻辑层
+##项目结构
 
-+ app/controller 业务逻辑层  
++ app/module 传统页面模块  
 + app/config 配置文件  
 + app/model 数据模型  
-+ app/service 服务层  
-+ app/view 展现层  
++ app/service 服务层   
 + app/socket websocket功能模块  
++ app/api restful 模块
 
-##下一步规划
+## 微服务调用方式 可看app.js node app 可以开启多端口模式		
+
+##数据库配置		
+数据库ORM利用waterline 进行操作 配置如下	
+```javascript``` 
+export default {
+    db: {
+        connections: {
+            local: {
+                adapter: 'mongo',
+                host: '127.0.0.1',
+                port: 27017,
+                user: '',
+                password: '',
+                database: 'database'
+            }
+        }
+    }
+}
+
+``````
+
+## Version 2.+ 功能明细
 
 + websocket 支撑cluster  
 + mirco 微服务 分离引入  已经实现 <sup> version 2.2 </sup>

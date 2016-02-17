@@ -1,5 +1,5 @@
-#KNode version 2.2 Beta
-#####基于 express babel 开发的 nodejs (传统刷新,restful,socket)模型的 立足微服务 开发框架！
+#KNode version 2.2 Beta 
+#####基于 express babel 开发的 nodejs (传统刷新,restful,socket)模型的 立足微服务 开发框架！ 
 
 安装依赖  `npm install`  
 运行程序  `node app.js`  

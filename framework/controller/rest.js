@@ -12,9 +12,7 @@ export default class extends G.controller.base {
             pageSize: 10,
             page: 1,
             sort: 'desc',
-            order: 'id',
-            cb:false,
-            findOne:false,
+            order: 'id'
         }
         //
         let order = this.req.query.order || this.pageSet.order
@@ -33,9 +31,9 @@ export default class extends G.controller.base {
         let rs = {}
         rs.code = 0
         //
-        if (op.findOne) {
-            this._map.id = this._map.id || this.req.params.id
-            rs.data = await this.model().findOne(this._map).toPromise()
+        if (this.req.params.id) {
+            this._map.id = this.req.params.id
+            rs.data = await this.model().findOne(map).toPromise()
         } else {
             rs.data = {
                 page: this.pageSet.page,

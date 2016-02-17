@@ -2,8 +2,6 @@ import fs from 'fs'
 
 let io = require('socket.io')();
 
-
-
 module.exports = (app, db) => {
 
     db(()=> {
@@ -16,10 +14,10 @@ module.exports = (app, db) => {
             console.log('启动Socket');
             io.listen(server)
 
-            if (fs.existsSync(G.path.app+'/socket')) {
+            if (fs.existsSync(G.path.app + '/socket')) {
                 fs.readdirSync(G.path.app + '/socket').forEach((name)=> {
                     if (name.indexOf('.js') > -1) {
-                        require(G.path.app + '/socket/'+ name)(io);
+                        require(G.path.app + '/socket/' + name)(io);
                     }
                 })
             }
@@ -28,4 +26,3 @@ module.exports = (app, db) => {
 
     })
 }
-

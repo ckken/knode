@@ -120,12 +120,14 @@ function reloadToken(){
         }, (error, response, body)=> {
             if (!error && response.statusCode == 200) {
                 let d = JSON.parse(body);
-                D.model('sys_token').update({id: tokenId}, {
-                    token: d.data.token,
-                    refreshToken: d.data.refreshToken
-                }).exec(function (e, d) {
-                    console.log('reflash', e, d)
-                })
+                if(d.code==0) {
+                    D.model('sys_token').update({id: tokenId}, {
+                        token: d.data.token,
+                        refreshToken: d.data.refreshToken
+                    }).exec(function (e, d) {
+                        console.log('reflash', e, d)
+                    })
+                }
             }
         })
     }

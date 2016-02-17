@@ -1,5 +1,5 @@
 module.exports = {
-    schema:true,
+    //schema:true,
     attributes: {
         name:{'type':'string',required:true}
         ,startTime:{'type':'date'}

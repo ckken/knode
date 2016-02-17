@@ -7,7 +7,16 @@ moment.locale('zh-cn')
 export default  (opt)=> {
     global._ = lodash
     _.moment = moment
-    opt.app_path = opt.root_path+'/' + (opt.app_path||'app')
+
+    //根据当前文件生成
+    if(!opt.app_path) {
+        let filename = require.main.filename
+        filename = filename.split('/')
+        filename = filename[filename.length - 1].replace('.js', '')
+        opt.app_path = filename
+    }
+
+    opt.app_path = opt.root_path+'/' + opt.app_path
     opt.core_path = opt.root_path+'/'+ (opt.core_path||'framework')
 
     //全局变量初始化

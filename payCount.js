@@ -1,5 +1,6 @@
 require('babel-core/register')
 require(__dirname+'/framework/knode')({
     root_path:__dirname,
-    port:8888
+    mod:['socket'],
+    port:8889
 });

@@ -8,8 +8,9 @@ export default function () {
     //控制层 功能类初始化
     G.controller = {}
     G.controller.base = base
-    G.controller.http = require(G.path.core + '/controller/http')
-    G.controller.rest = require(G.path.core + '/controller/rest')
+
+    if(G.system_mod.indexOf('page')>-1)G.controller.http = require(G.path.core + '/controller/http')
+    if(G.system_mod.indexOf('api')>-1)G.controller.rest = require(G.path.core + '/controller/rest')
 
     //跨控制层加载
     G.controller.load = function (path) {
@@ -18,4 +19,5 @@ export default function () {
             return require(path)
         }
     }
+
 }

@@ -62,7 +62,7 @@ module.exports = (app)=> {
 
 
     //G.system_mod = G.system_mod ||[]
-    console.log(G.system_mod)
+    //console.log(G.system_mod)
     if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('page') >-1) {
 
         app.options('/*', cors())

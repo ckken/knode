@@ -1,7 +1,14 @@
 [
   {
-    "script": "./app.js",
-    "name": "activityProject",
+    "script": "./ylp-activities.js",
+    "name": "ylp-activities",
+    "exec_mode": "fork",
+    //"exec_mode": "cluster",
+    //"instances": -1
+  },
+  {
+    "script": "./ylp-cron-socket.js",
+    "name": "ylp-cron-socket",
     //"exec_mode": "cluster",
     //"instances": -1,
     "exec_mode": "fork",
@@ -9,8 +16,8 @@
     // number of CPUs -1
   },
   {
-    "script": "./page.js",
-    "name": "demo",
+    "script": "./ylp-page-demo.js",
+    "name": "ylp-page-demo",
     "exec_mode": "fork",
     //"watch": true,
     // auto restart app on change,
@@ -22,13 +29,5 @@
       // Used if --env prod
       "INTERVAL": 60000
     }
-  },
-
-  {
-    "script": "./payCount.js",
-    "name": "payCount",
-    "exec_mode": "fork",
   }
-
-
 ]

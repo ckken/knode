@@ -64,6 +64,7 @@ export default ()=> {
     // no stacktraces leaked to user
     app.use((err, req, res, next)=> {
         var err_msg = {}
+        console.log('======================== error Logs ===========================')
         console.log(err)
         res.status(err.status || 500);
         if (G.debug) {

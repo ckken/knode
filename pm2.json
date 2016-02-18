@@ -1,0 +1,34 @@
+[
+  {
+    "script": "./app.js",
+    "name": "activityProject",
+    //"exec_mode": "cluster",
+    //"instances": -1,
+    "exec_mode": "fork",
+
+    // number of CPUs -1
+  },
+  {
+    "script": "./page.js",
+    "name": "demo",
+    "exec_mode": "fork",
+    //"watch": true,
+    // auto restart app on change,
+    "env": {
+      // common env variables
+      "INTERVAL": 1000
+    },
+    "env_production": {
+      // Used if --env prod
+      "INTERVAL": 60000
+    }
+  },
+
+  {
+    "script": "./payCount.js",
+    "name": "payCount",
+    "exec_mode": "fork",
+  }
+
+
+]

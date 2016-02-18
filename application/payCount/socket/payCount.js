@@ -156,7 +156,6 @@ module.exports =  async (io) => {
 
 
     async function getCount(day=0){
-        console.log('getCount',Date.now())
         setDay(day)
         let d =  await Promise.all([
             getData(sourceRedPackUrl()),
@@ -165,6 +164,7 @@ module.exports =  async (io) => {
             getData(sourceSumUrl()),
             getData(RedPackSumUrl()),
         ])
+        console.log('getCount',Date.now(),d)
 
         //console.log(d)
         return {

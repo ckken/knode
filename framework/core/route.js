@@ -40,7 +40,6 @@ module.exports = (app)=> {
                 await cls.invoke(req.rq.action)
 
             } catch (e) {
-                //console.log(e)
                 next(e)
             }
 

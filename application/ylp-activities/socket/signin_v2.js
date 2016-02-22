@@ -30,21 +30,30 @@ module.exports = (io) => {
     }
 
 
+
     //*********************初始化客户端连接*********************
     client.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
             if(d.id&&d.member) {
                 socket.signin = await signin_mod.findOne({id: d.id}).toPromise()
+                console.log(socket.signin)
                 if(socket.signin) {
                     socket.roomId = d.id
-                    socket.member = await member_mod.findOne({aid: d.id, openid: d.member.openid}).toPromise() || false
+                    socket.member = await member_mod.findOne({aid: socket.roomId, openid: d.member.openid}).toPromise() || false
 
                     if (!socket.member) {
-                        await member_mod.create(d.member).toPromise()
+
+                        socket.member = d.member
+                        socket.member.online = 1
+
+                        let data = d.member
+                        data.aid = socket.roomId
+                        await member_mod.create(data).toPromise()
+
                     } else {
                         socket.member.online = 1
-                        await member_mod.update({aid: d.id, openid: d.member.openid}, socket.member).toPromise()
+                        await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
                     }
 
                     //获取所有会员信息

@@ -19,7 +19,12 @@ module.exports = (io) => {
     }
 
     //let ylpHost = 'http://m.yolipai.com/mobile/lottery/config/'
-    let ylpHost = 'http://test-ylp.53123.cn/mobile/lottery/config/'
+    let ylpHost = '/mobile/lottery/config/'
+
+    function ylpUrl(host){
+        return host+ylpHost
+    }
+
     function getData(url,token){
         return new Promise((resolve,reject) => {
 
@@ -41,7 +46,13 @@ module.exports = (io) => {
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            if(d.id&&d.member&&d.member.token) {
+
+
+
+            if(d.id&&d.member&&d.member.token&&d.host) {
+
+                ylpUrl(d.host)
+
                 socket.activity  = await getData(ylpHost+d.id,d.member.token)
                 if(socket.activity) {
                     socket.roomId = d.id

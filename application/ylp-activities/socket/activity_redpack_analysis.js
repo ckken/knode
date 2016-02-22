@@ -42,7 +42,7 @@ module.exports = (io) => {
         //定位所在房间
         socket.on('init', async (d)=> {
             if(d.id&&d.member&&d.member.token) {
-                socket.activity  = await getData(ylpHost+d.id,d.member.token)
+                socket.activity  = await getData(d.host+'/mobile/lottery/config/'+d.id,d.member.token)
                 if(socket.activity) {
                     socket.roomId = d.id
                     //加入房间

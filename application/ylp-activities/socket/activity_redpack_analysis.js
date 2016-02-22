@@ -87,7 +87,7 @@ module.exports = (io) => {
                 //获取统计数据
                 socket.analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                 if (!socket.analysis || socket.analysis.length == 0) {
-                    let redpackNum = socket.activity.activityConfig&&socket.activity.activityConfig.checkNum||0
+                    let redpackNum = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
                     socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum}).toPromise()
 
                 }

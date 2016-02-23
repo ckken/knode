@@ -93,13 +93,13 @@ module.exports = (io) => {
 
                 //获取统计数据
                 cache[socket.roomId]  = cache[socket.roomId] ||{}
-                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
+                cache[socket.roomId].analysis = cache[socket.roomId].analysis || {}
 
                 console.log('init',cache[socket.roomId])
 
 
 
-                if(!cache[socket.roomId].analysis && socket.activity) {
+                if(Object.keys(cache[socket.roomId].analysis)>0 && socket.activity) {
                     //获取统计数据
                     let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                     analysis = analysis[0] || false
@@ -127,7 +127,7 @@ module.exports = (io) => {
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     //赋值
                     cache[socket.roomId].analysis = analysis
-                }else{
+                }else {
                     //补全已经参与人员数据
                     cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                 }

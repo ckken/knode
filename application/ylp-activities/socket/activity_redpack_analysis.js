@@ -85,7 +85,8 @@ module.exports = (io) => {
                 socket.analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                 if (!socket.analysis || socket.analysis.length == 0&&socket.activity) {
                     let redpackNum = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
-                    socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum}).toPromise()
+                    let leftNumber = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
+                    socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum,leftNumber:leftNumber}).toPromise()
                 }
                 socket.analysis = socket.analysis[0]
                 //socket.analysis = socket.activity.activityConfig.checkNum
@@ -130,6 +131,7 @@ module.exports = (io) => {
                     let redpack = parseInt(d) || 0
                     if (redpack > 0) {
                         socket.member.redpack = socket.member.redpack + redpack
+                        socket.analysis.leftNumber = socket.analysis.leftNumber>0?socket.analysis.leftNumber-1:0
                         //更新状态
                         await yhb_mod.update({aid: socket.roomId}, socket.analysis).toPromise()
                     }

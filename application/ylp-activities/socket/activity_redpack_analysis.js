@@ -88,14 +88,14 @@ module.exports = (io) => {
                 //获取统计数据
                 socket.analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
 
-                console.log(socket.analysis)
+                //console.log(socket.analysis)
 
                 if ((!socket.analysis || socket.analysis.length == 0)&&socket.activity) {
                     socket.analysis = await yhb_mod.create({aid: socket.roomId}).toPromise()
                 }else if(socket.analysis[0].redpackNumber == 0 && socket.activity){
                     let redpackNumber = socket.activity.activityInfo&&socket.activity.activityInfo.giftCount||0
                     socket.analysis = await yhb_mod.update({aid: socket.roomId},{redpackNumber:redpackNumber,leftNumber:redpackNumber}).toPromise()
-                    console.log('socket.analysis',socket.analysis)
+                    //console.log('socket.analysis',socket.analysis)
                 }
                 socket.analysis = socket.analysis[0]
                 //console.log('socket.analysis',socket.analysis)

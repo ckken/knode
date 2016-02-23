@@ -104,7 +104,7 @@ module.exports = (io) => {
                     if ((!analysis || analysis.length == 0) && socket.activity) {
                         //创建统计数据
                         analysis = await yhb_mod.create({aid: socket.roomId}).toPromise()
-                    } else if (analysis[0].redpackNumber == 0 && socket.activity) {
+                    } else if (analysis.redpackNumber == 0 && socket.activity) {
                         //获取礼品数量
                         let redpackNumber = socket.activity.activityInfo && socket.activity.activityInfo.giftCount || 0
                         //更新统计数据状态
@@ -112,8 +112,9 @@ module.exports = (io) => {
                             redpackNumber: redpackNumber,
                             leftNumber: redpackNumber
                         }).toPromise()
+                        analysis = analysis[0]
                     }
-                    analysis = analysis[0]
+
 
                     //补全已经参与人员数据
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()

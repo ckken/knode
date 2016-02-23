@@ -102,17 +102,18 @@ module.exports = (io) => {
                 if(!cache[socket.roomId].analysis && socket.activity) {
                     //获取统计数据
                     let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
+                    analysis = analysis[0] || false
                     //获取礼品数量
                     let redpackNumber = socket.activity.activityInfo && socket.activity.activityInfo.giftCount || 0
                     //
-                    if ((!analysis || analysis.length == 0)) {
+                    if (!analysis) {
                         //创建统计数据 同步api 数据
                         analysis = await yhb_mod.create({
                             aid: socket.roomId,
                             redpackNumber: redpackNumber,
                             leftNumber: redpackNumber
                         }).toPromise()
-                    } else if (analysis[0].redpackNumber == 0) {
+                    } else if (analysis.redpackNumber == 0) {
                         //更新统计数据状态
                         analysis = await yhb_mod.update({aid: socket.roomId}, {
                             redpackNumber: redpackNumber,
@@ -120,7 +121,8 @@ module.exports = (io) => {
                         }).toPromise()
                         analysis = analysis[0]
                     }
-                    
+                    console.log('=========analysis===============',analysis)
+
                     //补全已经参与人员数据
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     //赋值
@@ -146,7 +148,7 @@ module.exports = (io) => {
                     console.log('play socket.member',socket.member)
                    cache[socket.roomId].analysis.playTime =cache[socket.roomId].analysis.playTime + 1
                     //更新状态
-                    yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).exec(function(e,d){})
+                    await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
                 }
             }
 
@@ -168,7 +170,7 @@ module.exports = (io) => {
                         //剩下红包状态
                         if(cache[socket.roomId].analysis.leftNumber>0)cache[socket.roomId].analysis.leftNumber =cache[socket.roomId].analysis.leftNumber -1
                         //更新状态
-                        yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).exec(function(e,d){})
+                        await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
                     }
                 }
                 //
@@ -183,7 +185,7 @@ module.exports = (io) => {
                 d = d && true || false
                cache[socket.roomId].analysis.shakeBol = d
                 //更新状态
-                yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).exec(function(e,d){})
+                await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
             }
             sc.in(socket.roomId).emit('begin_client', d)
             sc.in(socket.roomId).emit('begin_service', d)

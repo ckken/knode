@@ -127,9 +127,14 @@ module.exports = (io) => {
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     //赋值
                     cache[socket.roomId].analysis = analysis
-                }else if(cache[socket.roomId].analysis){
+                }
+
+                else if(cache[socket.roomId].analysis && socket.activity){
                     //补全已经参与人员数据
                     cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
+                }else if(!cache[socket.roomId].analysis && !socket.activity){
+                    cache[socket.roomId].analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
+                    cache[socket.roomId].analysis = cache[socket.roomId].analysis[0] || {}
                 }
 
                 let members = await getMembers(socket.roomId)

@@ -174,6 +174,11 @@ module.exports = (io) => {
                         if(cache[socket.roomId].analysis.leftNumber>0)cache[socket.roomId].analysis.leftNumber =cache[socket.roomId].analysis.leftNumber -1
                         //更新状态
                         await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
+
+
+                        console.log('================pick==========')
+                        console.log(cache[socket.roomId].analysis)
+
                     }
                 }
                 //

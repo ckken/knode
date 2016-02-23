@@ -6,5 +6,6 @@ module.exports = {
         ,playMember:{type:'integer',defaultsTo:0}
         ,redpackNumber:{type:'integer',defaultsTo:0}
         ,leftNumber:{type:'integer',defaultsTo:0}
+        ,shakeBol:{type:'boolean',defaultsTo:false}//是否开启游戏
     }
 }

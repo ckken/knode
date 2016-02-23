@@ -89,7 +89,7 @@ module.exports = (io) => {
                     socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum,leftNumber:leftNumber}).toPromise()
                 }
                 socket.analysis = socket.analysis[0]
-                //socket.analysis = socket.activity.activityConfig.checkNum
+                //socket.analysis = socket.activity.activityConfig.checkNu
 
                 //补全已经参与人员数据
                 if(socket.analysis.playMember===0){

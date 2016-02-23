@@ -45,11 +45,10 @@ module.exports = (io) => {
 
     }
 
-
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-           // console.log(d)
+
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
@@ -58,6 +57,7 @@ module.exports = (io) => {
 
                     let ylpHost = ylpUrl(d.host)
                     socket.activity = await getData(ylpHost + d.id, d.member.token)
+                    //console.log(socket.activity.data)
                     if (socket.activity && socket.activity.code == 0) {
                         socket.activity = socket.activity.data
                         //
@@ -73,45 +73,41 @@ module.exports = (io) => {
                         if (!socket.member || socket.member.length==0) {
                             let memberData = d.member
                             memberData.aid = socket.roomId
-                            socket.member = await member_mod.create(memberData).toPromise()
-                            socket.member = socket.member[0]
-                        }else{
-                            socket.member = socket.member[0]
+                            await member_mod.create(memberData).toPromise()
                         }
-                       // socket.member = d.member
+                        socket.member = d.member
 
 
                     }
-                    //console.log(socket.activity)
                 }
 
                 //获取统计数据
                 socket.analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
-                let redpackNum = 0
-
-
-
-                if ((!socket.analysis || socket.analysis.length == 0)&&socket.activity) {
-                    redpackNum = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
-                    socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum}).toPromise()
+                if (!socket.analysis || socket.analysis.length == 0&&socket.activity) {
+                    let redpackNum = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
+                    let leftNumber = socket.activity.activityinfo&&socket.activity.activityinfo.giftCount||0
+                    socket.analysis = await yhb_mod.create({aid: socket.roomId,redpackNumber:redpackNum,leftNumber:leftNumber}).toPromise()
                 }
                 socket.analysis = socket.analysis[0]
-                socket.analysis.redpackNumber = socket.analysis.redpackNumber ||redpackNum
-                socket.analysis.leftNumber = socket.analysis.redpackNumber
-                //socket.analysis = socket.activity.activityConfig.checkNum
+                //socket.analysis = socket.activity.activityConfig.checkNu
 
                 //补全已经参与人员数据
-                //if(socket.analysis.playMember===0){
+                if(socket.analysis.playMember===0){
                     socket.analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
-
-                //}
+                }
 
                 let members = await getMembers(socket.roomId)
                 sc.in(socket.roomId).emit('analysis', socket.analysis)
                 sc.in(socket.roomId).emit('members', members)
-                sc.in(socket.roomId).emit('begin_client', socket.analysis.shakeBol||false)
             }
         })
+
+        /*
+         ,playTime:{type:'integer',defaultsTo:0}
+         ,playMember:{type:'integer',defaultsTo:0}
+         ,redpackNumber:{type:'integer',defaultsTo:0}
+         ,leftNumber:{type:'integer',defaultsTo:0}
+         */
 
         socket.on('play', async (d)=> {
 
@@ -128,23 +124,21 @@ module.exports = (io) => {
 
         socket.on('pick', async (d)=> {
 
+           // console.log(d)
             if (socket.roomId) {
                 if(socket.member) {
 
                     let redpack = parseInt(d) || 0
                     if (redpack > 0) {
-                        //会员获取的总红包数
-                        socket.member.redpack = socket.member.redpack || 0
                         socket.member.redpack = socket.member.redpack + redpack
-                        //更新会员获取的钱 排名前10的会员
-                        await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
-                        //剩下红包状态
-                        socket.analysis.leftNumber = socket.analysis.leftNumber -1
+                        socket.analysis.leftNumber = socket.analysis.leftNumber>0?socket.analysis.leftNumber-1:0
                         //更新状态
                         await yhb_mod.update({aid: socket.roomId}, socket.analysis).toPromise()
                     }
+                    //更新会员获取的钱 排名前10的会员
+                    await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
+
                 }
-                //
                 let members = await getMembers(socket.roomId)
                 sc.in(socket.roomId).emit('members', members)
                 sc.in(socket.roomId).emit('analysis', socket.analysis)
@@ -152,12 +146,7 @@ module.exports = (io) => {
         })
 
         socket.on('begin', async (d)=> {
-            if(socket.analysis) {
-                d = d && true || false
-                socket.analysis.shakeBol = d
-                //更新状态
-                await yhb_mod.update({aid: socket.roomId}, socket.analysis).toPromise()
-            }
+            d = d && true || false
             sc.in(socket.roomId).emit('begin_client', d)
         })
 

@@ -127,6 +127,9 @@ module.exports = (io) => {
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     //赋值
                     cache[socket.roomId].analysis = analysis
+                }else{
+                    //补全已经参与人员数据
+                    cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                 }
 
                 let members = await getMembers(socket.roomId)

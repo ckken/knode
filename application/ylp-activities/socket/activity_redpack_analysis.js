@@ -93,9 +93,10 @@ module.exports = (io) => {
 
                 //获取统计数据
                 cache[socket.roomId]  = cache[socket.roomId] ||{}
-                cache[socket.roomId].analysis = cache[socket.roomId].analysis = false
+                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
 
                 console.log('init',cache[socket.roomId])
+
 
 
                 if(!cache[socket.roomId].analysis) {
@@ -127,6 +128,8 @@ module.exports = (io) => {
                 sc.in(socket.roomId).emit('members', members)
                 sc.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol||false)
                 sc.in(socket.roomId).emit('begin_service', cache[socket.roomId].analysis.shakeBol||false)
+
+                console.log('----------cache[socket.roomId].analysis-----',cache[socket.roomId].analysis)
             }
         })
 

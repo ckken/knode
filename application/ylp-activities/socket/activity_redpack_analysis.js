@@ -48,19 +48,19 @@ module.exports = (io) => {
         })
 
     }
-    console.log('cache',cache)
+    console.log('==========cache==============',cache)
     //
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            console.log('----------init-------------',d)
+            //console.log('----------init-------------',d)
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
                 //缓存处理
                 cache[socket.roomId]  = cache[socket.roomId] ||{}
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
-                console.log('init',cache[socket.roomId])
+                //console.log('init',cache[socket.roomId])
                 //
                 if (d.member && d.member.token && d.host) {
 

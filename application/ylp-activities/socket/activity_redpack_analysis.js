@@ -52,7 +52,7 @@ module.exports = (io) => {
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            //console.log('----------init-------------',d)
+            console.log('----------init-------------',d)
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
@@ -141,8 +141,8 @@ module.exports = (io) => {
         })
 
         socket.on('play', async (d)=> {
-            //console.log(socket.roomId,socket.member,cache[socket.roomId])
-            //console.log('--------------'+Date.now()+'------------------')
+            console.log(socket.roomId,socket.member,cache[socket.roomId])
+            console.log('--------------'+Date.now()+'------------------')
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
@@ -157,6 +157,8 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
+            console.log('================pick==========')
+            console.log(cache[socket.roomId].analysis)
             if (socket.roomId) {
                 if(socket.member) {
                     let redpack = parseInt(d) || 0
@@ -172,9 +174,6 @@ module.exports = (io) => {
                             //更新状态
                             await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
                         }
-                       // console.log('================pick==========')
-                       // console.log(cache[socket.roomId].analysis)
-
                     }
                 }
                 //

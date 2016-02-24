@@ -158,7 +158,7 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
-            console.log('================pick==========')
+            console.log('================pick==========',socket.member.redpack,socket.member.nickname)
             //console.log(cache[socket.roomId].analysis)
             if (socket.roomId) {
                 if(socket.member) {

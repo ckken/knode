@@ -143,7 +143,7 @@ module.exports = (io) => {
 
         socket.on('play', async (d)=> {
             //console.log(socket.roomId,socket.member,cache[socket.roomId])
-            console.log('--------------play---'+Date.now()+'------------------',socket.member.nickname)
+            console.log('===play==='+Date.now()+'===',socket.member && socket.member.nickname)
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
@@ -158,7 +158,7 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
-            console.log('================pick===='+Date.now()+'====price=='+d+'==float=='+parseFloat(d)+'====',socket.member.redpack,socket.member.nickname)
+            console.log('===pick==='+Date.now()+'====领取==='+d+'元===',socket.member && socket.member.nickname)
             //console.log(cache[socket.roomId].analysis)
             if (socket.roomId && d>0) {
                 if(socket.member) {

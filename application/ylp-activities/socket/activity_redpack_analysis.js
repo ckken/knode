@@ -162,7 +162,7 @@ module.exports = (io) => {
             //console.log(cache[socket.roomId].analysis)
             if (socket.roomId && d>0) {
                 if(socket.member) {
-                    let redpack = parseInt(d) || 0
+                    let redpack = parseFloat(d) || 0
                     if (redpack > 0) {
                         //会员获取的总红包数
                         socket.member.redpack = socket.member.redpack || 0

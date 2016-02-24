@@ -3,7 +3,7 @@ import request from 'request';
 
 
 
-
+let cache = {}
 module.exports = (io) => {
 
 
@@ -48,16 +48,19 @@ module.exports = (io) => {
         })
 
     }
-
-    let cache = {}
-
+    console.log('cache',cache)
+    //
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            //console.log('----------init-------------',d)
+            console.log('----------init-------------',d)
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
+                //缓存处理
+                cache[socket.roomId]  = cache[socket.roomId] ||{}
+                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
+                console.log('init',cache[socket.roomId])
                 //
                 if (d.member && d.member.token && d.host) {
 
@@ -90,15 +93,7 @@ module.exports = (io) => {
                         //console.log('----------init socket.member-------------',socket.member)
                     }
                 }
-
-                //获取统计数据
-                cache[socket.roomId]  = cache[socket.roomId] ||{}
-                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
-
-                //console.log('init',cache[socket.roomId])
-
-
-
+                //
                 if(!cache[socket.roomId].analysis && socket.activity) {
                     //获取统计数据
                     let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
@@ -128,7 +123,6 @@ module.exports = (io) => {
                     //赋值
                     cache[socket.roomId].analysis = analysis
                 }
-
                 else if(cache[socket.roomId].analysis && socket.activity){
                     //补全已经参与人员数据
                     cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
@@ -136,7 +130,7 @@ module.exports = (io) => {
                     cache[socket.roomId].analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                     cache[socket.roomId].analysis = cache[socket.roomId].analysis[0] || {}
                 }
-
+                //提交内容
                 let members = await getMembers(socket.roomId)
                 sc.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
                 sc.in(socket.roomId).emit('members', members)

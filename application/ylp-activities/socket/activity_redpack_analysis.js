@@ -48,7 +48,6 @@ module.exports = (io) => {
         })
 
     }
-    console.log('==========cache==============',cache)
     //
     sc.on('connection', async (socket)=> {
         //定位所在房间
@@ -142,12 +141,8 @@ module.exports = (io) => {
         })
 
         socket.on('play', async (d)=> {
-            console.log('play',{
-                aid:socket.roomId,
-                cache:cache[socket.roomId],
-                member:socket.member
-            })
-            console.log('--------------'+Date.now()+'------------------')
+            //console.log(socket.roomId,socket.member,cache[socket.roomId])
+            //console.log('--------------'+Date.now()+'------------------')
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
@@ -162,12 +157,6 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
-
-            console.log('=========pick=========',{
-                redpack:d,
-                aid:socket.roomId,
-                cache:cache[socket.roomId]
-            })
             if (socket.roomId) {
                 if(socket.member) {
                     let redpack = parseInt(d) || 0

@@ -160,9 +160,13 @@ module.exports = (io) => {
 
         socket.on('pick', async (d)=> {
 
+            console.log('=========pick=========',{
+                redpack:d,
+                aid:socket.roomId,
+                cache:cache[socket.roomId]
+            })
             if (socket.roomId) {
                 if(socket.member) {
-
                     let redpack = parseInt(d) || 0
                     if (redpack > 0) {
                         //会员获取的总红包数
@@ -171,11 +175,11 @@ module.exports = (io) => {
                         //更新会员获取的钱 排名前10的会员
                         await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
                         //剩下红包状态
-                        if(cache[socket.roomId].analysis.leftNumber>0)cache[socket.roomId].analysis.leftNumber =cache[socket.roomId].analysis.leftNumber -1
-                        //更新状态
-                        await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
-
-
+                        if(cache[socket.roomId].analysis.leftNumber>0) {
+                            cache[socket.roomId].analysis.leftNumber = cache[socket.roomId].analysis.leftNumber - 1
+                            //更新状态
+                            await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
+                        }
                        // console.log('================pick==========')
                        // console.log(cache[socket.roomId].analysis)
 

@@ -143,7 +143,7 @@ module.exports = (io) => {
 
         socket.on('play', async (d)=> {
             //console.log(socket.roomId,socket.member,cache[socket.roomId])
-            console.log('--------------play---'+Date.now()+'------------------')
+            console.log('--------------play---'+Date.now()+'------------------',socket.member.nickname)
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {

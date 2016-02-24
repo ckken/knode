@@ -142,8 +142,11 @@ module.exports = (io) => {
         })
 
         socket.on('play', async (d)=> {
-            console.log('play',cache[socket.roomId])
-            console.log('cache id',socket.roomId)
+            console.log('play',{
+                aid:socket.roomId,
+                cache:cache[socket.roomId],
+                member:socket.member
+            })
             console.log('--------------'+Date.now()+'------------------')
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)

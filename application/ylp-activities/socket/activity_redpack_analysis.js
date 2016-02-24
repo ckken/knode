@@ -158,7 +158,7 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
-            console.log('================pick===='+Date.now()+'======'+parseFloat(d)+'====',socket.member.redpack,socket.member.nickname)
+            console.log('================pick===='+Date.now()+'====price=='+d+'==float=='+parseFloat(d)+'====',socket.member.redpack,socket.member.nickname)
             //console.log(cache[socket.roomId].analysis)
             if (socket.roomId && d>0) {
                 if(socket.member) {

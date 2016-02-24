@@ -160,7 +160,7 @@ module.exports = (io) => {
         socket.on('pick', async (d)=> {
             console.log('================pick==========',socket.member.redpack,socket.member.nickname)
             //console.log(cache[socket.roomId].analysis)
-            if (socket.roomId) {
+            if (socket.roomId && d>0) {
                 if(socket.member) {
                     let redpack = parseInt(d) || 0
                     if (redpack > 0) {

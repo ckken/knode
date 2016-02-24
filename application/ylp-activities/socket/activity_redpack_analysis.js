@@ -52,7 +52,7 @@ module.exports = (io) => {
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            console.log('----------init-------------',d)
+            //console.log('----------init-------------',d)
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
@@ -65,7 +65,7 @@ module.exports = (io) => {
 
                     let ylpHost = ylpUrl(d.host)
                     socket.activity = await getData(ylpHost + d.id, d.member.token)
-                    console.log('----------init socket.activity-------------',socket.activity)
+                    //console.log('----------init socket.activity-------------',socket.activity)
                     if (socket.activity && socket.activity.code == 0) {
                         socket.activity = socket.activity.data
                         //
@@ -90,17 +90,13 @@ module.exports = (io) => {
                         }
 
                         //console.log('----------init socket.member-------------',socket.member)
-
-
-
+                        //获取礼品数量
+                        let redpackNumber = socket.activity.activityInfo && socket.activity.activityInfo.giftCount || 0
                         //
-                        if(!cache[socket.roomId].analysis) {
-                            //获取统计数据
+                        if(!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber!=redpackNumber) {
+                            //获取统计数据 补全数据
                             let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                             analysis = analysis[0] || false
-                            //获取礼品数量
-                            let redpackNumber = socket.activity.activityInfo && socket.activity.activityInfo.giftCount || 0
-                            //
                             if (!analysis) {
                                 //创建统计数据 同步api 数据
                                 analysis = await yhb_mod.create({
@@ -108,7 +104,7 @@ module.exports = (io) => {
                                     redpackNumber: redpackNumber,
                                     leftNumber: redpackNumber
                                 }).toPromise()
-                            } else if (analysis.redpackNumber == 0) {
+                            } else if (analysis.redpackNumber != redpackNumber) {
                                 //更新统计数据状态
                                 analysis = await yhb_mod.update({aid: socket.roomId}, {
                                     redpackNumber: redpackNumber,
@@ -116,12 +112,12 @@ module.exports = (io) => {
                                 }).toPromise()
                                 analysis = analysis[0]
                             }
-                            //console.log('=========analysis===============',analysis)
 
                             //补全已经参与人员数据
                             analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                             //赋值
                             cache[socket.roomId].analysis = analysis
+                            //console.log('=========analysis in 补全已经参与人员数据===============',cache[socket.roomId].analysis)
                         }else{
                             //cache[socket.roomId].analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                             //cache[socket.roomId].analysis = cache[socket.roomId].analysis[0] || {}
@@ -131,6 +127,8 @@ module.exports = (io) => {
 
                     }
                 }
+
+                //console.log('=========analysis===============',cache[socket.roomId].analysis)
 
                 //提交内容
                 let members = await getMembers(socket.roomId)
@@ -144,8 +142,8 @@ module.exports = (io) => {
         })
 
         socket.on('play', async (d)=> {
-            console.log(socket.roomId,socket.member,cache[socket.roomId])
-            console.log('--------------'+Date.now()+'------------------')
+            //console.log(socket.roomId,socket.member,cache[socket.roomId])
+            console.log('--------------play '+Date.now()+'------------------')
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
@@ -161,7 +159,7 @@ module.exports = (io) => {
 
         socket.on('pick', async (d)=> {
             console.log('================pick==========')
-            console.log(cache[socket.roomId].analysis)
+            //console.log(cache[socket.roomId].analysis)
             if (socket.roomId) {
                 if(socket.member) {
                     let redpack = parseInt(d) || 0

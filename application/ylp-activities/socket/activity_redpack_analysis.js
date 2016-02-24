@@ -76,18 +76,18 @@ module.exports = (io) => {
                                 openid: d.member.openid
                             }).toPromise() || []
 
-                        console.log('----------init socket.member-------------',socket.member)
+                        //console.log('----------init socket.member-------------',socket.member)
                         if (socket.member.length == 0) {
                             let memberData = d.member
                             memberData.aid = socket.roomId
                             socket.member = await member_mod.create(memberData).toPromise()
-                            console.log('----------init create member-------------',socket.member)
+                            //console.log('----------init create member-------------',socket.member)
 
                         }else{
                             socket.member = socket.member[0]
                         }
 
-                        console.log('----------init socket.member-------------',socket.member)
+                        //console.log('----------init socket.member-------------',socket.member)
                     }
                 }
 
@@ -95,7 +95,7 @@ module.exports = (io) => {
                 cache[socket.roomId]  = cache[socket.roomId] ||{}
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
 
-                console.log('init',cache[socket.roomId])
+                //console.log('init',cache[socket.roomId])
 
 
 
@@ -121,7 +121,7 @@ module.exports = (io) => {
                         }).toPromise()
                         analysis = analysis[0]
                     }
-                    console.log('=========analysis===============',analysis)
+                    //console.log('=========analysis===============',analysis)
 
                     //补全已经参与人员数据
                     analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
@@ -143,7 +143,7 @@ module.exports = (io) => {
                 sc.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol||false)
                 sc.in(socket.roomId).emit('begin_service', cache[socket.roomId].analysis.shakeBol||false)
 
-                console.log('----------cache[socket.roomId].analysis-----',cache[socket.roomId].analysis)
+                //console.log('----------cache[socket.roomId].analysis-----',cache[socket.roomId].analysis)
             }
         })
 
@@ -151,9 +151,9 @@ module.exports = (io) => {
             console.log('play',cache[socket.roomId])
             console.log('--------------'+Date.now()+'------------------')
             if (socket.roomId) {
-                console.log('play socket.roomId',socket.roomId)
+                //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
-                    console.log('play socket.member',socket.member)
+                    //console.log('play socket.member',socket.member)
                    cache[socket.roomId].analysis.playTime =cache[socket.roomId].analysis.playTime + 1
                     //更新状态
                     await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
@@ -181,8 +181,8 @@ module.exports = (io) => {
                         await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
 
 
-                        console.log('================pick==========')
-                        console.log(cache[socket.roomId].analysis)
+                       // console.log('================pick==========')
+                       // console.log(cache[socket.roomId].analysis)
 
                     }
                 }

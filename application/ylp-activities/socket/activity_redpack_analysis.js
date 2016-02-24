@@ -65,7 +65,7 @@ module.exports = (io) => {
 
                     let ylpHost = ylpUrl(d.host)
                     socket.activity = await getData(ylpHost + d.id, d.member.token)
-                    //console.log('----------init socket.activity-------------',socket.activity)
+                    console.log('----------init socket.activity-------------',socket.activity)
                     if (socket.activity && socket.activity.code == 0) {
                         socket.activity = socket.activity.data
                         //

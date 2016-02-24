@@ -54,7 +54,7 @@ module.exports = (io) => {
     sc.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            console.log('----------init-------------',d)
+            //console.log('----------init-------------',d)
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
@@ -63,7 +63,7 @@ module.exports = (io) => {
 
                     let ylpHost = ylpUrl(d.host)
                     socket.activity = await getData(ylpHost + d.id, d.member.token)
-                    console.log('----------init socket.activity-------------',socket.activity)
+                    //console.log('----------init socket.activity-------------',socket.activity)
                     if (socket.activity && socket.activity.code == 0) {
                         socket.activity = socket.activity.data
                         //
@@ -149,6 +149,7 @@ module.exports = (io) => {
 
         socket.on('play', async (d)=> {
             console.log('play',cache[socket.roomId])
+            console.log('cache id',socket.roomId)
             console.log('--------------'+Date.now()+'------------------')
             if (socket.roomId) {
                 //console.log('play socket.roomId',socket.roomId)

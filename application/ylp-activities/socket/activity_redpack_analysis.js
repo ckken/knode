@@ -58,69 +58,72 @@ module.exports = (io) => {
                 socket.join(socket.roomId);
                 //缓存处理
                 cache[socket.roomId]  = cache[socket.roomId] ||{}
-                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false //统计分析
-                cache[socket.roomId].activity = cache[socket.roomId].activity || false //活动信息
-
+                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
+                //console.log('init',cache[socket.roomId])
                 //
                 if (d.member && d.member.token && d.host) {
 
+                    let ylpHost = ylpUrl(d.host)
+                    socket.activity = await getData(ylpHost + d.id, d.member.token)
+                    //console.log('----------init socket.activity-------------',socket.activity)
+                    if (socket.activity && socket.activity.code == 0) {
+                        socket.activity = socket.activity.data
+                        //
+                        sc.in(socket.roomId).emit('init_client', {
+                            activity: socket.activity
+                        })
+                        //获取会员数
+                        socket.member = await member_mod.find({
+                                aid: socket.roomId,
+                                openid: d.member.openid
+                            }).toPromise() || []
 
-                    //activity 处理
-                    if(!cache[socket.roomId].activity) {
+                        //console.log('----------init socket.member-------------',socket.member)
+                        if (socket.member.length == 0) {
+                            let memberData = d.member
+                            memberData.aid = socket.roomId
+                            socket.member = await member_mod.create(memberData).toPromise()
+                            //console.log('----------init create member-------------',socket.member)
 
-                        let ylpHost = ylpUrl(d.host)
-                        let activity = await getData(ylpHost + d.id, d.member.token)
-                        if (activity && activity.code == 0) {
-                            activity = activity.data
-                            //============================发送到客户端==============================
-                            sc.in(socket.roomId).emit('init_client', {
-                                activity: activity
-                            })
-                            //=============================缓存赋值
-                            cache[socket.roomId].activity = activity
-                            //============================获取会员信息==============================
-                            socket.member = await member_mod.find({
-                                    aid: socket.roomId,
-                                    openid: d.member.openid
-                                }).toPromise() || []
-
-                            if (socket.member.length == 0) {
-                                let memberData = d.member
-                                memberData.aid = socket.roomId
-                                socket.member = await member_mod.create(memberData).toPromise()
-                            } else {
-                                socket.member = socket.member[0]
-                            }
-                            //===========================获取礼品数量
-                            let redpackNumber = activity.activityInfo && activity.activityInfo.giftCount || 0
-                            //==============================
-                            if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber != redpackNumber) {
-                                //=======================获取统计数据 补全数据
-                                let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
-                                analysis = analysis[0] || false
-                                if (!analysis) {
-                                    //==================创建统计数据 同步api 数据
-                                    analysis = await yhb_mod.create({
-                                        aid: socket.roomId,
-                                        redpackNumber: redpackNumber,
-                                        leftNumber: redpackNumber
-                                    }).toPromise()
-                                } else if (analysis.redpackNumber != redpackNumber && !analysis.leftNumber) {
-                                    //===================更新统计数据状态
-                                    analysis = await yhb_mod.update({aid: socket.roomId}, {
-                                        redpackNumber: redpackNumber
-                                    }).toPromise()
-                                    analysis = analysis[0]
-                                }
-
-                                //补全已经参与人员数据
-                                analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
-                                //赋值
-                                cache[socket.roomId].analysis = analysis
-                            } else {
-                                cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
-                            }
+                        }else{
+                            socket.member = socket.member[0]
                         }
+
+                        //console.log('----------init socket.member-------------',socket.member)
+                        //获取礼品数量
+                        let redpackNumber = socket.activity.activityInfo && socket.activity.activityInfo.giftCount || 0
+                        //
+                        if(!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber!=redpackNumber) {
+                            //获取统计数据 补全数据
+                            let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
+                            analysis = analysis[0] || false
+                            if (!analysis) {
+                                //创建统计数据 同步api 数据
+                                analysis = await yhb_mod.create({
+                                    aid: socket.roomId,
+                                    redpackNumber: redpackNumber,
+                                    leftNumber: redpackNumber
+                                }).toPromise()
+                            } else if (analysis.redpackNumber != redpackNumber) {
+                                //更新统计数据状态
+                                analysis = await yhb_mod.update({aid: socket.roomId}, {
+                                    redpackNumber: redpackNumber,
+                                    leftNumber: redpackNumber
+                                }).toPromise()
+                                analysis = analysis[0]
+                            }
+
+                            //补全已经参与人员数据
+                            analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
+                            //赋值
+                            cache[socket.roomId].analysis = analysis
+                            //console.log('=========analysis in 补全已经参与人员数据===============',cache[socket.roomId].analysis)
+                        }else{
+                            //cache[socket.roomId].analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
+                            //cache[socket.roomId].analysis = cache[socket.roomId].analysis[0] || {}
+                            cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
+                        }
+
 
                     }
                 }
@@ -139,9 +142,12 @@ module.exports = (io) => {
         })
 
         socket.on('play', async (d)=> {
-            console.log('===play==='+Date.now()+'===',socket.member && socket.member.nickname)
+            //console.log(socket.roomId,socket.member,cache[socket.roomId])
+            console.log('--------------play---'+Date.now()+'------------------',socket.member.nickname)
             if (socket.roomId) {
+                //console.log('play socket.roomId',socket.roomId)
                 if(socket.member) {
+                    //console.log('play socket.member',socket.member)
                    cache[socket.roomId].analysis.playTime =cache[socket.roomId].analysis.playTime + 1
                     //更新状态
                     await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
@@ -152,7 +158,8 @@ module.exports = (io) => {
         })
 
         socket.on('pick', async (d)=> {
-            console.log('===pick==='+Date.now()+'====领取==='+d+'元===',socket.member && socket.member.nickname)
+            console.log('================pick===='+Date.now()+'====price=='+d+'==float=='+parseFloat(d)+'====',socket.member.redpack,socket.member.nickname)
+            //console.log(cache[socket.roomId].analysis)
             if (socket.roomId && d>0) {
                 if(socket.member) {
                     let redpack = parseFloat(d) || 0

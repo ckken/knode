@@ -60,7 +60,6 @@ module.exports = (io) => {
                 cache[socket.roomId] = cache[socket.roomId] || {}
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
                 cache[socket.roomId].activity = cache[socket.roomId].activity || false
-                //console.log('init',cache[socket.roomId])
                 //
                 if (d.member && d.member.token && d.host) {
 
@@ -97,7 +96,7 @@ module.exports = (io) => {
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     //
-                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber ==0) {
+                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
                         let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                         analysis = analysis[0] || false
@@ -109,30 +108,17 @@ module.exports = (io) => {
                                 leftNumber: redpackNumber
                             }).toPromise()
                         }
-
-                        /*else if (analysis.redpackNumber != redpackNumber) {
-                            //更新统计数据状态
-                            analysis = await yhb_mod.update({aid: socket.roomId}, {
-                                redpackNumber: redpackNumber
-                            }).toPromise()
-                            analysis = analysis[0]
-                        }*/
                         //补全已经参与人员数据
                         analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                         //赋值
                         cache[socket.roomId].analysis = analysis
-                        //console.log('=========analysis in 补全已经参与人员数据===============',cache[socket.roomId].analysis)
                     } else {
-                        //cache[socket.roomId].analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
-                        //cache[socket.roomId].analysis = cache[socket.roomId].analysis[0] || {}
                         cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     }
 
 
                 }
-
-                console.log('=========init analysis===============', cache[socket.roomId].analysis)
-
+                //console.log('=========init analysis===============', cache[socket.roomId].analysis)
                 //提交内容
                 let members = await getMembers(socket.roomId)
                 sc.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)

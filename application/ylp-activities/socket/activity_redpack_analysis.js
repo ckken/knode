@@ -96,10 +96,11 @@ module.exports = (io) => {
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     //
-                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
+                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0 || cache[socket.roomId].analysis.redpackNumber != redpackNumber) {
                         //获取统计数据 补全数据
                         let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                         analysis = analysis[0] || false
+                        //////////////////////////////////////////
                         if (!analysis) {
                             //创建统计数据 同步api 数据
                             analysis = await yhb_mod.create({
@@ -107,8 +108,16 @@ module.exports = (io) => {
                                 redpackNumber: redpackNumber,
                                 leftNumber: redpackNumber
                             }).toPromise()
+                            /////////////////////////////
+                        }else if (analysis.redpackNumber==0 || analysis.redpackNumber != redpackNumber) {
+                            //更新统计数据状态
+                            analysis = await yhb_mod.update({aid: socket.roomId}, {
+                                redpackNumber: redpackNumber
+                            }).toPromise()
+
+                            analysis = analysis[0]
                         }
-                        //补全已经参与人员数据
+                        ////////////////补全已经参与人员数据
                         analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                         //赋值
                         cache[socket.roomId].analysis = analysis

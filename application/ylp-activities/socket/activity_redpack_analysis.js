@@ -128,7 +128,7 @@ module.exports = (io) => {
                     }
                 }
 
-                //console.log('=========analysis===============',cache[socket.roomId].analysis)
+                console.log('=========init analysis===============',cache[socket.roomId].analysis)
 
                 //提交内容
                 let members = await getMembers(socket.roomId)

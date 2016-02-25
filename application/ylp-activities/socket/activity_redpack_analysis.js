@@ -112,10 +112,14 @@ module.exports = (io) => {
                         }else if (analysis.redpackNumber==0 || analysis.redpackNumber != redpackNumber) {
                             //更新统计数据状态
                             analysis = await yhb_mod.update({aid: socket.roomId}, {
-                                redpackNumber: redpackNumber
+                                redpackNumber: redpackNumber,
                             }).toPromise()
 
                             analysis = analysis[0]
+                        }else if(analysis.leftNumber != leftNumber){
+                            analysis = await yhb_mod.update({aid: socket.roomId}, {
+                                leftNumber: leftNumber,
+                            }).toPromise()
                         }
                         ////////////////补全已经参与人员数据
                         analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()

@@ -96,7 +96,7 @@ module.exports = (io) => {
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     //
-                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0 || cache[socket.roomId].analysis.redpackNumber != redpackNumber) {
+                    if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0 || cache[socket.roomId].analysis.redpackNumber != redpackNumber || !analysis.leftNumber && analysis.leftNumber != redpackNumber) {
                         //获取统计数据 补全数据
                         let analysis = await yhb_mod.find({aid: socket.roomId}).toPromise()
                         analysis = analysis[0] || false

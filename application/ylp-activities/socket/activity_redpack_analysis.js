@@ -116,7 +116,9 @@ module.exports = (io) => {
                             }).toPromise()
 
                             analysis = analysis[0]
-                        }else if(analysis.leftNumber != redpackNumber){
+                        }
+
+                        else if(!analysis.leftNumber && analysis.leftNumber != redpackNumber){
                             analysis = await yhb_mod.update({aid: socket.roomId}, {
                                 leftNumber: leftNumber,
                             }).toPromise()

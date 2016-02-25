@@ -191,6 +191,7 @@ module.exports = (io) => {
                 //更新状态
                 await yhb_mod.update({aid: socket.roomId},cache[socket.roomId].analysis).toPromise()
             }
+            console.log('======begin======',d)
             sc.in(socket.roomId).emit('begin_client', d)
             sc.in(socket.roomId).emit('begin_service', d)
         })

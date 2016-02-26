@@ -45,12 +45,12 @@ module.exports = async (io) => {
                     socket.params.endTime=_.moment().subtract(0, "days").endOf("day").format('YYYY-MM-DD HH:mm:ss');
                     break;
                 case -1:
-                    socket.params.beginTime=_.moment().subtract(-1, "days").startOf("day").format('YYYY-MM-DD HH:mm:ss');
-                    socket.params.endTime=_.moment().subtract(-1, "days").endOf("day").format('YYYY-MM-DD HH:mm:ss');
+                    socket.params.beginTime=_.moment().subtract(1, "days").startOf("day").format('YYYY-MM-DD HH:mm:ss');
+                    socket.params.endTime=_.moment().subtract(1, "days").endOf("day").format('YYYY-MM-DD HH:mm:ss');
                     break;
                 case -2:
-                    socket.params.beginTime=_.moment().subtract(-2, "days").startOf("day").format('YYYY-MM-DD HH:mm:ss');
-                    socket.params.endTime=_.moment().subtract(-2, "days").endOf("day").format('YYYY-MM-DD HH:mm:ss');
+                    socket.params.beginTime=_.moment().subtract(2, "days").startOf("day").format('YYYY-MM-DD HH:mm:ss');
+                    socket.params.endTime=_.moment().subtract(2, "days").endOf("day").format('YYYY-MM-DD HH:mm:ss');
                     break;
                 case 7:
                     socket.params.beginTime=_.moment().startOf("weeks").format('YYYY-MM-DD HH:mm:ss');

@@ -155,7 +155,8 @@ module.exports = (io) => {
                     } else {
                         cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     }
-
+                    sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
+                    sc_screen.in(socket.roomId).emit('members', members)
                 }
                 sc_client.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol || false)
 

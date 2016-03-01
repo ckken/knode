@@ -101,7 +101,6 @@ module.exports = (io) => {
                 })
             }
         })
-
     })
 
     //*********************初始化屏幕连接*********************
@@ -113,35 +112,28 @@ module.exports = (io) => {
                 if(socket.signin) {
                     socket.roomId = d.id
                     socket.members = await getMembers(socket.roomId)
-                    //
                     //加入房间
                     socket.join(socket.roomId);
                     screen.in(socket.roomId).emit('init', {
                         signin:socket.signin,
                         members:socket.members,
                         online:onlineMembers(socket.members)
-                    });
+                    })
                 }
             }
         })
-
 
         //弹幕开关
         socket.on('setDanmu', async (d)=> {
             if(socket.roomId){
                 socket.signin.isDanmu = (d===false)&&false||true
                 await signin_mod.update({id: socket.roomId},{isDanmu:socket.signin.isDanmu}).toPromise()
-                client.in(socket.roomId).emit('setDanmu', socket.signin.isDanmu);
-
-
+                client.in(socket.roomId).emit('setDanmu', socket.rooms[socket.roomId].isDanmu);
             }
         })
 
-
-
         //断开连接
         socket.on('disconnect', async ()=> {
-
             /*
             socket.member.online = 0
             await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()

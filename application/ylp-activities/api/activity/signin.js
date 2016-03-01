@@ -5,10 +5,14 @@ export default class extends base {
     init(){
         super.init()
         this.modelName = 'activity_signin'
+
     }
 
 
     async get(){
+
+
+
         var rs = await super.get({cb:true})
 
         for(let i=0;i<rs.data.pageData.length;i++){
@@ -24,8 +28,6 @@ export default class extends base {
         if(this._map.aid){
             this.modelName = 'activity_signin_member'
             rs = await super.get({cb:true})
-            //console.log(this._map)
-            //console.log(rs)
         }
         this.json(rs)
     }

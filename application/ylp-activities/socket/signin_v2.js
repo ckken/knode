@@ -131,7 +131,7 @@ module.exports = (io) => {
             if(socket.roomId){
                 socket.signin.isDanmu = (d===false)&&false||true
                 await signin_mod.update({id: socket.roomId},{isDanmu:socket.signin.isDanmu}).toPromise()
-                client.in(socket.roomId).emit('setDanmu', socket.rooms[socket.roomId].isDanmu);
+                client.in(socket.roomId).emit('setDanmu', socket.signin.isDanmu);
 
 
             }

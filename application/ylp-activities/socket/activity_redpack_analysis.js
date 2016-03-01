@@ -59,7 +59,7 @@ module.exports = (io) => {
                 //缓存处理
                 cache[socket.roomId] = cache[socket.roomId] || {}
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
-                cache[socket.roomId].activity = cache[socket.roomId].activity || false
+               // cache[socket.roomId].activity = cache[socket.roomId].activity || false
 
                 let members = await getMembers(socket.roomId)
                 sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
@@ -92,7 +92,7 @@ module.exports = (io) => {
     sc_client.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
-            console.log("one user came in")
+            //console.log("one user came in")
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);

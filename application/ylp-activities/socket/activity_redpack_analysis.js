@@ -1,8 +1,8 @@
 import request from 'request';
 //Promise.promisifyAll(request)
 
+let cache = {}    //用于缓存活动数据信息
 
-let cache = {}
 module.exports = (io) => {
 
 
@@ -11,7 +11,8 @@ module.exports = (io) => {
 
 
     //设置入口 定义命名空间
-    let sc = io.of('/activity/redpack/analysis');
+    let sc_screen = io.of('/activity/redpack/analysis/screen');
+    let sc_client = io.of('/activity/redpack/analysis/client');
 
     //获取用户信息
     let getMembers = async (aid, limit = 10)=> {
@@ -24,7 +25,6 @@ module.exports = (io) => {
             }).toPromise() || []
     }
 
-    //let ylpHost = 'http://m.yolipai.com/mobile/lottery/config/'
     let ylpHost = '/mobile/lottery/config/'
 
     function ylpUrl(host) {
@@ -48,11 +48,51 @@ module.exports = (io) => {
 
     }
 
-    //
-    sc.on('connection', async (socket)=> {
+    //  **********************************屏幕端初始化连接************************************
+    sc_screen.on('connection', async (socket)=> {
         //定位所在房间
         socket.on('init', async (d)=> {
             //console.log('----------init-------------',d)
+            if (d.id) {
+                socket.roomId = d.id
+                socket.join(socket.roomId);
+                //缓存处理
+                cache[socket.roomId] = cache[socket.roomId] || {}
+                cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
+                cache[socket.roomId].activity = cache[socket.roomId].activity || false
+
+                let members = await getMembers(socket.roomId)
+                sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
+                sc_screen.in(socket.roomId).emit('members', members)
+                sc_screen.in(socket.roomId).emit('begin_service', cache[socket.roomId].analysis.shakeBol || false)
+
+            }
+        })
+
+        socket.on('begin', async (d)=> {
+            if (cache[socket.roomId].analysis) {
+                d = d && true || false
+                cache[socket.roomId].analysis.shakeBol = d
+                //更新状态
+                await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
+            }
+            console.log('======begin======', d)
+            sc_client.in(socket.roomId).emit('begin_client', d)
+            sc_screen.in(socket.roomId).emit('begin_service', d)
+        })
+
+        //断开连接
+        socket.on('disconnect', async ()=> {
+
+        })
+
+    })
+
+    //**********************************手机客户端初始化连接***********************************
+    sc_client.on('connection', async (socket)=> {
+        //定位所在房间
+        socket.on('init', async (d)=> {
+            console.log("one user came in")
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
@@ -71,7 +111,7 @@ module.exports = (io) => {
                         if (activity && activity.code == 0) {
                             activity = activity.data
                             //
-                            sc.in(socket.roomId).emit('init_client', {
+                            sc_client.in(socket.roomId).emit('init_client', {
                                 activity: activity
                             })
                         }
@@ -116,17 +156,9 @@ module.exports = (io) => {
                         cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     }
 
-
                 }
-                //console.log('=========init analysis===============', cache[socket.roomId].analysis)
-                //提交内容
-                let members = await getMembers(socket.roomId)
-                sc.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
-                sc.in(socket.roomId).emit('members', members)
-                sc.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol || false)
-                sc.in(socket.roomId).emit('begin_service', cache[socket.roomId].analysis.shakeBol || false)
+                sc_client.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol || false)
 
-                //console.log('----------cache[socket.roomId].analysis-----',cache[socket.roomId].analysis)
             }
         })
 
@@ -143,7 +175,7 @@ module.exports = (io) => {
                 }
             }
 
-            if (cache[socket.roomId])sc.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
+            if (cache[socket.roomId]) sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
         })
 
         socket.on('pick', async (d)=> {
@@ -171,23 +203,10 @@ module.exports = (io) => {
                 }
                 //
                 let members = await getMembers(socket.roomId)
-                sc.in(socket.roomId).emit('members', members)
-                sc.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
+                sc_screen.in(socket.roomId).emit('members', members)
+                sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
             }
         })
-
-        socket.on('begin', async (d)=> {
-            if (cache[socket.roomId].analysis) {
-                d = d && true || false
-                cache[socket.roomId].analysis.shakeBol = d
-                //更新状态
-                await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
-            }
-            console.log('======begin======', d)
-            sc.in(socket.roomId).emit('begin_client', d)
-            sc.in(socket.roomId).emit('begin_service', d)
-        })
-
 
         //断开连接
         socket.on('disconnect', async ()=> {

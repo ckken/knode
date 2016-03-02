@@ -59,7 +59,7 @@ module.exports = (io) => {
                 //缓存处理
                 cache[socket.roomId] = cache[socket.roomId] || {}
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
-               // cache[socket.roomId].activity = cache[socket.roomId].activity || false
+                cache[socket.roomId].activity = cache[socket.roomId].activity || false
 
                 let members = await getMembers(socket.roomId)
                 sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
@@ -155,7 +155,9 @@ module.exports = (io) => {
                     } else {
                         cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
                     }
-
+                    let members = await getMembers(socket.roomId)
+                    sc_screen.in(socket.roomId).emit('members', members)
+                    sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
                 }
                 sc_client.in(socket.roomId).emit('begin_client', cache[socket.roomId].analysis.shakeBol || false)
 

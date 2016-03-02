@@ -24,6 +24,8 @@ export default class extends base {
 
     async members(){
         let rs = {}
+        delete this._map.ylpEnterpriseAccountNo
+        delete this._map.userAccountNo
         this._map.aid = this.req.params.id
         if(this._map.aid){
             this.modelName = 'activity_signin_member'

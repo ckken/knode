@@ -30,6 +30,7 @@ export default class extends base {
         if(this._map.aid){
             this.modelName = 'activity_signin_member'
             if(this.req.query.nickname){
+                console.log(1111)
                 rs = await super.get({polulate:{select:this.req.query.nickname},cb:true})
             }else{
                 rs = await super.get({cb:true})

@@ -1,14 +1,7 @@
 export default {
     db: {
         connections: {
-/*            local: {
-                adapter: 'mongo',
-                host: '172.16.8.213',
-                port: 27017,
-                user: '',
-                password: '',
-                database: 'yolipai'
-            },*/
+
             local: {
                 adapter: 'mongo',
                 host: '127.0.0.1',
@@ -16,6 +9,14 @@ export default {
                 user: '',
                 password: '',
                 database: 'yolipai'
+            },
+            ylp_analysis: {
+                adapter: 'mongo',
+                host: '127.0.0.1',
+                port: 27017,
+                user: '',
+                password: '',
+                database: 'ylp_analysis'
             },
 
             /*erp: {

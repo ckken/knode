@@ -29,11 +29,11 @@ export default class extends base {
         this._map.aid = this.req.params.id
         if(this._map.aid){
             this.modelName = 'activity_signin_member'
-            rs = await super.get({cb:true})
-        }
-        if(this.req.query.nickname){
-            this.modelName = 'activity_signin_member'
-            rs = await super.get({cb:true})
+            if(this.req.query.nickname){
+                rs = await super.get({polulate:{select:this.req.query.nickname},cb:true})
+            }else{
+                rs = await super.get({cb:true})
+            }
         }
         this.json(rs)
     }

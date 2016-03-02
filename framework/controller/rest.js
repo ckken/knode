@@ -15,6 +15,7 @@ export default class extends G.controller.base {
             order: 'id',
             cb:false,
             findOne:false,
+            nickname:""
         }
         //
         let order = this.req.query.order || this.pageSet.order
@@ -23,11 +24,13 @@ export default class extends G.controller.base {
 
         this.pageSet.page = this.req.query.page || this.pageSet.page
         this.pageSet.pageSize = this.req.query.pageSize || this.pageSet.pageSize
+        this.pageSet.nickname = this.req.query.nickname || this.pageSet.nickname
 
         orderby[order] = sort
         let paginates = {
             page: this.pageSet.page,
-            limit: this.pageSet.pageSize
+            limit: this.pageSet.pageSize,
+            nickname: this.pageSet.nickname
         }
 
         let rs = {}

@@ -48,7 +48,7 @@ module.exports = (io) => {
                     "is_forbid" : socket.member.is_forbid
                 }
                 await member_mod.update({aid: d.member.aid, openid: d.member.openid}, socket.member).toPromise()
-                client.in(socket.roomId).emit('forbid_switch',client_data)
+                client.in(d.member.aid).emit('forbid_switch',client_data)
                 console.log("-------------------------forbid switch--------------------------------")
                 console.log(client_data)
             }

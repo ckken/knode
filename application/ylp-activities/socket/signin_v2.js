@@ -32,10 +32,12 @@ module.exports = (io) => {
         return online
     }
 
+    //*********************初始化后台管理连接*********************
     admin.on('connection',async (socket)=>{
         socket.on('forbid',async (d)=>{
             if(d && d.member){
                 socket.member = d.member
+                console.log(d.member)
        //         socket.member.is_forbid = (d.isForbid===false)?false:true
                 let member_temp =  await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise() || false
                 socket.member.online = member_temp.online

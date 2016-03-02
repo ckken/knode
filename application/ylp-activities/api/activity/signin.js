@@ -27,8 +27,11 @@ export default class extends base {
         delete this._map.ylpEnterpriseAccountNo
         delete this._map.userAccountNo
         this._map.aid = this.req.params.id
-        console.log(this.req.query)
         if(this._map.aid){
+            this.modelName = 'activity_signin_member'
+            rs = await super.get({cb:true})
+        }
+        if(this.req.query.nickname){
             this.modelName = 'activity_signin_member'
             rs = await super.get({cb:true})
         }

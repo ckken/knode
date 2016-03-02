@@ -29,10 +29,12 @@ export default class extends base {
         this._map.aid = this.req.params.id
         this._map.nickname = this.req.params.nickname
         if(this._map.aid){
+            console.log("aid:",this._map.aid)
             this.modelName = 'activity_signin_member'
             rs = await super.get({cb:true})
         }
         if(this._map.nickname){
+            console.log("nickname:",this._map.nickname)
             this.modelName = 'activity_signin_member'
             rs = await super.get({cb:true})
         }

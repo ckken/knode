@@ -4,11 +4,14 @@ module.exports = (io) => {
 
     let member_mod = D.model('activity_signin_member')
     let signin_mod = D.model('activity_signin')
+    let member
 
 
     //设置入口 定义命名空间
     let client = io.of('/signin/v2/client');
     let screen = io.of('/signin/v2/screen');
+    let admin = io.of('/signin/v2/admin');
+
 
     //获取用户信息
     let getMembers = async (aid)=> {
@@ -28,6 +31,24 @@ module.exports = (io) => {
         })
         return online
     }
+
+    admin.on('connection',async (socket)=>{
+        socket.on('forbid',async (d)=>{
+            if(d && d.member){
+                socket.member = d.member
+       //         socket.member.is_forbid = (d.isForbid===false)?false:true
+                let member_temp =  await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise() || false
+                socket.member.online = member_temp.online
+
+                let client_data = {
+                    "openid" : d.member.openid,
+                    "is_forbid" : socket.member.is_forbid
+                }
+                await member_mod.update({aid: d.member.aid, openid: d.member.openid}, socket.member).toPromise()
+                client.in(socket.roomId).emit('forbid_switch',client_data)
+            }
+        })
+    })
 
 
 
@@ -49,11 +70,14 @@ module.exports = (io) => {
 
                         let data = d.member
                         data.aid = socket.roomId
+                        data.is_forbid = false
                         await member_mod.create(data).toPromise()
 
                     } else {
                         socket.member.online = 1
                         await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
+                        let member_isForbid = socket.member.is_forbid || false
+                        socket.emit('forbid_init',member_isForbid)
                     }
 
                     //获取所有会员信息

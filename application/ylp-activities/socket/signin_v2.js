@@ -37,7 +37,8 @@ module.exports = (io) => {
         socket.on('forbid',async (d)=>{
             if(d && d.member){
                 socket.member = d.member
-                console.log("------------------------------------"+d.member+"-------------------------------------------")
+                console.log("------------------------------------on:forbid>d.member-------------------------------------------")
+                console.log(d.member)
        //         socket.member.is_forbid = (d.isForbid===false)?false:true
                 let member_temp =  await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise() || false
                 socket.member.online = member_temp.online

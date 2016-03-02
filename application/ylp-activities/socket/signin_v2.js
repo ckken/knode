@@ -37,7 +37,7 @@ module.exports = (io) => {
         socket.on('forbid',async (d)=>{
             if(d && d.member){
                 socket.member = d.member
-                console.log(d.member)
+                console.log("------------------------------------"+d.member+"-------------------------------------------")
        //         socket.member.is_forbid = (d.isForbid===false)?false:true
                 let member_temp =  await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise() || false
                 socket.member.online = member_temp.online
@@ -48,6 +48,8 @@ module.exports = (io) => {
                 }
                 await member_mod.update({aid: d.member.aid, openid: d.member.openid}, socket.member).toPromise()
                 client.in(socket.roomId).emit('forbid_switch',client_data)
+                console.log("-------------------------forbid switch--------------------------------")
+                console.log(client_data)
             }
         })
     })
@@ -80,6 +82,8 @@ module.exports = (io) => {
                         await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
                         let member_isForbid = socket.member.is_forbid || false
                         socket.emit('forbid_init',member_isForbid)
+                        console.log("-------------------------forbid init--------------------------------")
+                        console.log(member_isForbid)
                     }
 
                     //获取所有会员信息

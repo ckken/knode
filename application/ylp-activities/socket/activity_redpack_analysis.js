@@ -92,7 +92,6 @@ module.exports = (io) => {
     //**********************************手机客户端初始化连接***********************************
     sc_client.on('connection', async (socket)=> {
         //定位所在房间
-        let is_first_play
         socket.on('init', async (d)=> {
             //console.log("one user came in")
             if (d.id) {
@@ -130,14 +129,14 @@ module.exports = (io) => {
                     //console.log('----------init socket.member-------------',socket.member)
                     if (socket.member.length == 0) {
                         console.log("-----------------is_first_play:true---------------------")
-                        is_first_play = true
+                    //    is_first_play = true
                         let memberData = d.member
                         memberData.aid = socket.roomId
+                        memberData.is_first_play = true
                         socket.member = await member_mod.create(memberData).toPromise()
                         //console.log('----------init create member-------------',socket.member)
                     } else {
                         console.log("-----------------is_first_play:false---------------------")
-                        is_first_play = false
                         socket.member = socket.member[0]
                     }
                     //console.log('----------init socket.member-------------',socket.member)
@@ -188,7 +187,7 @@ module.exports = (io) => {
                         aid: socket.roomId,
                         openid: socket.member.openid
                     }, socket.member).toPromise()
-                    if(is_first_play == true){
+                    if(socket.member.is_first_play == true){
                         console.log("-----------------playMember +1 ---------------------")
                         cache[socket.roomId].analysis.playMember = cache[socket.roomId].analysis.playMember + 1
                     }

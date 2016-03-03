@@ -135,6 +135,7 @@ module.exports = (io) => {
                     //console.log('----------init socket.member-------------',socket.member)
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
+                    let leftNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.leftGiftCount || 0
                     //
                     if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
@@ -145,7 +146,7 @@ module.exports = (io) => {
                             analysis = await yhb_mod.create({
                                 aid: socket.roomId,
                                 redpackNumber: redpackNumber,
-                                leftNumber: redpackNumber
+                                leftNumber: leftNumber
                             }).toPromise()
                         }
                         //补全已经参与人员数据

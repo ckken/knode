@@ -59,12 +59,12 @@ module.exports = async (io) => {
         d.now.fromFormat = d.now.from.format('YYYY-MM-DD HH:mm:ss')
         d.now.toFormat = d.now.to.format('YYYY-MM-DD HH:mm:ss')
         d.now.diff = d.now.to.diff(d.now.from, 'days') + 1
-        d.now.map.completeTime = {'>=': new Date(d.now.fromFormat), '<=': new Date(d.now.toFormat)};
+        d.now.map.paySuccessTime = {'>=': new Date(d.now.fromFormat), '<=': new Date(d.now.toFormat)};
         /////////////////////////////////////////////////////////////
         d.ex.fromFormat = d.ex.from.format('YYYY-MM-DD HH:mm:ss')
         d.ex.toFormat = d.ex.to.format('YYYY-MM-DD HH:mm:ss')
         d.ex.diff = d.ex.to.diff(d.ex.from, 'days') + 1
-        d.ex.map.completeTime = {'>=': new Date(d.ex.fromFormat), '<=': new Date(d.ex.toFormat)};
+        d.ex.map.paySuccessTime = {'>=': new Date(d.ex.fromFormat), '<=': new Date(d.ex.toFormat)};
 
         return d
     }
@@ -158,7 +158,7 @@ module.exports = async (io) => {
         })
 
         socket.on('hasOrderUpdate',async(d) =>{
-            cache = {}
+
         })
 
 

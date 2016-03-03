@@ -80,7 +80,7 @@ export default ()=> {
             }
         }
         res.json(err_msg)
-        if (G.debug) {
+        if (G.debug&&err.status!=404) {
             console.log('======================== error Logs ===========================')
             throw new Error(err);
         }

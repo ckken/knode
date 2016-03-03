@@ -21,7 +21,7 @@ module.exports = (io) => {
                 select: ['nickname', 'headimgurl', 'redpack']
             }).limit(limit).sort({
                 redpack: 'desc',
-                updated: 'desc',
+                updatedAt: 'desc',
 
             }).toPromise() || []
     }

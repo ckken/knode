@@ -17,7 +17,7 @@ module.exports = (io) => {
     //获取用户信息
     let getMembers = async (aid, limit = 10)=> {
         return await member_mod.find({
-                where: {aid: aid},
+                where: {aid: aid,play:true,redpack:{'>':0}},
                 select: ['nickname', 'headimgurl', 'redpack']
             }).limit(limit).sort({
                 redpack: 'desc',
@@ -92,6 +92,7 @@ module.exports = (io) => {
     //**********************************手机客户端初始化连接***********************************
     sc_client.on('connection', async (socket)=> {
         //定位所在房间
+        let is_first_play
         socket.on('init', async (d)=> {
             //console.log("one user came in")
             if (d.id) {
@@ -108,7 +109,7 @@ module.exports = (io) => {
                     if (!cache[socket.roomId].activity) {
 
                         let ylpHost = ylpUrl(d.host)
-                     //   console.log(ylpHost)
+                        console.log(ylpHost)
                         let activity = await getData(ylpHost + d.id, d.member.token)
                       //  console.log("act:",activity)
                         if (activity && activity.code == 0) {
@@ -128,17 +129,20 @@ module.exports = (io) => {
                         }).toPromise() || []
                     //console.log('----------init socket.member-------------',socket.member)
                     if (socket.member.length == 0) {
+                        is_first_play = true
                         let memberData = d.member
                         memberData.aid = socket.roomId
                         socket.member = await member_mod.create(memberData).toPromise()
                         //console.log('----------init create member-------------',socket.member)
                     } else {
+                        is_first_play = true
                         socket.member = socket.member[0]
                     }
                     //console.log('----------init socket.member-------------',socket.member)
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     let leftNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.leftGiftCount || 0
+                    console.log("left:----------------------------",cache[socket.roomId].activity)
                     //
                     if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
@@ -153,11 +157,11 @@ module.exports = (io) => {
                             }).toPromise()
                         }
                         //补全已经参与人员数据
-                        analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
+                        analysis.playMember = await member_mod.count({aid: socket.roomId,play:true}).toPromise()
                         //赋值
                         cache[socket.roomId].analysis = analysis
                     } else {
-                        cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId}).toPromise()
+                        cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId,play:true}).toPromise()
                     }
                     let members = await getMembers(socket.roomId)
                     sc_screen.in(socket.roomId).emit('members', members)
@@ -177,8 +181,18 @@ module.exports = (io) => {
                     //console.log('play socket.member',socket.member)
                     cache[socket.roomId].analysis.playTime = cache[socket.roomId].analysis.playTime + 1
                     //更新状态
+                    socket.member.play = true
+                    await member_mod.update({
+                        aid: socket.roomId,
+                        openid: socket.member.openid
+                    }, socket.member).toPromise()
+                    if(is_first_play == true){
+                        cache[socket.roomId].analysis.playMember = cache[socket.roomId].analysis.playMember + 1
+                    }
                     await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
+                    sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
                 }
+
             }
 
             if (cache[socket.roomId]) sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
@@ -195,10 +209,13 @@ module.exports = (io) => {
                         socket.member.redpack = socket.member.redpack || 0
                         socket.member.redpack = socket.member.redpack + redpack
                         //更新会员获取的钱 排名前10的会员
+                        socket.member.play = true
                         await member_mod.update({
                             aid: socket.roomId,
                             openid: socket.member.openid
                         }, socket.member).toPromise()
+                        let play_members = await getMembers(socket.roomId)
+                        sc_screen.in(socket.roomId).emit('members', play_members)
                         //剩下红包状态
                         if (cache[socket.roomId].analysis.leftNumber > 0) {
                             cache[socket.roomId].analysis.leftNumber = cache[socket.roomId].analysis.leftNumber - 1

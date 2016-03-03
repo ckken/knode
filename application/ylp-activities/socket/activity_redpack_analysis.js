@@ -190,6 +190,11 @@ module.exports = (io) => {
                     if(socket.member.is_first_play == true){
                         console.log("-----------------playMember +1 ---------------------")
                         cache[socket.roomId].analysis.playMember = cache[socket.roomId].analysis.playMember + 1
+                        socket.member.is_first_play = false
+                        await member_mod.update({
+                            aid: socket.roomId,
+                            openid: socket.member.openid
+                        }, socket.member).toPromise()
                     }
                     await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()
                     sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)

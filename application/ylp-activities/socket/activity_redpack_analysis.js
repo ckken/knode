@@ -129,12 +129,14 @@ module.exports = (io) => {
                         }).toPromise() || []
                     //console.log('----------init socket.member-------------',socket.member)
                     if (socket.member.length == 0) {
+                        console.log("-----------------is_first_play:true---------------------")
                         is_first_play = true
                         let memberData = d.member
                         memberData.aid = socket.roomId
                         socket.member = await member_mod.create(memberData).toPromise()
                         //console.log('----------init create member-------------',socket.member)
                     } else {
+                        console.log("-----------------is_first_play:false---------------------")
                         is_first_play = false
                         socket.member = socket.member[0]
                     }
@@ -142,7 +144,7 @@ module.exports = (io) => {
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     let leftNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.leftGiftCount || 0
-                    console.log("left:----------------------------",cache[socket.roomId].activity)
+                  //  console.log("left:----------------------------",cache[socket.roomId].activity)
                     //
                     if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
@@ -187,6 +189,7 @@ module.exports = (io) => {
                         openid: socket.member.openid
                     }, socket.member).toPromise()
                     if(is_first_play == true){
+                        console.log("-----------------playMember +1 ---------------------")
                         cache[socket.roomId].analysis.playMember = cache[socket.roomId].analysis.playMember + 1
                     }
                     await yhb_mod.update({aid: socket.roomId}, cache[socket.roomId].analysis).toPromise()

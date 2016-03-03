@@ -21,7 +21,8 @@ module.exports = (io) => {
                 select: ['nickname', 'headimgurl', 'redpack']
             }).limit(limit).sort({
                 redpack: 'desc',
-                id: 'asc'
+                updated: 'desc',
+
             }).toPromise() || []
     }
 
@@ -107,7 +108,9 @@ module.exports = (io) => {
                     if (!cache[socket.roomId].activity) {
 
                         let ylpHost = ylpUrl(d.host)
+                     //   console.log(ylpHost)
                         let activity = await getData(ylpHost + d.id, d.member.token)
+                      //  console.log("act:",activity)
                         if (activity && activity.code == 0) {
                             activity = activity.data
                             //

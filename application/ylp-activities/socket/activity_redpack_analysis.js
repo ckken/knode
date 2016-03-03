@@ -135,7 +135,7 @@ module.exports = (io) => {
                         socket.member = await member_mod.create(memberData).toPromise()
                         //console.log('----------init create member-------------',socket.member)
                     } else {
-                        is_first_play = true
+                        is_first_play = false
                         socket.member = socket.member[0]
                     }
                     //console.log('----------init socket.member-------------',socket.member)

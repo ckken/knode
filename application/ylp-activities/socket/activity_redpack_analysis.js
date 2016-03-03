@@ -57,8 +57,17 @@ module.exports = (io) => {
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
-                //缓存处理
                 cache[socket.roomId] = cache[socket.roomId] || {}
+                if(!cache[socket.roomId].analysis){
+                    console.log("-----------------read cache-------------------")
+                    let analysis_client = await yhb_mod.find({aid: socket.roomId}).toPromise()
+                    analysis_client = analysis_client[0] || false
+                    cache[socket.roomId].analysis = analysis_client
+                    console.log("cache:",cache[socket.roomId].analysis)
+                }
+                //缓存处理
+                console.log("-------------------------screen_cache--------------------")
+                console.log(cache[socket.roomId])
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
                 cache[socket.roomId].activity = cache[socket.roomId].activity || false
 
@@ -110,7 +119,7 @@ module.exports = (io) => {
                         let ylpHost = ylpUrl(d.host)
                         console.log(ylpHost)
                         let activity = await getData(ylpHost + d.id, d.member.token)
-                      //  console.log("act:",activity)
+                        console.log("act:",activity)
                         if (activity && activity.code == 0) {
                             activity = activity.data
                             //
@@ -143,7 +152,7 @@ module.exports = (io) => {
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     let leftNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.leftGiftCount || 0
-                  //  console.log("left:----------------------------",cache[socket.roomId].activity)
+                    console.log("left:----------------------------",cache[socket.roomId].activity)
                     //
                     if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
@@ -161,6 +170,8 @@ module.exports = (io) => {
                         analysis.playMember = await member_mod.count({aid: socket.roomId,play:true}).toPromise()
                         //赋值
                         cache[socket.roomId].analysis = analysis
+                        console.log("--------------client_cache-----------------")
+                        console.log(cache[socket.roomId].analysis)
                     } else {
                         cache[socket.roomId].analysis.playMember = await member_mod.count({aid: socket.roomId,play:true}).toPromise()
                     }

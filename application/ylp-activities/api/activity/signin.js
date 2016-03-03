@@ -27,7 +27,7 @@ export default class extends base {
         delete this._map.ylpEnterpriseAccountNo
         delete this._map.userAccountNo
         this._map.aid = this.req.params.id
-        if(this.req.query.nickname)this._map.nickname = '/'+this.req.query.nickname+'/'
+        if(this.req.query.nickname)this._map.nickname = {'like': '%'+ this.req.query.nickname +'%' }
         console.log(this._map)
         if(this._map.aid){
             this.modelName = 'activity_signin_member'

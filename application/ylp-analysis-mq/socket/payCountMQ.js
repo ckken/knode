@@ -6,6 +6,7 @@ if (G.mq && G.mq_pay_queue) {
 
     let ylpServe = {
         'host': G.mq.host,
+        'port': 61613,
         'connectHeaders': {
             'login': G.mq.username,
             'passcode': G.mq.password,

@@ -7,7 +7,7 @@ if (G.mq && G.mq_pay_queue) {
     let client = Stomp.overTCP(G.mq.host, 61613)
     client.connect(G.mq.username, G.mq.password, async(d)=> {
         //console.log('model data',await model.find().limit(10).sort({id:'desc'}).toPromise())
-        //console.log(d)
+        console.log(d)
         client.subscribe(G.mq_pay_queue, async(d)=> {
             //
             let data = JSON.parse(d.body)

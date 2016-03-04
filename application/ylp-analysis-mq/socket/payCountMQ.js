@@ -1,36 +1,34 @@
-// MQ
-
 import stompit from 'stompit';
+if (G.mq && G.mq_pay_queue) {
 
-let ylpServe = {
-    'host': G.mq.host,
-    'connectHeaders':{
-        'login': G.mq.username,
-        'passcode': G.mq.password,
-        //'heart-beat': '5000,5000'
-    }
-};
-
-let manager = new stompit.ConnectFailover([ylpServe], {
-    'maxReconnects': 1000
-});
-// 数据库
-let model = D.model('analysis_pay')
-//MQ
-manager.connect(async(error, client, reconnect) =>{
-
-    if (error) {
-        console.log('connect error ' + error.message);
-        return;
-    }
-
-    let subscribeHeaders = {
-        'destination': G.mq_pay_queue,
-        'ack': 'auto'
+    console.log(G.mq, G.mq_pay_queue)
+    let ylpServe = {
+        'host': G.mq.host,
+        'connectHeaders': {
+            'login': G.mq.username,
+            'passcode': G.mq.password,
+            //'heart-beat': '5000,5000'
+        }
     };
 
-    console.log(G.mq,G.mq_pay_queue)
-    if(G.mq_pay_queue) {
+    let manager = new stompit.ConnectFailover([ylpServe], {
+        'maxReconnects': 1000
+    });
+// 数据库
+    let model = D.model('analysis_pay')
+//MQ
+    manager.connect(async(error, client, reconnect) => {
+
+        if (error) {
+            console.log('connect error ' + error.message);
+            return;
+        }
+
+        let subscribeHeaders = {
+            'destination': G.mq_pay_queue,
+            'ack': 'auto'
+        };
+
         client.subscribe(subscribeHeaders, async(error, message) => {
             if (error) {
                 console.log('subscribe error ' + error.message);
@@ -64,22 +62,24 @@ manager.connect(async(error, client, reconnect) =>{
         client.on('error', function (error) {
             reconnect();
         });
-    }
-});
+
+    });
 //socket
 
-/*let io = require('socket.io-client')
+    /*let io = require('socket.io-client')
 
-var socket = io.connect('http://127.0.0.1:8804/payCount',{forceNew: true})
-socket.on('connect',function(d){
-    console.log('connect',socket.id)
-    //console.log(socket)
-    socket.emit('hasOrderUpdate','hasOrderUpdate')
-})
-socket.on('payCount',function(d){
-    console.log(d)
+     var socket = io.connect('http://127.0.0.1:8804/payCount',{forceNew: true})
+     socket.on('connect',function(d){
+     console.log('connect',socket.id)
+     //console.log(socket)
+     socket.emit('hasOrderUpdate','hasOrderUpdate')
+     })
+     socket.on('payCount',function(d){
+     console.log(d)
 
-})*/
+     })*/
+
+}
 
 
 module.exports = async (io) => {

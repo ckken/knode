@@ -26,6 +26,7 @@
     "serve-favicon": "^2.3.0",
     "socket.io": "^1.4.5",
     "stompit": "^0.22.0",
+    "stompjs": "^2.3.3",
     "swig": "^1.4.2",
     "waterline": "^0.10.26",
     "wechat": "^2.0.2",

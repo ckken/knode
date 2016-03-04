@@ -1,9 +1,33 @@
-import stompit from 'stompit';
+//import stompit from 'stompit';
 
 console.log(G.mq, G.mq_pay_queue)
 
+// 数据库
+let model = D.model('analysis_pay')
+
 if (G.mq && G.mq_pay_queue) {
 
+    var Stomp = require('stompjs');
+    var client = Stomp.overTCP(G.mq.host, 61613);
+    client.connect(G.mq.username, G.mq.password, async(d)=>{
+        //console.log(d)
+        client.subscribe(G.mq_pay_queue, async(d)=>{
+            //
+            let data = JSON.parse(d.body)
+            let checkCount = await model.count({bankOrderNo: data.bankOrderNo}).toPromise()
+            //
+            console.log('==='+G.mq_pay_queue+'===' + Date.now() + '====', data.bankOrderNo+'====mongoCount=='+checkCount);
+            if (checkCount > 0) {
+                await model.update({bankOrderNo: data.bankOrderNo}, data).toPromise()
+            } else {
+                await model.create(data).toPromise()
+            }
+        })
+    }, (d)=>{
+        return console.log(d)
+    })
+
+    /*
     let ylpServe = {
         'host': G.mq.host,
         'port': 61613,
@@ -15,7 +39,7 @@ if (G.mq && G.mq_pay_queue) {
     };
 
     let manager = new stompit.ConnectFailover([ylpServe], {
-        'maxReconnects': 10
+        'maxReconnects': 1000
     });
 // 数据库
     let model = D.model('analysis_pay')
@@ -68,19 +92,8 @@ if (G.mq && G.mq_pay_queue) {
 
     });
 //socket
+*/
 
-    /*let io = require('socket.io-client')
-
-     var socket = io.connect('http://127.0.0.1:8804/payCount',{forceNew: true})
-     socket.on('connect',function(d){
-     console.log('connect',socket.id)
-     //console.log(socket)
-     socket.emit('hasOrderUpdate','hasOrderUpdate')
-     })
-     socket.on('payCount',function(d){
-     console.log(d)
-
-     })*/
 
 }
 

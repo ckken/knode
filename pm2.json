@@ -9,5 +9,15 @@
     "name": "ylp-analysis-mq",
     "exec_mode": "fork",
   },
+  {
+    "script": "./test-ylp-activities.js",
+    "name": "ylp-activities",
+    "exec_mode": "fork",
+  },
+  {
+    "script": "./test-ylp-analysis-mq.js",
+    "name": "ylp-analysis-mq",
+    "exec_mode": "fork",
+  }
 
 ]

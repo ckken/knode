@@ -29,7 +29,7 @@ manager.connect(async(error, client, reconnect) =>{
         'ack': 'auto'
     };
 
-
+    console.log(G.mq,G.mq_pay_queue)
     if(G.mq_pay_queue) {
         client.subscribe(subscribeHeaders, async(error, message) => {
             if (error) {

@@ -80,7 +80,16 @@ export default class extends G.controller.rest {
         map = this.setDay(360)
         console.log(map)
         //let count = await D.model('analysis_pay').count(map).toPromise()
-        this.json({code:0,data:data,msg:'加载成功!'})
+        let d = await D.model('analysis_pay').find().sort({id:'desc'}).limit(409).toPromise()||[]
+        /*for(var i=0;i<d.length;i++){
+            await D.model('analysis_pay').update({id:d[i].id},{
+                "paySuccessTime":d[i].paySuccessTime,
+                "completeTime":d[i].completeTime,
+                "createTime":d[i].createTime,
+                "modifyTime":d[i].modifyTime
+            }).toPromise()
+        }*/
+        this.json(d)
     }
 
 }

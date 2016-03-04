@@ -1,12 +1,12 @@
 [
   {
     "script": "./test-ylp-activities.js",
-    "name": "ylp-activities",
+    "name": "test-ylp-activities",
     "exec_mode": "fork",
   },
   {
     "script": "./test-ylp-analysis-mq.js",
-    "name": "ylp-analysis-mq",
+    "name": "test-ylp-analysis-mq",
     "exec_mode": "fork",
   }
 ]

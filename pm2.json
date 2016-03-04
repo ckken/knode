@@ -3,33 +3,11 @@
     "script": "./ylp-activities.js",
     "name": "ylp-activities",
     "exec_mode": "fork",
-    //"exec_mode": "cluster",
-    //"instances": -1
   },
   {
     "script": "./ylp-analysis-mq.js",
     "name": "ylp-analysis-mq",
-    "exec_mode": "fork"
-  },
-/*  {
-    "script": "./ylp-cron-socket.js",
-    "name": "ylp-cron-socket",
     "exec_mode": "fork",
   },
-  {
-    "script": "./ylp-page-demo.js",
-    "name": "ylp-page-demo",
-    "exec_mode": "fork",
-    //"watch": true,
-    // auto restart app on change,
-    "env": {
-      // common env variables
-      "INTERVAL": 1000
-    },
-    "env_production": {
-      // Used if --env prod
-      "INTERVAL": 60000
-    }
-  }*/
 
 ]

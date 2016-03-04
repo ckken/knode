@@ -1,7 +1,9 @@
 import stompit from 'stompit';
+
+console.log(G.mq, G.mq_pay_queue)
+
 if (G.mq && G.mq_pay_queue) {
 
-    console.log(G.mq, G.mq_pay_queue)
     let ylpServe = {
         'host': G.mq.host,
         'connectHeaders': {

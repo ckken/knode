@@ -10,12 +10,12 @@ if (G.mq && G.mq_pay_queue) {
         'connectHeaders': {
             'login': G.mq.username,
             'passcode': G.mq.password,
-            //'heart-beat': '5000,5000'
+            'heart-beat': '5000,5000'
         }
     };
 
     let manager = new stompit.ConnectFailover([ylpServe], {
-        'maxReconnects': 1000
+        'maxReconnects': 10
     });
 // 数据库
     let model = D.model('analysis_pay')

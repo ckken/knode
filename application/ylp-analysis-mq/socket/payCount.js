@@ -25,8 +25,8 @@ module.exports = async (io) => {
 
         switch (day) {
             case 1:
-                d.now.from = _.moment().subtract(0, "days").startOf("day")
-                d.now.to = _.moment().subtract(0, "days").endOf("day")
+                d.now.from = _.moment().startOf("day")
+                d.now.to = _.moment().endOf("day")
                 d.ex.from = _.moment().subtract(1, "days").startOf("day")
                 d.ex.to = _.moment().subtract(1, "days").endOf("day")
                 break;
@@ -59,12 +59,14 @@ module.exports = async (io) => {
         d.now.fromFormat = d.now.from.format('YYYY-MM-DD HH:mm:ss')
         d.now.toFormat = d.now.to.format('YYYY-MM-DD HH:mm:ss')
         d.now.diff = d.now.to.diff(d.now.from, 'days') + 1
-        d.now.map.paySuccessTime = {'>=': new Date(d.now.fromFormat), '<=': new Date(d.now.toFormat)};
+
+        d.now.map.paySuccessTime = {'>=': d.now.fromFormat, '<=': d.now.toFormat}
+
         /////////////////////////////////////////////////////////////
         d.ex.fromFormat = d.ex.from.format('YYYY-MM-DD HH:mm:ss')
         d.ex.toFormat = d.ex.to.format('YYYY-MM-DD HH:mm:ss')
         d.ex.diff = d.ex.to.diff(d.ex.from, 'days') + 1
-        d.ex.map.paySuccessTime = {'>=': new Date(d.ex.fromFormat), '<=': new Date(d.ex.toFormat)};
+        d.ex.map.paySuccessTime = {'>=': d.ex.fromFormat, '<=': d.ex.toFormat};
 
         return d
     }
@@ -90,7 +92,7 @@ module.exports = async (io) => {
             addActiveStore: 0,
             addPlat: 0
         }
-        //
+
         data.totalAmount = await model.find(d.now.map).sum('orderAmount').toPromise() || []
         data.totalAmount = data.totalAmount[0] && data.totalAmount[0].orderAmount || 0
         //
@@ -126,6 +128,7 @@ module.exports = async (io) => {
             groupBy: ['providerId'],
             sum: ['provider']
         }).toPromise()
+        //
         data.addActiveProvider = data.addActiveProvider.length
         //
         data.addActiveStore = await model.find({where: d.ex.map, groupBy: ['storeId'], sum: ['store']}).toPromise()
@@ -137,33 +140,30 @@ module.exports = async (io) => {
         return data
     }
 
-    let cache = {}
-    cache[1] = await getData()
-
+    //let cache = {}
+    //cache[1] = await getData()
+    let onlineArr = []
     SC.on('connection', async (socket)=> {
 
-
         socket.day = socket.day||1
-        cache[socket.day] = cache[socket.day] || await getData(day)||{}
-        socket.emit('payCount', cache[socket.day])
+        socket.data = await getData(socket.day)
+        socket.emit('payCount', socket.data)
         socket.emit('updateTime', Date.now())
-        socket.emit('online', 0)
+        if(onlineArr.indexOf(socket.id)===-1)onlineArr.push(socket.id)
+        socket.emit('online', onlineArr.length)
 
 
         socket.on('day', async  (day)=> {
             socket.day = day
-            cache[socket.day] = cache[socket.day] || await getData(day)||{}
-            socket.emit('payCount', cache[day])
+            socket.data = await getData(socket.day)
+            socket.emit('payCount', socket.data)
             socket.emit('updateTime', Date.now())
-        })
-
-        socket.on('hasOrderUpdate',async(d) =>{
-
         })
 
 
         socket.on('disconnect', async  ()=> {
-            socket.emit('online', 0)
+            onlineArr.splice(socket.id,1)
+            socket.emit('online', onlineArr.length)
         })
 
     })

@@ -7,13 +7,14 @@
     //"instances": -1
   },
   {
+    "script": "./ylp-analysis-mq.js",
+    "name": "ylp-analysis-mq",
+    "exec_mode": "fork"
+  },
+/*  {
     "script": "./ylp-cron-socket.js",
     "name": "ylp-cron-socket",
-    //"exec_mode": "cluster",
-    //"instances": -1,
     "exec_mode": "fork",
-
-    // number of CPUs -1
   },
   {
     "script": "./ylp-page-demo.js",
@@ -29,5 +30,6 @@
       // Used if --env prod
       "INTERVAL": 60000
     }
-  }
+  }*/
+
 ]

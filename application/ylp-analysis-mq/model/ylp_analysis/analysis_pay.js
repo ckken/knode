@@ -12,6 +12,7 @@ module.exports = {
         values.modifyTime = _.moment(values.modifyTime).format('YYYY-MM-DD HH:mm:ss')
         values.paySuccessTime = _.moment(values.paySuccessTime).format('YYYY-MM-DD HH:mm:ss')
         values.completeTime = _.moment(values.completeTime).format('YYYY-MM-DD HH:mm:ss')
+        console.log('beforeCreate',JSON.stringify(values))
         cb();
     },
     //
@@ -20,6 +21,7 @@ module.exports = {
         values.modifyTime = _.moment(values.modifyTime).format('YYYY-MM-DD HH:mm:ss')
         values.paySuccessTime = _.moment(values.paySuccessTime).format('YYYY-MM-DD HH:mm:ss')
         values.completeTime = _.moment(values.completeTime).format('YYYY-MM-DD HH:mm:ss')
+        console.log('beforeUpdate',JSON.stringify(values))
         cb();
     },
 }

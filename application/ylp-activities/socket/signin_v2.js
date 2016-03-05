@@ -15,7 +15,7 @@ module.exports = (io) => {
 
     //获取用户信息
     let getMembers = async (aid)=> {
-        return await member_mod.find({where: {aid: aid}, select: ['nickname', 'headimgurl', 'online']}).sort({
+        return await member_mod.find({where: {aid: aid,in_room:true}, select: ['nickname', 'headimgurl', 'online']}).sort({
                 online: 'desc',
                 id: 'asc'
             }).toPromise() || []
@@ -37,8 +37,8 @@ module.exports = (io) => {
         socket.on('forbid',async (d)=>{
             if(d && d.member){
                 socket.member = d.member
-                console.log("------------------------------------on:forbid>d.member-------------------------------------------")
-                console.log(d.member)
+                //console.log("------------------------------------on:forbid>d.member-------------------------------------------")
+                //console.log(d.member)
        //         socket.member.is_forbid = (d.isForbid===false)?false:true
                 let member_temp =  await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise() || false
                 socket.member.online = member_temp.online
@@ -49,9 +49,20 @@ module.exports = (io) => {
                 }
                 await member_mod.update({aid: d.member.aid, openid: d.member.openid}, socket.member).toPromise()
                 client.in(d.member.aid).emit('forbid_switch',client_data)
-                console.log("-------------------------forbid switch--------------------------------")
-                console.log(client_data)
+                //console.log("-------------------------forbid switch--------------------------------")
+                //console.log(client_data)
             }
+        })
+        socket.on('getout',async (d)=>{
+              if(d && d.member){
+                  d.member.in_room = false
+                //  console.log()
+                //  console.log(d.member)
+                  await member_mod.update({aid: d.member.aid, openid: d.member.openid}, d.member).toPromise()
+              //    let temp = await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise()
+              //    console.log("temp:",temp)
+                  client.in(d.member.aid).emit('client_getout',{openid: d.member.openid})
+              }
         })
     })
 
@@ -63,7 +74,7 @@ module.exports = (io) => {
         socket.on('init', async (d)=> {
             if(d.id&&d.member) {
                 socket.signin = await signin_mod.findOne({id: d.id}).toPromise()
-                console.log(socket.signin)
+             //   console.log(socket.signin)
                 if(socket.signin) {
                     socket.roomId = d.id
                     socket.member = await member_mod.findOne({aid: socket.roomId, openid: d.member.openid}).toPromise() || false
@@ -72,23 +83,32 @@ module.exports = (io) => {
 
                         socket.member = d.member
                         socket.member.online = 1
-
+                        socket.member.in_room = true
                         let data = d.member
                         data.aid = socket.roomId
                         data.is_forbid = false
                         await member_mod.create(data).toPromise()
+                        //加入房间
+                        socket.join(socket.roomId);
 
                     } else {
-                        socket.member.online = 1
-                        await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
-                        let member_isForbid = socket.member.is_forbid || false
-                        socket.emit('forbid_init',member_isForbid)
+                        console.log("---------------member:------------------")
+                        console.log(socket.member)
+                        if(socket.member.in_room === true){
+                            socket.join(socket.roomId);
+                         //   console.log("in_room")
+                            socket.member.online = 1
+                            await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
+                            let member_isForbid = socket.member.is_forbid || false
+                            socket.emit('forbid_init',member_isForbid)
+                        }else {
+                            socket.emit('getout_init',false)
+                        }
                     }
 
                     //获取所有会员信息
                     socket.members = await getMembers(socket.roomId)
-                    //加入房间
-                    socket.join(socket.roomId);
+
                     client.in(socket.roomId).emit('init', {
                         signin:socket.signin,
                         member_count:socket.members.length,
@@ -112,7 +132,24 @@ module.exports = (io) => {
             }
         })
 
-
+        socket.on('request_getout', async(d)=>{
+            if(d){
+      //          console.log("--------------on:request_getout------------------")
+                socket.member.online = 0
+                await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
+                socket.members = await getMembers(socket.roomId)
+                //
+                client.in(socket.roomId).emit('members', {
+                    member_count: socket.members.length,
+                    online: onlineMembers(socket.members)
+                })
+                screen.in(socket.roomId).emit('members', {
+                    members: socket.members,
+                    online: onlineMembers(socket.members)
+                })
+                socket.leave(socket.roomId)
+            }
+        })
         //断开连接
         socket.on('disconnect', async ()=> {
             if(socket.member) {

@@ -8,11 +8,13 @@ module.exports = (io) => {
 
     let member_mod = D.model('activity_yhb_member')
     let yhb_mod = D.model('activity_yhb_analysis')
+    let signin_mod = D.model('activity_signin')
 
 
     //设置入口 定义命名空间
     let sc_screen = io.of('/activity/redpack/analysis/screen');
     let sc_client = io.of('/activity/redpack/analysis/client');
+    let sc_admin = io.of('/activity/redpack/analysis/admin');
 
     //获取用户信息
     let getMembers = async (aid, limit = 10)=> {
@@ -57,17 +59,24 @@ module.exports = (io) => {
             if (d.id) {
                 socket.roomId = d.id
                 socket.join(socket.roomId);
+                let signin_activity = await signin_mod.find({redPackUrl:socket.roomId}).toPromise()
+             //   console.log(signin_activity)
+                signin_activity = signin_activity[0] || {}
+                if(signin_activity.id){
+             //       console.log(signin_activity.id)
+                    sc_screen.in(socket.roomId).emit('sign_id', signin_activity.id)
+                }
                 cache[socket.roomId] = cache[socket.roomId] || {}
                 if(!cache[socket.roomId].analysis){
-                    console.log("-----------------read cache-------------------")
+                 //   console.log("-----------------read cache-------------------")
                     let analysis_client = await yhb_mod.find({aid: socket.roomId}).toPromise()
                     analysis_client = analysis_client[0] || false
                     cache[socket.roomId].analysis = analysis_client
-                    console.log("cache:",cache[socket.roomId].analysis)
+                   console.log("cache:",cache[socket.roomId].analysis)
                 }
                 //缓存处理
-                console.log("-------------------------screen_cache--------------------")
-                console.log(cache[socket.roomId])
+             //   console.log("-------------------------screen_cache--------------------")
+           //      console.log(cache[socket.roomId])
                 cache[socket.roomId].analysis = cache[socket.roomId].analysis || false
                 cache[socket.roomId].activity = cache[socket.roomId].activity || false
 
@@ -89,6 +98,24 @@ module.exports = (io) => {
             console.log('======begin======', d)
             sc_client.in(socket.roomId).emit('begin_client', d)
             sc_screen.in(socket.roomId).emit('begin_service', d)
+        })
+
+        socket.on('refresh', async (d)=> {
+            if(d){
+                if(cache[d.id].token){
+                    let token = cache[d.id].token
+                    let ylpHost = ylpUrl(d.host)
+                    let activity = await getData(ylpHost + d.id, token)
+         //           console.log("act:",activity)
+                    if (activity && activity.code == 0) {
+                        activity = activity.data
+                        cache[d.id].analysis.redpackNumber = activity.activityInfo && activity.activityInfo.giftCount || 0
+                        cache[d.id].analysis.leftNumber = activity.activityInfo && activity.activityInfo.leftGiftCount || 0
+                        sc_screen.in(d.id).emit('analysis', cache[d.id].analysis)
+                    }
+                }
+
+            }
         })
 
         //断开连接
@@ -128,8 +155,9 @@ module.exports = (io) => {
                             })
                         }
                         cache[socket.roomId].activity = activity
+                        cache[socket.roomId].token = d.member.token
                     }
-
+                    cache[socket.roomId].token = d.member.token
                     //获取会员数
                     socket.member = await member_mod.find({
                             aid: socket.roomId,
@@ -137,7 +165,7 @@ module.exports = (io) => {
                         }).toPromise() || []
                     //console.log('----------init socket.member-------------',socket.member)
                     if (socket.member.length == 0) {
-                        console.log("-----------------is_first_play:true---------------------")
+                   //     console.log("-----------------is_first_play:true---------------------")
                     //    is_first_play = true
                         let memberData = d.member
                         memberData.aid = socket.roomId
@@ -145,14 +173,14 @@ module.exports = (io) => {
                         socket.member = await member_mod.create(memberData).toPromise()
                         //console.log('----------init create member-------------',socket.member)
                     } else {
-                        console.log("-----------------is_first_play:false---------------------")
+                    //    console.log("-----------------is_first_play:false---------------------")
                         socket.member = socket.member[0]
                     }
                     //console.log('----------init socket.member-------------',socket.member)
                     //获取礼品数量
                     let redpackNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.giftCount || 0
                     let leftNumber = cache[socket.roomId].activity.activityInfo && cache[socket.roomId].activity.activityInfo.leftGiftCount || 0
-                    console.log("left:----------------------------",cache[socket.roomId].activity)
+                    //console.log("left:----------------------------",cache[socket.roomId].activity)
                     //
                     if (!cache[socket.roomId].analysis || cache[socket.roomId].analysis.redpackNumber == 0) {
                         //获取统计数据 补全数据
@@ -199,7 +227,7 @@ module.exports = (io) => {
                         openid: socket.member.openid
                     }, socket.member).toPromise()
                     if(socket.member.is_first_play == true){
-                        console.log("-----------------playMember +1 ---------------------")
+                   //     console.log("-----------------playMember +1 ---------------------")
                         cache[socket.roomId].analysis.playMember = cache[socket.roomId].analysis.playMember + 1
                         socket.member.is_first_play = false
                         await member_mod.update({
@@ -256,5 +284,15 @@ module.exports = (io) => {
 
     })
 
+    //  **********************************后台管理端初始化连接************************************
+    sc_admin.on('connection', async (socket)=> {
+        socket.on('change_config', async (d)=> {
+            if(d){
+                cache[d.id].activity.redpackNumber = d.redpackNumber
+                cache[d.id].activity.leftNumber = d.leftNumber
+                sc_screen.in(d.id).emit('analysis', cache[socket.roomId].analysis)
+            }
+        })
+    })
 
 }

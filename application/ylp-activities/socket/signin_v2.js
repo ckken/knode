@@ -59,8 +59,8 @@ module.exports = (io) => {
                 //  console.log()
                 //  console.log(d.member)
                   await member_mod.update({aid: d.member.aid, openid: d.member.openid}, d.member).toPromise()
-              //    let temp = await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise()
-              //    console.log("temp:",temp)
+                  let temp = await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise()
+                  console.log("temp:",temp)
                   client.in(d.member.aid).emit('client_getout',{openid: d.member.openid})
               }
         })
@@ -136,6 +136,7 @@ module.exports = (io) => {
             if(d){
       //          console.log("--------------on:request_getout------------------")
                 socket.member.online = 0
+                socket.member.in_room = false
                 await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
                 socket.members = await getMembers(socket.roomId)
                 //

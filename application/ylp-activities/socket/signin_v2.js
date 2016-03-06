@@ -92,8 +92,8 @@ module.exports = (io) => {
                         socket.join(socket.roomId);
 
                     } else {
-                        console.log("---------------member:------------------")
-                        console.log(socket.member)
+             //           console.log("---------------member:------------------")
+                        console.log("----------------"+socket.member.city+"--"+socket.member.nickname+"签到------------------")
                         if(socket.member.in_room === true){
                             socket.join(socket.roomId);
                          //   console.log("in_room")
@@ -127,6 +127,7 @@ module.exports = (io) => {
         socket.on('danmu', async (d)=> {
             if(socket.roomId && socket.signin.isDanmu!==false){
                 d = {msg: d,user:{nickname:socket.member.nickname,headimgurl:socket.member.headimgurl}}
+                console.log(d.user.nickname+" 说： "+d.msg)
                 client.in(socket.roomId).emit('danmu', d);
                 screen.in(socket.roomId).emit('danmu', d);
             }

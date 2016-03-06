@@ -157,6 +157,9 @@ module.exports = (io) => {
                         cache[socket.roomId].activity = activity
                         cache[socket.roomId].token = d.member.token
                     }
+                    sc_client.in(socket.roomId).emit('init_client', {
+                        activity: cache[socket.roomId].activity
+                    })
                     cache[socket.roomId].token = d.member.token
                     //获取会员数
                     socket.member = await member_mod.find({

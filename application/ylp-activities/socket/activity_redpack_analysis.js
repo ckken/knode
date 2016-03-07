@@ -116,9 +116,12 @@ module.exports = (io) => {
 
         socket.on('refresh', async (d)=> {
             if(d){
-                if(cache[d.id].token){
-                    let token = cache[d.id].token
+                    cache[d.id] = cache[d.id] || {}
+                    let token = cache[d.id].token || ''
                     let ylpHost = ylpUrl(d.host)
+                    if(!token){
+                        token = await member_mod.findOne({aid : d.id}).toPromise()
+                    }
                     let activity = await getData(ylpHost + d.id, token)
          //           console.log("act:",activity)
                     if (activity && activity.code == 0) {
@@ -127,7 +130,6 @@ module.exports = (io) => {
                         cache[d.id].analysis.leftNumber = activity.activityInfo && activity.activityInfo.leftGiftCount || 0
                         sc_screen.in(d.id).emit('analysis', cache[d.id].analysis)
                     }
-                }
 
             }
         })

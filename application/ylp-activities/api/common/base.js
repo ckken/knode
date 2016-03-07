@@ -7,15 +7,16 @@ export default class extends G.controller.rest {
         this.member = false
 
 
-        //if(token){
-        //    this.member = await this.getData(G.web_b_host+'/accounts-center/check/token',token)
-        //    if(!this.member||this.member.code !=0){
-        //        return this.json(this.member)
-        //    }
-        //    this.member = this.member.data
-        //}else{
-        //    return this.json({code:-2,msg:'缺少token'})
-        //}
+        if(token){
+            this.member = await this.getData(G.web_b_host+'/accounts-center/check/token',token)
+            console.log(this.member,token)
+            if(!this.member||this.member.code !=0){
+                return this.json(this.member)
+            }
+            this.member = this.member.data
+        }else{
+            return this.json({code:-2,msg:'缺少token'})
+        }
 
         //权限设置
         this._map = this._map ||{}

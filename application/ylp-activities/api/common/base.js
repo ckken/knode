@@ -9,7 +9,7 @@ export default class extends G.controller.rest {
 
         if(token){
             this.member = await this.getData(G.web_b_host+'/accounts-center/check/token',token)
-            console.log(this.member,token)
+            //console.log(this.member,token)
             if(!this.member||this.member.code !=0){
                 return this.json(this.member)
             }

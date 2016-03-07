@@ -55,13 +55,13 @@ module.exports = (io) => {
         })
         socket.on('getout',async (d)=>{
               if(d && d.member){
-                  d.member.in_room = false
+                  d.member.in_room = (d.member.in_room===true)?true:false
                 //  console.log()
                 //  console.log(d.member)
                   await member_mod.update({aid: d.member.aid, openid: d.member.openid}, d.member).toPromise()
-                  let temp = await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise()
-                  console.log("temp:",temp)
-                  client.in(d.member.aid).emit('client_getout',{openid: d.member.openid})
+             //     let temp = await member_mod.findOne({aid: d.member.aid, openid: d.member.openid}).toPromise()
+           //       console.log("temp:",temp)
+                  client.in(d.member.aid).emit('client_getout',{openid: d.member.openid,getout: d.member.in_room})
               }
         })
     })
@@ -137,7 +137,7 @@ module.exports = (io) => {
             if(d){
       //          console.log("--------------on:request_getout------------------")
                 socket.member.online = 0
-                socket.member.in_room = false
+                socket.member.in_room = (d===false)?false:true
                 await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
                 socket.members = await getMembers(socket.roomId)
                 //

@@ -275,6 +275,12 @@ module.exports = (io) => {
                 }
                 //
                 let members = await getMembers(socket.roomId)
+                let redpack_msg = {}
+                redpack_msg.user = {}
+                redpack_msg.user.headimgurl = socket.member.headimgurl
+                redpack_msg.user.nickname = socket.member.nickname
+                redpack_msg.msg = "抢到了"+parseFloat(d)+"元红包"
+                sc_screen.in(socket.roomId).emit('redpack_msg',redpack_msg)
                 sc_screen.in(socket.roomId).emit('members', members)
                 sc_screen.in(socket.roomId).emit('analysis', cache[socket.roomId].analysis)
             }

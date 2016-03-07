@@ -101,6 +101,7 @@ module.exports = (io) => {
                             await member_mod.update({aid: socket.roomId, openid: d.member.openid}, socket.member).toPromise()
                             let member_isForbid = socket.member.is_forbid || false
                             socket.emit('forbid_init',member_isForbid)
+                            socket.emit('getout_init',true)
                         }else {
                             socket.emit('getout_init',false)
                         }

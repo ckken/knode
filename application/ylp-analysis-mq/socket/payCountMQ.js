@@ -16,7 +16,7 @@ if (G.mq && G.mq_pay_queue) {
         //console.log('model data',await model.find().limit(10).sort({id:'desc'}).toPromise())
         client.subscribe(G.mq_pay_queue, async(d)=> {
             //
-            console.log(d.body)
+            //console.log(d.body)
             let data = d&&JSON.parse(d.body)
             let checkCount = await model.count({bankOrderNo: data.bankOrderNo}).toPromise()
             //

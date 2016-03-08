@@ -53,16 +53,22 @@ module.exports = async (io) => {
                  d.now.to = _.moment().endOf("weeks")
                  d.ex.from = _.moment().subtract(1, "weeks").startOf("weeks")
                  d.ex.to = _.moment().subtract(1, "weeks").endOf("weeks")*/
+
                 d.now.from = _.moment().subtract(7, "days").startOf("day")
                 d.now.to = _.moment().subtract(7, "days").endOf("day")
                 d.ex.from = _.moment().subtract(14, "days").startOf("day")
                 d.ex.to = _.moment().subtract(14, "days").endOf("day")
                 break;
             case 30:
-                d.now.from = _.moment().startOf("months")
+                /*d.now.from = _.moment().startOf("months")
                 d.now.to = _.moment().endOf("months")
                 d.ex.from = _.moment().subtract(1, "months").startOf("months")
-                d.ex.to = _.moment().subtract(1, "months").endOf("months")
+                d.ex.to = _.moment().subtract(1, "months").endOf("months")*/
+
+                d.now.from = _.moment().subtract(30, "days").startOf("day")
+                d.now.to = _.moment().subtract(30, "days").endOf("day")
+                d.ex.from = _.moment().subtract(60, "days").startOf("day")
+                d.ex.to = _.moment().subtract(60, "days").endOf("day")
                 break;
         }
 
@@ -170,7 +176,7 @@ module.exports = async (io) => {
             socket.day = day||socket.day
             socket.data = await getData(socket.day)
             socket.emit('payCount', socket.data)
-            console.log(day,socket.data)
+            //console.log(day,socket.data)
             socket.emit('updateTime', Date.now())
         })
 
@@ -178,7 +184,7 @@ module.exports = async (io) => {
         let i = 0
         client.on('updateFromMq',async  (d)=> {
 
-            console.log('updateFromMq',d,i++)
+            //console.log('updateFromMq',d,i++)
             socket.data = await getData(socket.day)
             socket.broadcast.emit('payCount', socket.data)
             socket.broadcast.emit('updateTime', Date.now())

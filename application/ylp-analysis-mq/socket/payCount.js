@@ -1,3 +1,9 @@
+import ioc from 'socket.io-client';
+//客户端桥接MQ里面带来的信息
+//let client = ioc('http://localhost:'+G.port+'/payCount',{ forceNew: true })
+let client = ioc('http://localhost:'+G.port+'/payCount')
+
+
 module.exports = async (io) => {
 
     let model = D.model('analysis_pay')
@@ -63,14 +69,17 @@ module.exports = async (io) => {
         d.now.fromFormat = d.now.from.format('YYYY-MM-DD HH:mm:ss')
         d.now.toFormat = d.now.to.format('YYYY-MM-DD HH:mm:ss')
         d.now.diff = d.now.to.diff(d.now.from, 'days') + 1
-
+        //
         d.now.map.paySuccessTime = {'>=': d.now.fromFormat, '<=': d.now.toFormat}
+        d.now.map.orderFrom = 'ERP'
 
         /////////////////////////////////////////////////////////////
         d.ex.fromFormat = d.ex.from.format('YYYY-MM-DD HH:mm:ss')
         d.ex.toFormat = d.ex.to.format('YYYY-MM-DD HH:mm:ss')
         d.ex.diff = d.ex.to.diff(d.ex.from, 'days') + 1
+        //
         d.ex.map.paySuccessTime = {'>=': d.ex.fromFormat, '<=': d.ex.toFormat};
+        d.ex.map.orderFrom = 'ERP'
 
         return d
     }
@@ -158,10 +167,21 @@ module.exports = async (io) => {
 
 
         socket.on('day', async  (day)=> {
-            socket.day = day
+            socket.day = day||socket.day
             socket.data = await getData(socket.day)
             socket.emit('payCount', socket.data)
+            console.log(day,socket.data)
             socket.emit('updateTime', Date.now())
+        })
+
+
+        let i = 0
+        client.on('updateFromMq',async  (d)=> {
+
+            console.log('updateFromMq',d,i++)
+            socket.data = await getData(socket.day)
+            socket.broadcast.emit('payCount', socket.data)
+            socket.broadcast.emit('updateTime', Date.now())
         })
 
 

@@ -55,9 +55,9 @@ module.exports = async (io) => {
                  d.ex.to = _.moment().subtract(1, "weeks").endOf("weeks")*/
 
                 d.now.from = _.moment().subtract(7, "days").startOf("day")
-                d.now.to = _.moment().subtract(7, "days").endOf("day")
+                d.now.to = _.moment().subtract(0, "days").endOf("day")
                 d.ex.from = _.moment().subtract(14, "days").startOf("day")
-                d.ex.to = _.moment().subtract(14, "days").endOf("day")
+                d.ex.to = _.moment().subtract(0, "days").endOf("day")
                 break;
             case 30:
                 /*d.now.from = _.moment().startOf("months")
@@ -66,9 +66,9 @@ module.exports = async (io) => {
                 d.ex.to = _.moment().subtract(1, "months").endOf("months")*/
 
                 d.now.from = _.moment().subtract(30, "days").startOf("day")
-                d.now.to = _.moment().subtract(30, "days").endOf("day")
+                d.now.to = _.moment().subtract(0, "days").endOf("day")
                 d.ex.from = _.moment().subtract(60, "days").startOf("day")
-                d.ex.to = _.moment().subtract(60, "days").endOf("day")
+                d.ex.to = _.moment().subtract(0, "days").endOf("day")
                 break;
         }
 

@@ -50,9 +50,9 @@ module.exports = async (io) => {
                 break;
             case 7:
                 /*d.now.from = _.moment().startOf("weeks")
-                d.now.to = _.moment().endOf("weeks")
-                d.ex.from = _.moment().subtract(1, "weeks").startOf("weeks")
-                d.ex.to = _.moment().subtract(1, "weeks").endOf("weeks")*/
+                 d.now.to = _.moment().endOf("weeks")
+                 d.ex.from = _.moment().subtract(1, "weeks").startOf("weeks")
+                 d.ex.to = _.moment().subtract(1, "weeks").endOf("weeks")*/
                 d.now.from = _.moment().subtract(7, "days").startOf("day")
                 d.now.to = _.moment().subtract(7, "days").endOf("day")
                 d.ex.from = _.moment().subtract(14, "days").startOf("day")

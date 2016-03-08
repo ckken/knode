@@ -17,7 +17,6 @@ module.exports = (app, db) => {
             //如果启动redis 会默认启动集群方案 支持 pm2 的 cluster
             if(G.redis){
                 let redis = require('socket.io-redis');
-                console.log(redis)
                 io.adapter(redis({ host: G.redis.host, port: G.redis.port,auth_pass: G.redis.password }));
             }
             //监听所有 socket 文件夹的.js文件 注册给socket.io

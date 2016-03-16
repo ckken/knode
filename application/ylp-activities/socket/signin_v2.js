@@ -17,7 +17,7 @@ module.exports = (io) => {
     let getMembers = async (aid)=> {
         return await member_mod.find({where: {aid: aid,in_room:true}, select: ['nickname', 'headimgurl', 'online']}).sort({
                 online: 'desc',
-                updatedAt: 'desc'
+                id: 'desc'
             }).toPromise() || []
     }
 

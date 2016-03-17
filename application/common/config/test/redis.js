@@ -1,8 +1,8 @@
 export default {
     redis:{
-        host:'172.16.8.164',
+        host:'172.16.8.161',
         username:'root',
         password:'yolipai168',
-        port:'7004'
+        port:'7001'
     }
 }

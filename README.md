@@ -126,8 +126,8 @@ let client = Stomp.overTCP(G.mq.host, 61613)
     })
 ``````
 
-##socket redis cluster `application/common/config/production/redis.js` 支持<sup>2.3</sup>
-###
+##socket redis cluster 支持<sup>2.3</sup>
+`application/common/config/production/redis.js`
 
 ``````
 export default {

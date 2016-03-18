@@ -85,6 +85,7 @@ module.exports = (io) => {
                         socket.member = d.member
                         socket.member.online = 1
                         socket.member.in_room = true
+                        socket.member.is_signin = true
                         let data = d.member
                         data.aid = socket.roomId
                         data.is_forbid = false
@@ -94,7 +95,7 @@ module.exports = (io) => {
 
                     } else {
                         //           console.log("---------------member:------------------")
-                        console.log("----------------"+socket.member.city+"--"+socket.member.nickname+"签到------------------")
+                 //       console.log("----------------"+socket.member.city+"--"+socket.member.nickname+"签到------------------")
                         if(socket.member.in_room === true){
                             socket.join(socket.roomId);
                             //   console.log("in_room")
@@ -161,7 +162,9 @@ module.exports = (io) => {
         })
         //断开连接
         socket.on('disconnect', async ()=> {
+            console.log("----------------disconnect-------------------")
             if(socket.member) {
+                console.log("-----------"+socket.member.nickname+"下线------------")
                 socket.member.online = 0
                 await member_mod.update({aid: socket.roomId, openid: socket.member.openid}, socket.member).toPromise()
                 socket.members = await getMembers(socket.roomId)

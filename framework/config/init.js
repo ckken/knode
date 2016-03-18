@@ -89,13 +89,28 @@ export default function (opt) {
                 _.extend(G, conf);
             }
         })
+    }else{
+        fs.readdirSync(G.path.common+'/config').forEach((name)=> {
+            if (name.indexOf('.js') > -1) {
+                let conf = require(G.path.common+'/config/' + name)
+                _.extend(G, conf);
+            }
+        })
     }
-
-    //***模块配置文件
-    fs.readdirSync(G.path.config).forEach((name)=> {
-        if (name.indexOf('.js') > -1) {
-            let conf = require(G.path.config + '/' + name)
-            _.extend(G, conf);
-        }
-    })
+    if(env_val.indexOf(opt.env)>-1) {
+        //***模块配置文件
+        fs.readdirSync(G.path.config+'/'+opt.env).forEach((name)=> {
+            if (name.indexOf('.js') > -1) {
+                let conf = require(G.path.config + '/'+opt.env+'/'  + name)
+                _.extend(G, conf);
+            }
+        })
+    }else{
+        fs.readdirSync(G.path.config).forEach((name)=> {
+            if (name.indexOf('.js') > -1) {
+                let conf = require(G.path.config + '/' + name)
+                _.extend(G, conf);
+            }
+        })
+    }
 }

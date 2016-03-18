@@ -90,6 +90,13 @@ module.exports = (app)=> {
         //
         app.all('/:module/:controller/:id/:action', cors(), restFunc())
         app.all('/:module/:controller/:id/:action/:actionId', cors(), restFunc())
+    }else{
+        //刷新页面模型
+        app.options('/:module/:controller/:action', cors())
+        app.get('/:module/:controller/:action', cors(), Func)
+        app.get('/:module/:controller/:action/:id', cors(), Func)
+        app.post('/:module/:controller/:action', cors(), Func)
+        app.post('/:module/:controller/:action/:id', cors(), Func)
     }
 
 

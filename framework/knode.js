@@ -6,11 +6,15 @@ moment.locale('zh-cn')
 //export default function (root, app_path, core_path) {
 export default  (opt)=> {
     global._ = lodash
+    global.Promise = require('bluebird');//bluebird 比原生的Promise快 Promise.promisifyAll 全局promise 批量生成为 Async
     _.moment = moment
 
     //根据当前文件生成
     if(!opt.app_path) {
+        let isWin = /^win/.test(process.platform);
+        //let split = (isWin)?'/\/':'/';
         let filename = require.main.filename
+        if(isWin)filename = filename.replace(/\\/g,"\/")
         filename = filename.split('/')
         filename = filename[filename.length - 1].replace('.js', '')
         opt.app_path = filename

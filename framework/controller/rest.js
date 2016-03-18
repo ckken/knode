@@ -86,8 +86,4 @@ export default class extends G.controller.base {
         this.json(rs)
     }
 
-    json(data) {
-        this.res.json(data)
-    }
-
 }

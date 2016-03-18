@@ -40,7 +40,6 @@ module.exports = (app)=> {
                 await cls.invoke(req.rq.action)
 
             } catch (e) {
-                //console.log(e)
                 next(e)
             }
 
@@ -57,13 +56,13 @@ module.exports = (app)=> {
     }
 
     app.get('/', Func)
-
+    //restful 模型
+    app.options('/*', cors())
 
     //G.system_mod = G.system_mod ||[]
     //console.log(G.system_mod)
     if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('module') >-1) {
 
-        app.options('/*', cors())
         app.get('/' + G.rest + '/:module/:controller', cors(), restFunc())
         app.get('/' + G.rest + '/:module/:controller/:id', cors(), restFunc())
         app.post('/' + G.rest + '/:module/:controller', cors(), restFunc())
@@ -75,15 +74,14 @@ module.exports = (app)=> {
         app.all('/' + G.rest + '/:module/:controller/:id/:action', cors(), restFunc())
         app.all('/' + G.rest + '/:module/:controller/:id/:action/:actionId', cors(), restFunc())
         //刷新页面模型
-        app.options('/:module/:controller/:action', cors())
+        //app.options('/:module/:controller/:action', cors())
         app.get('/:module/:controller/:action', cors(), Func)
         app.get('/:module/:controller/:action/:id', cors(), Func)
         app.post('/:module/:controller/:action', cors(), Func)
         app.post('/:module/:controller/:action/:id', cors(), Func)
 
     }else if(G.system_mod.indexOf('api')>-1 && G.system_mod.indexOf('module') === -1){
-        //restful 模型
-        app.options('/*', cors())
+
         app.get('/:module/:controller', cors(), restFunc())
         app.get('/:module/:controller/:id', cors(), restFunc())
         app.post('/:module/:controller', cors(), restFunc())
@@ -92,6 +90,13 @@ module.exports = (app)=> {
         //
         app.all('/:module/:controller/:id/:action', cors(), restFunc())
         app.all('/:module/:controller/:id/:action/:actionId', cors(), restFunc())
+    }else{
+        //刷新页面模型
+        app.options('/:module/:controller/:action', cors())
+        app.get('/:module/:controller/:action', cors(), Func)
+        app.get('/:module/:controller/:action/:id', cors(), Func)
+        app.post('/:module/:controller/:action', cors(), Func)
+        app.post('/:module/:controller/:action/:id', cors(), Func)
     }
 
 

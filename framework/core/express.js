@@ -64,7 +64,6 @@ export default ()=> {
     // no stacktraces leaked to user
     app.use((err, req, res, next)=> {
         var err_msg = {}
-        console.log(err)
         res.status(err.status || 500);
         if (G.debug) {
             err_msg = {
@@ -80,20 +79,13 @@ export default ()=> {
                 code:-1
             }
         }
-        //console.log(req.is('html'))
-        //console.log(err_msg)
         res.json(err_msg)
-        /*if(req.is('html')){
-         req.display('/common/error',err_msg)
-         }else{
-         res.json(err_msg)
-         }*/
-    });
+        if (G.debug&&err.status!=404) {
+            console.log('======================== error Logs ===========================')
+            throw new Error(err);
+        }
 
-// 启动服务器
-    /*var server = app.listen(G.port,()=>{
-     console.log('ENode server listening on port ' + server.address().port);
-     });*/
+    });
 
     return app
 

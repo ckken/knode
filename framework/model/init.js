@@ -42,8 +42,8 @@ export default function (cb) {
                 setting.connection = setting.connection || k;//连接数据库的名称 别名
                 setting.tableName = setting.tableName || name;//数据表名称
                 //setting.identity = k
-                setting.autoCreatedAt = setting.autoCreatedAt || true;//自动记录增加时间
-                setting.autoUpdatedAt = setting.autoUpdatedAt || true;//自动记录修改时间
+                setting.autoCreatedAt = (setting.autoCreatedAt===false)?false : true;//自动记录增加时间
+                setting.autoUpdatedAt = (setting.autoUpdatedAt===false)?false:true;//自动记录修改时间
                 dbs[k] = waterline.Collection.extend(setting)
 
                 orm.loadCollection(dbs[k])

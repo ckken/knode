@@ -1,0 +1,12 @@
+[
+  {
+    "script": "./ylp-activities.js",
+    "name": "ylp-activities",
+    "exec_mode": "fork",
+  },
+  {
+    "script": "./ylp-analysis-mq.js",
+    "name": "ylp-analysis-mq",
+    "exec_mode": "fork",
+  }
+]

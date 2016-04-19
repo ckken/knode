@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.ts",
   "scripts": {
-    "test": "npm test",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha -- -t 50000 --recursive  -R spec test/",
     "compile": "tsc",
     "watch": "tsc -w"
   },
@@ -23,15 +23,18 @@
   },
   "homepage": "https://github.com/ckken/KNode#readme",
   "devDependencies": {
+    "istanbul": "^0.4.3",
+    "mocha": "^2.4.5",
     "source-map": "^0.5.3"
   },
   "dependencies": {
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
+    "commander": "^2.9.0",
     "compression": "^1.6.1",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
-    "fs": "0.0.2",
+    "lodash-node": "^3.10.2",
     "morgan": "^1.7.0",
     "serve-favicon": "^2.3.0",
     "swig": "^1.4.2"

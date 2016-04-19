@@ -3,6 +3,7 @@
         "target": "ES5",
         "outDir": "lib",
         "rootDir": "src",
-        "sourceMap":true
+        "sourceMap":true,
+        "allowSyntheticDefaultImports":true
     }
 }

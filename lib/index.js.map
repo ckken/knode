@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/index.js"],"names":[],"mappings":";;;;;;;;AAAA;;;;AACA;;;;;;AACA,OAAO,OAAP,GAAiB,QAAQ,UAAR,CAAjB","file":"index.js","sourcesContent":["import fs from 'fs';\nimport path from 'path';\nglobal.Promise = require('bluebird');\n\nexport default class {\n\n\n\n}"]}
